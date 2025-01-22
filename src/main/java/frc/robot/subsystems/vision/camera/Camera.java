@@ -1,13 +1,13 @@
 package frc.robot.subsystems.vision.camera;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.utils.ObjectType;
-import frc.robot.utils.Subsystems;
-import frc.robot.utils.VisionABC;
-import frc.robot.utils.VisionObject;
+import frc.robot.utils.*;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.networktables.NetworkTableEntry;
+
+import java.sql.Time;
 
 public class Camera extends VisionABC {
 	private ObjectType object;
@@ -114,6 +114,15 @@ public class Camera extends VisionABC {
 	public int getLastseenAprilTag() {
 		return lastseenAprilTag;
 	}
-	
+
+	public PoseAllocate getRobotPose() {
+		LimelightHelpers.PoseEstimate pose = LimelightHelpers.getBotPoseEstimate(cameraName, "botpose", true);
+		double time = pose.timestampSeconds;
+		return new PoseAllocate(pose, time);
+	}
+
+	public void SetRobotOrientation(double headingDeg, double yawRate, double pitch, double pitchRate, double roll, double rollRate) {
+		LimelightHelpers.SetRobotOrientation(cameraName, headingDeg, yawRate, pitch, pitchRate, roll, rollRate);
+	}
 
 }

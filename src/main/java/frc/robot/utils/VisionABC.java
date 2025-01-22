@@ -28,6 +28,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 public abstract class VisionABC extends SubsystemABS {
 
   protected ShuffleboardTab tab;
+  protected String cameraName;
 
   /**
    * Constructor for VisionABC.
@@ -35,6 +36,7 @@ public abstract class VisionABC extends SubsystemABS {
   public VisionABC(Subsystems part, String tabName) {
     super(Subsystems.VISION, "Vision");
     tab = getTab();
+    cameraName = tabName;
   }
 
   /**

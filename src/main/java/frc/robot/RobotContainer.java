@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Map;
 
+import frc.robot.utils.*;
 import org.json.simple.parser.ParseException;
 
 import com.ctre.phoenix6.Utils;
@@ -33,13 +34,6 @@ import frc.robot.constants.RobotMap.SafetyMap.AutonConstraints;
 import frc.robot.subsystems.swerve.CommandSwerveDrivetrain;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
 import frc.robot.subsystems.vision.camera.Camera;
-import frc.robot.utils.AutoPathFinder;
-import frc.robot.utils.DrivetrainConstants;
-import frc.robot.utils.ObjectType;
-import frc.robot.utils.RobotFramework;
-import frc.robot.utils.SubsystemABS;
-import frc.robot.utils.Subsystems;
-import frc.robot.utils.Telemetry;
 
 @SuppressWarnings("unused") // DO NOT REMOVE
 
@@ -100,12 +94,39 @@ public class RobotContainer extends RobotFramework {
         configureBindings();
 
         telemetry = new Telemetry(SafetyMap.kMaxSpeed);
-        DrivetrainConstants.drivetrain.registerTelemetry(telemetry::telemeterize);
-        
+        setupVisionImplants();
+
+    }
+
+    private void setupVisionImplants() {
+        var driveState = DrivetrainConstants.drivetrain.getState();
+        double headingDeg = driveState.Pose.getRotation().getDegrees();
+        double omega = Units.radiansToRotations(driveState.Speeds.omegaRadiansPerSecond);
+        frontCamera.SetRobotOrientation(headingDeg, 0,0,0,0,0);
+        rearCamera.SetRobotOrientation(headingDeg, 0,0,0,0,0);
+
+        PoseAllocate frontPose = frontCamera.getRobotPose();
+        PoseAllocate rearPose = rearCamera.getRobotPose();
+
+        if  (
+                frontPose.getPose() != null
+            && frontPose.getPoseEstimate().tagCount > 0
+            && Math.abs(omega) < 2) {
+            DrivetrainConstants.drivetrain.addVisionMeasurement(frontPose.getPose(), frontPose.getTime());
+        }
+        if  (
+                rearPose.getPose() != null
+                        && rearPose.getPoseEstimate().tagCount > 0
+                        && Math.abs(omega) < 2) {
+            DrivetrainConstants.drivetrain.addVisionMeasurement(rearPose.getPose(), rearPose.getTime());
+        }
+
+
 
     }
 
     private void configureBindings() {
+        DrivetrainConstants.drivetrain.registerTelemetry(telemetry::telemeterize);
         driverController.start()
                 .onTrue(DrivetrainConstants.drivetrain
                         .runOnce(() -> DrivetrainConstants.drivetrain.seedFieldCentric()));
