@@ -19,6 +19,7 @@ import edu.wpi.first.math.controller.HolonomicDriveController;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
@@ -61,15 +62,15 @@ public class RobotContainer extends RobotFramework {
                 SensorMap.GYRO_PORT,
                 driverController);
 
-        frontCamera = new Camera(
-                Subsystems.VISION,
-                Subsystems.VISION.getNetworkTable(),
-                ObjectType.APRIL_TAG_FRONT);
+        // frontCamera = new Camera(
+        //         Subsystems.VISION,
+        //         Subsystems.VISION.getNetworkTable(),
+        //         ObjectType.APRIL_TAG_FRONT);
 
-        rearCamera = new Camera(
-                Subsystems.VISION,
-                Subsystems.VISION.getNetworkTable(),
-                ObjectType.APRIL_TAG_BACK);
+        // rearCamera = new Camera(
+        //         Subsystems.VISION,
+        //         Subsystems.VISION.getNetworkTable(),
+        //         ObjectType.APRIL_TAG_BACK);
 
         teleOpChooser = new SendableChooser<>();
         setupDrivetrain();
@@ -91,39 +92,43 @@ public class RobotContainer extends RobotFramework {
 
         setupNamedCommands();
         setupPaths();
+        telemetry = new Telemetry(SafetyMap.kMaxSpeed);
         configureBindings();
 
-        telemetry = new Telemetry(SafetyMap.kMaxSpeed);
-        setupVisionImplants();
+        
+        // setupVisionImplants();
 
     }
 
-    private void setupVisionImplants() {
-        var driveState = DrivetrainConstants.drivetrain.getState();
-        double headingDeg = driveState.Pose.getRotation().getDegrees();
-        double omega = Units.radiansToRotations(driveState.Speeds.omegaRadiansPerSecond);
-        frontCamera.SetRobotOrientation(headingDeg, 0,0,0,0,0);
-        rearCamera.SetRobotOrientation(headingDeg, 0,0,0,0,0);
+    // private void setupVisionImplants() {
+    //     var driveState = DrivetrainConstants.drivetrain.getState();
+    //     double headingDeg = driveState.Pose.getRotation().getDegrees();
+    //     SmartDashboard.putNumber("robot rotation", headingDeg);
+    //     double omega = Units.radiansToRotations(driveState.Speeds.omegaRadiansPerSecond);
+    //     frontCamera.SetRobotOrientation(headingDeg, 0,0,0,0,0);
+    //     rearCamera.SetRobotOrientation(headingDeg, 0,0,0,0,0);
 
-        PoseAllocate frontPose = frontCamera.getRobotPose();
-        PoseAllocate rearPose = rearCamera.getRobotPose();
+    //     PoseAllocate frontPose = frontCamera.getRobotPose();
+    //     PoseAllocate rearPose = rearCamera.getRobotPose();
 
-        if  (
-                frontPose.getPose() != null
-            && frontPose.getPoseEstimate().tagCount > 0
-            && Math.abs(omega) < 2) {
-            DrivetrainConstants.drivetrain.addVisionMeasurement(frontPose.getPose(), frontPose.getTime());
-        }
-        if  (
-                rearPose.getPose() != null
-                        && rearPose.getPoseEstimate().tagCount > 0
-                        && Math.abs(omega) < 2) {
-            DrivetrainConstants.drivetrain.addVisionMeasurement(rearPose.getPose(), rearPose.getTime());
-        }
+    //     if  (  
+    //             frontPose != null 
+    //         &&    frontPose.getPose() != null
+    //         && frontPose.getPoseEstimate().tagCount > 0
+    //         && Math.abs(omega) < 2) {
+    //         DrivetrainConstants.drivetrain.addVisionMeasurement(frontPose.getPose(), frontPose.getTime());
+    //     }
+    //     if  (
+    //                 rearPose != null
+    //                     && rearPose.getPose() != null
+    //                     && rearPose.getPoseEstimate().tagCount > 0
+    //                     && Math.abs(omega) < 2) {
+    //         DrivetrainConstants.drivetrain.addVisionMeasurement(rearPose.getPose(), rearPose.getTime());
+    //     }
 
 
 
-    }
+    // }
 
     private void configureBindings() {
         DrivetrainConstants.drivetrain.registerTelemetry(telemetry::telemeterize);
@@ -172,9 +177,10 @@ public class RobotContainer extends RobotFramework {
     // DO NOT REMOVE
     public SubsystemABS[] SafeGuardSystems() {
         return new SubsystemABS[] {
-                swerveSubsystem,
-                frontCamera,
-                rearCamera
+                swerveSubsystem
+                // ,
+                // frontCamera,
+                // rearCamera
 
         };
     }

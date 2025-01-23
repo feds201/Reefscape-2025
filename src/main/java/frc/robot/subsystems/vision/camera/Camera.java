@@ -117,8 +117,11 @@ public class Camera extends VisionABC {
 
 	public PoseAllocate getRobotPose() {
 		LimelightHelpers.PoseEstimate pose = LimelightHelpers.getBotPoseEstimate(cameraName, "botpose", true);
-		double time = pose.timestampSeconds;
-		return new PoseAllocate(pose, time);
+		if(pose!=null){
+			double time = pose.timestampSeconds;
+			return new PoseAllocate(pose, time);
+		}
+		return null;
 	}
 
 	public void SetRobotOrientation(double headingDeg, double yawRate, double pitch, double pitchRate, double roll, double rollRate) {

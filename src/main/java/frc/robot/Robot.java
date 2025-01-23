@@ -5,6 +5,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
@@ -13,15 +14,22 @@ import com.ctre.phoenix6.hardware.CANrange;
 import com.pathplanner.lib.commands.PathfindingCommand;
 import com.pathplanner.lib.pathfinding.Pathfinding;
 
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.net.WebServer;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import frc.robot.constants.ComandCenter;
+import frc.robot.subsystems.vision.camera.Camera;
 import frc.robot.utils.AutonTester;
+import frc.robot.utils.DrivetrainConstants;
 import frc.robot.utils.LocalADStarAK;
+import frc.robot.utils.ObjectType;
+import frc.robot.utils.PoseAllocate;
 import frc.robot.utils.RobotTester;
 import frc.robot.utils.SafetyManager;
+import frc.robot.utils.Subsystems;
 import frc.robot.utils.SystemCheckUp;
 
 /**
@@ -34,6 +42,7 @@ public class Robot extends TimedRobot
 {
     private Command autonomousCommand;
     private RobotContainer robotContainer;
+    private Camera frontCamera;
     /**
      * This method is run when the robot is first started up and should be used for any
      * initialization code.
@@ -41,6 +50,11 @@ public class Robot extends TimedRobot
     @Override
     public void robotInit()
     {
+
+        frontCamera = new Camera(
+                Subsystems.VISION,
+                Subsystems.VISION.getNetworkTable(),
+                ObjectType.APRIL_TAG_FRONT);
 
         Pathfinding.setPathfinder(new LocalADStarAK());
         SignalLogger.setPath("/media/sda1/CTRElogs/");
@@ -68,9 +82,26 @@ public class Robot extends TimedRobot
      * <p>This runs after the mode specific periodic methods, but before LiveWindow and
      * SmartDashboard integrated updating.
      */
+
+     
     @Override
     public void robotPeriodic()
     {
+        
+        var driveState = DrivetrainConstants.drivetrain.getState();
+        double headingDeg = driveState.Pose.getRotation().getDegrees();
+        SmartDashboard.putNumber("robot rotation", headingDeg);
+        double omega = Units.radiansToRotations(driveState.Speeds.omegaRadiansPerSecond);
+        frontCamera.SetRobotOrientation(headingDeg, 0,0,0,0,0);
+        // SwerveDrivePoseEstimator.update(headingDeg, );
+        PoseAllocate frontPose = frontCamera.getRobotPose();
+        if  (  
+                frontPose != null 
+            &&    frontPose.getPose() != null
+            && frontPose.getPoseEstimate().tagCount > 0
+            && Math.abs(omega) < 2) {
+            DrivetrainConstants.drivetrain.addVisionMeasurement(frontPose.getPose(), frontPose.getTime());
+        }
         // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled
         // commands, running already-scheduled commands, removing finished or interrupted commands,
         // and running subsystem periodic() methods.  This must be called from the robot's periodic
