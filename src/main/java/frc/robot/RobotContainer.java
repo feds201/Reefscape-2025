@@ -52,16 +52,16 @@ import frc.robot.utils.Telemetry;
 
 public class RobotContainer extends RobotFramework {
 
-    private SwerveSubsystem swerveSubsystem;
-    private CommandXboxController driverController;
-    private CommandXboxController operatorController;
+    private final SwerveSubsystem swerveSubsystem;
+    private final CommandXboxController driverController;
+    private final CommandXboxController operatorController;
     private Telemetry telemetry;
-    private SendableChooser<Command> teleOpChooser;
-    private SendableChooser<Command> autonChooser;
-    private Camera frontCamera;
-    private Camera rearCamera;
-    private PathConstraints autoAlignConstraints;
-    private SwerveDrivePoseEstimator poseEstimator;
+    private final SendableChooser<Command> teleOpChooser;
+    private final SendableChooser<Command> autonChooser;
+    private final Camera frontCamera;
+    private final Camera rearCamera;
+    private final PathConstraints autoAlignConstraints;
+    private final SwerveDrivePoseEstimator poseEstimator;
 
     public RobotContainer() {
         double swerveSpeedMultiplier = 0.4;
