@@ -116,7 +116,7 @@ public class Camera extends VisionABC {
 	}
 
 	public PoseAllocate getRobotPose() {
-		LimelightHelpers.PoseEstimate pose = LimelightHelpers.getBotPoseEstimate(cameraName, "botpose", true);
+		LimelightHelpers.PoseEstimate pose = LimelightHelpers.getBotPoseEstimate(cameraName, "botpose_orb_wpiblue", true);
 		if(pose!=null){
 			double time = pose.timestampSeconds;
 			return new PoseAllocate(pose, time);

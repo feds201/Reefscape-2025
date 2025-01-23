@@ -15,6 +15,11 @@ import com.pathplanner.lib.commands.PathfindingCommand;
 import com.pathplanner.lib.pathfinding.Pathfinding;
 
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.net.WebServer;
 import edu.wpi.first.wpilibj.DataLogManager;
@@ -43,6 +48,7 @@ public class Robot extends TimedRobot
     private Command autonomousCommand;
     private RobotContainer robotContainer;
     private Camera frontCamera;
+    private SwerveDrivePoseEstimator poseEstimator;
     /**
      * This method is run when the robot is first started up and should be used for any
      * initialization code.
@@ -50,13 +56,24 @@ public class Robot extends TimedRobot
     @Override
     public void robotInit()
     {
+        
+
+        Pathfinding.setPathfinder(new LocalADStarAK());
+
+        //Start of pose estimation stuff
+
+        var driveState = DrivetrainConstants.drivetrain.getState();
+        Rotation2d gyroAngle = driveState.Pose.getRotation();
+        SwerveModulePosition[] modulePositions = driveState.ModulePositions;
+        poseEstimator = new SwerveDrivePoseEstimator(DrivetrainConstants.drivetrain.getKinematics(), gyroAngle, modulePositions, new Pose2d(0, 0, gyroAngle));
 
         frontCamera = new Camera(
                 Subsystems.VISION,
                 Subsystems.VISION.getNetworkTable(),
                 ObjectType.APRIL_TAG_FRONT);
 
-        Pathfinding.setPathfinder(new LocalADStarAK());
+        //End of pose estimation stuff
+
         SignalLogger.setPath("/media/sda1/CTRElogs/");
         
         WebServer.start(5800, Filesystem.getDeployDirectory().getPath());
@@ -90,10 +107,12 @@ public class Robot extends TimedRobot
         
         var driveState = DrivetrainConstants.drivetrain.getState();
         double headingDeg = driveState.Pose.getRotation().getDegrees();
+        Rotation2d gyroAngle = driveState.Pose.getRotation();
         SmartDashboard.putNumber("robot rotation", headingDeg);
         double omega = Units.radiansToRotations(driveState.Speeds.omegaRadiansPerSecond);
         frontCamera.SetRobotOrientation(headingDeg, 0,0,0,0,0);
-        // SwerveDrivePoseEstimator.update(headingDeg, );
+        SwerveModulePosition[] modulePositions = driveState.ModulePositions;
+        poseEstimator.update(gyroAngle, modulePositions);
         PoseAllocate frontPose = frontCamera.getRobotPose();
         if  (  
                 frontPose != null 
