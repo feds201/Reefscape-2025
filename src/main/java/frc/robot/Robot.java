@@ -22,6 +22,9 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.net.WebServer;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
@@ -48,6 +51,9 @@ public class Robot extends TimedRobot
     private Command autonomousCommand;
     private RobotContainer robotContainer;
     private Camera frontCamera;
+
+    
+   
     /**
      * This method is run when the robot is first started up and should be used for any
      * initialization code.
@@ -90,6 +96,7 @@ public class Robot extends TimedRobot
     public void robotPeriodic()
     {
         CommandScheduler.getInstance().run();
+        // robotContainer.setupVisionImplants();
     }
 
     /** This method is called once each time the robot enters Disabled mode. */

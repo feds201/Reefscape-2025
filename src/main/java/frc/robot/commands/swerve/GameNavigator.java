@@ -13,12 +13,12 @@ import frc.robot.utils.PathPair;
 
 public class GameNavigator extends AutoPathFinder {
   private static final PathPair[] PATHS = {
-      new PathPair(0, 1, "1pathleft", "1pathright"),
-      new PathPair(2, 3, "3pathleft", "3pathright"),
-      new PathPair(4, 5, "5pathleft", "5pathright"),
-      new PathPair(6, 7, "7pathleft", "7pathright"),
-      new PathPair(8, 9, "9pathleft", "9pathright"),
-      new PathPair(10, 11, "11pathleft", "11pathright"),
+      // new PathPair(0, 1, "1pathleft", "1pathright"),
+      // new PathPair(2, 3, "3pathleft", "3pathright"),
+      // new PathPair(4, 5, "5pathleft", "5pathright"),
+      // new PathPair(6, 7, "7pathleft", "7pathright"),
+      // new PathPair(8, 9, "9pathleft", "9pathright"),
+      new PathPair(18, 18, "Pathto1Left", "Pathto1Right")
   };
 
   public static Command GoLeft(int TagID) {

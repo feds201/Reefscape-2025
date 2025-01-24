@@ -21,6 +21,9 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -44,6 +47,7 @@ import frc.robot.utils.DrivetrainConstants;
 import frc.robot.utils.ObjectType;
 import frc.robot.utils.PoseAllocate;
 import frc.robot.utils.RobotFramework;
+import frc.robot.utils.SafetyManager;
 import frc.robot.utils.SubsystemABS;
 import frc.robot.utils.Subsystems;
 import frc.robot.utils.Telemetry;
@@ -62,6 +66,12 @@ public class RobotContainer extends RobotFramework {
     private final Camera rearCamera;
     private final PathConstraints autoAlignConstraints;
     private final SwerveDrivePoseEstimator poseEstimator;
+
+     private final NetworkTableInstance inst = NetworkTableInstance.getDefault();
+
+    /* Robot swerve drive state */
+    private final NetworkTable driveStateTable = inst.getTable("PoseEstimation");
+    private final StructPublisher<Pose2d> estimatedPose = driveStateTable.getStructTopic("PoseEstimation", Pose2d.struct).publish();
 
     public RobotContainer() {
         double swerveSpeedMultiplier = 0.4;
@@ -113,7 +123,8 @@ public class RobotContainer extends RobotFramework {
         configureBindings();
 
 
-        // setupVisionImplants();
+        telemetry = new Telemetry(SafetyMap.kMaxSpeed);
+        DrivetrainConstants.drivetrain.registerTelemetry(telemetry::telemeterize);
 
     }
 
@@ -121,13 +132,14 @@ public class RobotContainer extends RobotFramework {
         var driveState = DrivetrainConstants.drivetrain.getState();
         double headingDeg = driveState.Pose.getRotation().getDegrees();
         Rotation2d gyroAngle = driveState.Pose.getRotation();
+        SmartDashboard.putNumber("robot rotation", headingDeg);
         double omega = Units.radiansToRotations(driveState.Speeds.omegaRadiansPerSecond);
         frontCamera.SetRobotOrientation(headingDeg, 0,0,0,0,0);
-        rearCamera.SetRobotOrientation(headingDeg, 0,0,0,0,0);
+        // rearCamera.SetRobotOrientation(headingDeg, 0,0,0,0,0);
         SwerveModulePosition[] modulePositions = driveState.ModulePositions;
         poseEstimator.update(gyroAngle, modulePositions);
         PoseAllocate frontPose = frontCamera.getRobotPose();
-        PoseAllocate rearPose = rearCamera.getRobotPose();
+        // PoseAllocate rearPose = rearCamera.getRobotPose();
 
         if  (
                 frontPose != null
@@ -135,15 +147,16 @@ public class RobotContainer extends RobotFramework {
                         && frontPose.getPoseEstimate().tagCount > 0
                         && Math.abs(omega) < 2) {
             DrivetrainConstants.drivetrain.addVisionMeasurement(frontPose.getPose(), frontPose.getTime());
+            
         }
-        if  (
-                rearPose != null
-                        && rearPose.getPose() != null
-                        && rearPose.getPoseEstimate().tagCount > 0
-                        && Math.abs(omega) < 2) {
-            DrivetrainConstants.drivetrain.addVisionMeasurement(rearPose.getPose(), rearPose.getTime());
-        }
-
+        // if  (
+        //         rearPose != null
+        //                 && rearPose.getPose() != null
+        //                 && rearPose.getPoseEstimate().tagCount > 0
+        //                 && Math.abs(omega) < 2) {
+        //     DrivetrainConstants.drivetrain.addVisionMeasurement(rearPose.getPose(), rearPose.getTime());
+        // }
+        estimatedPose.set(poseEstimator.getEstimatedPosition());
 
 
     }
@@ -153,14 +166,14 @@ public class RobotContainer extends RobotFramework {
                 .onTrue(DrivetrainConstants.drivetrain
                         .runOnce(() -> DrivetrainConstants.drivetrain.seedFieldCentric()));
 
-        driverController.b()
-                .onTrue(AutoPathFinder.GotoPath("Pathto1"));
+        // driverController.b()
+        //         .onTrue(AutoPathFinder.GotoPath("Pathto1"));
 
-        driverController.y()
-                .onTrue(AutoPathFinder.GotoPath("lineToRight"));
+        // driverController.y()
+        //         .onTrue(AutoPathFinder.GotoPath("lineToRight"));
 
-        // driverController.leftBumper()
-        //         .onTrue(GameNavigator.GoLeft(frontCamera.getLastseenAprilTag()));
+        driverController.leftBumper()
+                .onTrue(GameNavigator.GoLeft(frontCamera.GetAprilTag()));
 
         // driverController.rightBumper()
         //         .onTrue(GameNavigator.GoRight(frontCamera.getLastseenAprilTag()));

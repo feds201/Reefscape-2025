@@ -103,7 +103,7 @@ public class Camera extends VisionABC {
 		if (entry.exists()) {
 			return (int) entry.getDouble(0);
 		}
-		return lastseenAprilTag;
+		return -1;
 	}
 
 	@Override 
@@ -115,17 +115,19 @@ public class Camera extends VisionABC {
 		return lastseenAprilTag;
 	}
 
+
+	//This method has to be fixed
 	public PoseAllocate getRobotPose() {
-		LimelightHelpers.PoseEstimate pose = LimelightHelpers.getBotPoseEstimate(cameraName, "botpose_orb_wpiblue", true);
+		LimelightHelpers.PoseEstimate pose = LimelightHelpers.getBotPoseEstimate("limelight-seven", "botpose_orb_wpiblue", true);
 		if(pose!=null){
 			double time = pose.timestampSeconds;
 			return new PoseAllocate(pose, time);
 		}
 		return null;
 	}
-
+//This method has to be fixed
 	public void SetRobotOrientation(double headingDeg, double yawRate, double pitch, double pitchRate, double roll, double rollRate) {
-		LimelightHelpers.SetRobotOrientation(cameraName, headingDeg, yawRate, pitch, pitchRate, roll, rollRate);
+		LimelightHelpers.SetRobotOrientation("limelight-seven", headingDeg, yawRate, pitch, pitchRate, roll, rollRate);
 	}
 
 }
