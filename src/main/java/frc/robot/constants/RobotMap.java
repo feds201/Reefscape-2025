@@ -4,6 +4,7 @@ import com.pathplanner.lib.path.PathConstraints;
 
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.utils.CameraProperty;
 
 public class RobotMap {
 
@@ -73,32 +74,20 @@ public class RobotMap {
         
     }
 
-    // You can add more mappings for other subsystems like intake, shooter, etc.
+    // You can add more mappings for other subsystems like Arm, shooter, etc.
 
     public static class VisionMap {
         
-        public static final double ballRadius = 9; // cm ; 3.5 inches
-        public static final double targetHeight = 1.6; // m ; 38.7 inches
-        public static final double cameraHeight = .6; // m ; 16 inches
-        public static final double cameraAngle = 40; // degrees
 
 
         public static class CameraConfig {
             public static class BackCam {
-                public static final int CAMERA_HEIGHT = 480;
-                public static final int CAMERA_WIDTH = 640;
-                public static final double TARGET_HEIGHT = 0.0;
-                public static final double HORIZONTAL_FOV = 59.6;
-                public static final double VERTICAL_FOV = 45.7;
+                public static CameraProperty cameraProperty = new CameraProperty("Back Camera");
 
             }
         
             public static class FrontCam {
-                public static final int CAMERA_HEIGHT = 480;
-                public static final int CAMERA_WIDTH = 640;
-                public static final double TARGET_HEIGHT = 0.0;
-                public static final double HORIZONTAL_FOV = 59.6;
-                public static final double VERTICAL_FOV = 45.7;
+                public static CameraProperty cameraProperty = new CameraProperty("limelight-7");
             }
 
             public static double tx;

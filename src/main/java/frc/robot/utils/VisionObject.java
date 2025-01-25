@@ -104,15 +104,15 @@ public class VisionObject {
         return getAngle()[1];
     }
 
-    public double getDistance() {
-        double targetOffsetAngle_Vertical = y;
-        double limelightMountAngleDegrees = VisionMap.cameraAngle;
-        double limelightLensHeightMetres = VisionMap.cameraHeight;
-        double goalHeightMetres = VisionMap.targetHeight;
-        double angleToGoalDegrees = limelightMountAngleDegrees + targetOffsetAngle_Vertical;
-        double angleToGoalRadians = Math.toRadians(angleToGoalDegrees);
-        return (goalHeightMetres - limelightLensHeightMetres) / Math.tan(angleToGoalRadians);
-    }
+    // public double getDistance() {
+    //     double targetOffsetAngle_Vertical = y;
+    //     double limelightMountAngleDegrees = VisionMap.cameraAngle;
+    //     double limelightLensHeightMetres = VisionMap.cameraHeight;
+    //     double goalHeightMetres = VisionMap.targetHeight;
+    //     double angleToGoalDegrees = limelightMountAngleDegrees + targetOffsetAngle_Vertical;
+    //     double angleToGoalRadians = Math.toRadians(angleToGoalDegrees);
+    //     return (goalHeightMetres - limelightLensHeightMetres) / Math.tan(angleToGoalRadians);
+    // }
 
     public void logVisionData() {
         System.out.println("Vision Data - X: " + x + ", Y: " + y + ", Area: " + area + ", Type: " + type);

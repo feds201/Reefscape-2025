@@ -39,6 +39,8 @@ import frc.robot.constants.RobotMap.SafetyMap;
 import frc.robot.constants.RobotMap.SensorMap;
 import frc.robot.constants.RobotMap.UsbMap;
 import frc.robot.constants.RobotMap.SafetyMap.AutonConstraints;
+import frc.robot.constants.RobotMap.VisionMap.CameraConfig;
+import frc.robot.services.PoseEstimator;
 import frc.robot.subsystems.swerve.CommandSwerveDrivetrain;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
 import frc.robot.subsystems.vision.camera.Camera;
@@ -66,6 +68,7 @@ public class RobotContainer extends RobotFramework {
     private final Camera rearCamera;
     private final PathConstraints autoAlignConstraints;
     private final SwerveDrivePoseEstimator poseEstimator;
+    public final PoseEstimator poseEstimator2;
 
      private final NetworkTableInstance inst = NetworkTableInstance.getDefault();
 
@@ -74,7 +77,6 @@ public class RobotContainer extends RobotFramework {
     private final StructPublisher<Pose2d> estimatedPose = driveStateTable.getStructTopic("PoseEstimation", Pose2d.struct).publish();
 
     public RobotContainer() {
-        double swerveSpeedMultiplier = 0.4;
         driverController = UsbMap.driverController;
         operatorController = UsbMap.operatorController;
         autoAlignConstraints = AutonConstraints.kPathConstraints;
@@ -84,23 +86,17 @@ public class RobotContainer extends RobotFramework {
         SwerveModulePosition[] modulePositions = driveState.ModulePositions;
         poseEstimator = new SwerveDrivePoseEstimator(DrivetrainConstants.drivetrain.getKinematics(), gyroAngle, modulePositions, new Pose2d(0, 0, gyroAngle));
 
+        poseEstimator2 = new PoseEstimator(DrivetrainConstants.drivetrain);
+        
         swerveSubsystem = new SwerveSubsystem(
                 Subsystems.SWERVE_DRIVE,
                 Subsystems.SWERVE_DRIVE.getNetworkTable(),
                 SensorMap.GYRO_PORT,
                 driverController);
 
-        frontCamera = new Camera(
-                Subsystems.VISION,
-                Subsystems.VISION.getNetworkTable(),
-                ObjectType.APRIL_TAG_FRONT,
-                "limelight-seven");
+        frontCamera = new Camera(true, CameraConfig.FrontCam.cameraProperty);
 
-        rearCamera = new Camera(
-                Subsystems.VISION,
-                Subsystems.VISION.getNetworkTable(),
-                ObjectType.APRIL_TAG_BACK,
-                "limelight-namegoeshere");
+        rearCamera = new Camera(true, CameraConfig.BackCam.cameraProperty);
 
         teleOpChooser = new SendableChooser<>();
         setupDrivetrain();
@@ -130,38 +126,38 @@ public class RobotContainer extends RobotFramework {
 
     }
 
-    public void setupVisionImplants() {
-        var driveState = DrivetrainConstants.drivetrain.getState();
-        double headingDeg = driveState.Pose.getRotation().getDegrees();
-        Rotation2d gyroAngle = driveState.Pose.getRotation();
-        SmartDashboard.putNumber("robot rotation", headingDeg);
-        double omega = Units.radiansToRotations(driveState.Speeds.omegaRadiansPerSecond);
-        frontCamera.SetRobotOrientation(headingDeg, 0,0,0,0,0);
-        // rearCamera.SetRobotOrientation(headingDeg, 0,0,0,0,0);
-        SwerveModulePosition[] modulePositions = driveState.ModulePositions;
-        poseEstimator.update(gyroAngle, modulePositions);
-        PoseAllocate frontPose = frontCamera.getRobotPose();
-        // PoseAllocate rearPose = rearCamera.getRobotPose();
+    // public void setupVisionImplants() {
+    //     var driveState = DrivetrainConstants.drivetrain.getState();
+    //     double headingDeg = driveState.Pose.getRotation().getDegrees();
+    //     Rotation2d gyroAngle = driveState.Pose.getRotation();
+    //     SmartDashboard.putNumber("robot rotation", headingDeg);
+    //     double omega = Units.radiansToRotations(driveState.Speeds.omegaRadiansPerSecond);
+    //     frontCamera.SetRobotOrientation(headingDeg, 0,0,0,0,0);
+    //     // rearCamera.SetRobotOrientation(headingDeg, 0,0,0,0,0);
+    //     SwerveModulePosition[] modulePositions = driveState.ModulePositions;
+    //     poseEstimator.update(gyroAngle, modulePositions);
+    //     PoseAllocate frontPose = frontCamera.getRobotPose();
+    //     // PoseAllocate rearPose = rearCamera.getRobotPose();
 
-        if  (
-                frontPose != null
-                        &&    frontPose.getPose() != null
-                        && frontPose.getPoseEstimate().tagCount > 0
-                        && Math.abs(omega) < 2) {
-            DrivetrainConstants.drivetrain.addVisionMeasurement(frontPose.getPose(), frontPose.getTime());
+    //     if  (
+    //             frontPose != null
+    //                     &&    frontPose.getPose() != null
+    //                     && frontPose.getPoseEstimate().tagCount > 0
+    //                     && Math.abs(omega) < 2) {
+    //         DrivetrainConstants.drivetrain.addVisionMeasurement(frontPose.getPose(), frontPose.getTime());
             
-        }
-        // if  (
-        //         rearPose != null
-        //                 && rearPose.getPose() != null
-        //                 && rearPose.getPoseEstimate().tagCount > 0
-        //                 && Math.abs(omega) < 2) {
-        //     DrivetrainConstants.drivetrain.addVisionMeasurement(rearPose.getPose(), rearPose.getTime());
-        // }
-        estimatedPose.set(poseEstimator.getEstimatedPosition());
+    //     }
+    //     // if  (
+    //     //         rearPose != null
+    //     //                 && rearPose.getPose() != null
+    //     //                 && rearPose.getPoseEstimate().tagCount > 0
+    //     //                 && Math.abs(omega) < 2) {
+    //     //     DrivetrainConstants.drivetrain.addVisionMeasurement(rearPose.getPose(), rearPose.getTime());
+    //     // }
+    //     estimatedPose.set(poseEstimator.getEstimatedPosition());
 
 
-    }
+    // }
 
     private void configureBindings() {
         driverController.start()
