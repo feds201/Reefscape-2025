@@ -6,10 +6,13 @@ package frc.robot.commands.swerve;
 
 
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import frc.robot.subsystems.vision.camera.Camera;
 import frc.robot.utils.AutoPathFinder;
 import frc.robot.utils.PathPair;
+import frc.robot.utils.VisionABC;
 
 public class GameNavigator extends AutoPathFinder {
   private static final PathPair[] PATHS = {
@@ -30,39 +33,41 @@ public class GameNavigator extends AutoPathFinder {
       new PathPair(11, 20, "16alignLeft", "16alignRight")
   };
 
-  public static Command GoLeft(int TagID) {
-    if (TagID == -1) {
-      return new ParallelCommandGroup();
+  public static Command GoLeft(Camera camera) {
+    SmartDashboard.putNumber("TagID", camera.getLastseenAprilTag());
+    if (camera.getLastseenAprilTag() == -1) {
+      return new ParallelCommandGroup().withTimeout(2);
       //return null;
       /* returning null causes an error, -1 acts as null in this case. */
     }
 
     for (PathPair path : PATHS) {
-      if (path.tagToPath(TagID)) {
+      if (path.tagToPath(camera.getLastseenAprilTag() )) {
 
         return new ParallelCommandGroup(GotoPath(path.getLeftPath()));
       }
 
     }
-    return new ParallelCommandGroup();
+    return new ParallelCommandGroup().withTimeout(2);
     //Do nothing (in case something went wrong when traversing the PathPair list)
   }
 
-  public static Command GoRight(int TagID) {
-    if (TagID == -1) {
-      return new ParallelCommandGroup();
+  public static Command GoRight(Camera camera) {
+    SmartDashboard.putNumber("TagID", camera.getLastseenAprilTag() );
+    if (camera.getLastseenAprilTag()  == -1) {
+      return new ParallelCommandGroup().withTimeout(2);
         //return null;
       /* returning null causes an error, -1 acts as null in this case. */
     }
 
     for (PathPair path : PATHS) {
-      if (path.tagToPath(TagID)) {
+      if (path.tagToPath(camera.getLastseenAprilTag() )) {
 
         return new ParallelCommandGroup(GotoPath(path.getRightPath()));
       }
 
     }
-    return new ParallelCommandGroup();
+    return new ParallelCommandGroup().withTimeout(2);
     //Do nothing (in case something went wrong when traversing the PathPair list)
   }
 }

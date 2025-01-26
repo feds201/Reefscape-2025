@@ -1,12 +1,15 @@
-//LimelightHelpers v1.10 (REQUIRES LLOS 2024.9.1 OR LATER)
 
-package frc.robot.utils;
+//LimelightHelpers v1.11 (REQUIRES LLOS 2025.0 OR LATER)
+
+package frc.robot;
 
 import edu.wpi.first.networktables.DoubleArrayEntry;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.TimestampedDoubleArray;
+import frc.robot.LimelightHelpers.LimelightResults;
+import frc.robot.LimelightHelpers.PoseEstimate;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -572,6 +575,40 @@ public class LimelightHelpers {
 
     }
 
+    /**
+     * Encapsulates the state of an internal Limelight IMU.
+     */
+    public static class IMUData {
+        public double robotYaw = 0.0;
+        public double Roll = 0.0;
+        public double Pitch = 0.0;
+        public double Yaw = 0.0;
+        public double gyroX = 0.0;
+        public double gyroY = 0.0;
+        public double gyroZ = 0.0;
+        public double accelX = 0.0;
+        public double accelY = 0.0;
+        public double accelZ = 0.0;
+
+        public IMUData() {}
+
+        public IMUData(double[] imuData) {
+            if (imuData != null && imuData.length >= 10) {
+                this.robotYaw = imuData[0];
+                this.Roll = imuData[1];
+                this.Pitch = imuData[2];
+                this.Yaw = imuData[3];
+                this.gyroX = imuData[4];
+                this.gyroY = imuData[5];
+                this.gyroZ = imuData[6];
+                this.accelX = imuData[7];
+                this.accelY = imuData[8];
+                this.accelZ = imuData[9];
+            }
+        }
+    }
+
+
     private static ObjectMapper mapper;
 
     /**
@@ -667,7 +704,7 @@ public class LimelightHelpers {
         return inData[position];
     }
 
-    public static PoseEstimate getBotPoseEstimate(String limelightName, String entryName, boolean isMegaTag2) {
+    public static PoseEstimate getBotPoseEstimate(String limelightName , String entryName , boolean isMegaTag2) {
         DoubleArrayEntry poseEntry = LimelightHelpers.getLimelightDoubleArrayEntry(limelightName, entryName);
 
         TimestampedDoubleArray tsValue = poseEntry.getAtomic();
@@ -937,7 +974,7 @@ public class LimelightHelpers {
 
     /**
      * Gets the target area as a percentage of the image (0-100%).
-     * @param limelightName Name of the Limelight camera ("" for default)
+     * @param limelightName Name of the Limelight camera ("" for default) 
      * @return Target area percentage (0-100)
      */
     public static double getTA(String limelightName) {
@@ -947,7 +984,7 @@ public class LimelightHelpers {
     /**
      * T2D is an array that contains several targeting metrcis
      * @param limelightName Name of the Limelight camera
-     * @return Array containing  [targetValid, targetCount, targetLatency, captureLatency, tx, ty, txnc, tync, ta, tid, targetClassIndexDetector,
+     * @return Array containing  [targetValid, targetCount, targetLatency, captureLatency, tx, ty, txnc, tync, ta, tid, targetClassIndexDetector, 
      * targetClassIndexClassifier, targetLongSidePixels, targetShortSidePixels, targetHorizontalExtentPixels, targetVerticalExtentPixels, targetSkewDegrees]
      */
     public static double[] getT2DArray(String limelightName) {
@@ -1296,7 +1333,21 @@ public class LimelightHelpers {
 
     }
 
-
+    /**
+     * Gets the current IMU data from NetworkTables.
+     * IMU data is formatted as [robotYaw, Roll, Pitch, Yaw, gyroX, gyroY, gyroZ, accelX, accelY, accelZ].
+     * Returns all zeros if data is invalid or unavailable.
+     *
+     * @param limelightName Name/identifier of the Limelight
+     * @return IMUData object containing all current IMU data
+     */
+    public static IMUData getIMUData(String limelightName) {
+        double[] imuData = getLimelightNTDoubleArray(limelightName, "imu");
+        if (imuData == null || imuData.length < 10) {
+            return new IMUData();  // Returns object with all zeros
+        }
+        return new IMUData(imuData);
+    }
 
     /////
     /////
@@ -1389,7 +1440,7 @@ public class LimelightHelpers {
      * @param limelightName Name/identifier of the Limelight
      * @param yaw Robot yaw in degrees. 0 = robot facing red alliance wall in FRC
      * @param yawRate (Unnecessary) Angular velocity of robot yaw in degrees per second
-     * @param pitch (Unnecessary) Robot pitch in degrees
+     * @param pitch (Unnecessary) Robot pitch in degrees 
      * @param pitchRate (Unnecessary) Angular velocity of robot pitch in degrees per second
      * @param roll (Unnecessary) Robot roll in degrees
      * @param rollRate (Unnecessary) Angular velocity of robot roll in degrees per second
@@ -1425,7 +1476,17 @@ public class LimelightHelpers {
     }
 
     /**
-     * Sets the 3D point-of-interest offset for the current fiducial pipeline.
+     * Configures the IMU mode for MegaTag2 Localization
+     *
+     * @param limelightName Name/identifier of the Limelight
+     * @param mode IMU mode.
+     */
+    public static void SetIMUMode(String limelightName, int mode) {
+        setLimelightNTDouble(limelightName, "imumode_set", mode);
+    }
+
+    /**
+     * Sets the 3D point-of-interest offset for the current fiducial pipeline. 
      * https://docs.limelightvision.io/docs/docs-limelight/pipeline-apriltag/apriltag-3d#point-of-interest-tracking
      *
      * @param limelightName Name/identifier of the Limelight

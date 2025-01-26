@@ -1,7 +1,9 @@
 package frc.robot.subsystems.vision.camera;
 
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.LimelightHelpers;
 import frc.robot.utils.*;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.networktables.NetworkTableEntry;
@@ -11,18 +13,21 @@ public class Camera extends VisionABC {
 	public int lastseenAprilTag;
 	public GenericEntry lastseentag_sim;
 	
-	// public Camera(Subsystems vision, String networkTable, ObjectType objectType) {
-	// 	super(vision, networkTable);
-	// 	lastseenAprilTag = -1;
-	// 	object = objectType;
-	// 	cameraName = objectType.getName();
-	// 	lastseentag_sim =  tab.add("AprilTag"+ objectType.getName(), -1).getEntry();
-	// }
+	 public Camera(Subsystems vision, String networkTable, ObjectType objectType) {
+	 	super(vision, networkTable);
+	 	lastseenAprilTag = -1;
+	 	object = objectType;
+	 	cameraName = objectType.getName();
+	 	lastseentag_sim =  tab.add("AprilTag"+ objectType.getName(), -1).getEntry();
+	 }
 
-	public Camera(Boolean isOdometry, CameraProperty cameraProperty) {
+	public Camera(Boolean isOdometry, CameraProperty cameraProperty, ObjectType objectype) {
 		super(Subsystems.VISION, Subsystems.VISION.getNetworkTable());
-		cameraName = cameraProperty.getCameraName();
-		lastseenAprilTag = -1;		
+		object = objectype;
+        cameraName = cameraProperty.getCameraName();
+		lastseenAprilTag = -1;
+		lastseentag_sim =  tab.add("AprilTag"+ objectype.getName(), -1).getEntry();
+        tab.addNumber(cameraName + " Last Seen Tag", () -> lastseenAprilTag);
 	}
 
 	@Override
@@ -66,7 +71,7 @@ public class Camera extends VisionABC {
 
 	@Override
 	public void simulationPeriodic() {
-		lastseenAprilTag = (int)  lastseentag_sim.getDouble(-1);
+		lastseenAprilTag = ( int ) lastseentag_sim.getInteger(-1);
 	}
 
 	@Override
@@ -106,7 +111,7 @@ public class Camera extends VisionABC {
 		
 		NetworkTableEntry entry = LimelightHelpers.getLimelightNTTableEntry(cameraName, "tid");
 		if (entry.exists()) {
-			return (int) entry.getDouble(0);
+			return (int) entry.getDouble(-1);
 		}
 		return -1;
 	}
@@ -117,13 +122,14 @@ public class Camera extends VisionABC {
 	}
 
 	public int getLastseenAprilTag() {
+		SmartDashboard.putNumber("Last Seen April Tag", lastseenAprilTag);
 		return lastseenAprilTag;
 	}
 
 
 	
 	public PoseAllocate getRobotPose() {
-		LimelightHelpers.PoseEstimate pose = LimelightHelpers.getBotPoseEstimate(cameraName, "botpose_orb_wpiblue", true);
+		LimelightHelpers.PoseEstimate pose = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(cameraName);
 		if(pose!=null){
 			double time = pose.timestampSeconds;
 			return new PoseAllocate(pose, time);

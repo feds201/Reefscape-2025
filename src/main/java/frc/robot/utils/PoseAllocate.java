@@ -2,6 +2,7 @@ package frc.robot.utils;
 
 import com.ctre.phoenix6.Utils;
 import edu.wpi.first.math.geometry.Pose2d;
+import frc.robot.LimelightHelpers;
 
 public class PoseAllocate {
     private LimelightHelpers.PoseEstimate pose;
