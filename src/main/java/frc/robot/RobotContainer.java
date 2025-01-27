@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.swerve.DriveForwardCommand;
 import frc.robot.commands.swerve.GameNavigator;
+import frc.robot.commands.swerve.direction;
 import frc.robot.constants.RobotMap.SafetyMap;
 import frc.robot.constants.RobotMap.SensorMap;
 import frc.robot.constants.RobotMap.UsbMap;
@@ -139,16 +140,15 @@ public class RobotContainer extends RobotFramework {
                 .onTrue(DrivetrainConstants.drivetrain
                         .runOnce(() -> DrivetrainConstants.drivetrain.seedFieldCentric()));
 
-         driverController.b().onTrue(AutoPathFinder.GotoPath("56alignRight"));
-
+         driverController.b().onTrue(AutoPathFinder.GotoPath(   "56alignRight"));
+ 
          driverController.y().onTrue(AutoPathFinder.GotoPath("56alignRight"));
 
         driverController.leftBumper()
-                .whileFalse(GameNavigator.GoLeft(frontCamera));
+                .onTrue(GameNavigator.GoLeft(frontCamera));
 
         driverController.rightBumper()
-                .whileTrue(GameNavigator.GoRight(frontCamera))
-                .whileFalse(GameNavigator.GoLeft(frontCamera));
+                .whileTrue(new direction(frontCamera));
     }
 
     private void setupNamedCommands() {
