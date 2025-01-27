@@ -43,6 +43,7 @@ import frc.robot.utils.AutoPathFinder;
 import frc.robot.utils.DrivetrainConstants;
 import frc.robot.utils.ObjectType;
 import frc.robot.utils.PoseAllocate;
+import frc.robot.utils.PoseEstimator;
 import frc.robot.utils.RobotFramework;
 import frc.robot.utils.SubsystemABS;
 import frc.robot.utils.Subsystems;
@@ -61,7 +62,7 @@ public class RobotContainer extends RobotFramework {
     private Camera frontCamera;
     private Camera rearCamera;
     private PathConstraints autoAlignConstraints;
-    private SwerveDrivePoseEstimator poseEstimator;
+    private PoseEstimator poseEstimator;
 
     public RobotContainer() {
         double swerveSpeedMultiplier = 0.4;
@@ -72,8 +73,7 @@ public class RobotContainer extends RobotFramework {
         SwerveDriveState driveState = DrivetrainConstants.drivetrain.getState();
         Rotation2d gyroAngle = driveState.Pose.getRotation();
         SwerveModulePosition[] modulePositions = driveState.ModulePositions;
-        poseEstimator = new SwerveDrivePoseEstimator(DrivetrainConstants.drivetrain.getKinematics(), gyroAngle, modulePositions, new Pose2d(0, 0, gyroAngle));
-
+        poseEstimator = new PoseEstimator(DrivetrainConstants.drivetrain);
         swerveSubsystem = new SwerveSubsystem(
                 Subsystems.SWERVE_DRIVE,
                 Subsystems.SWERVE_DRIVE.getNetworkTable(),
@@ -125,7 +125,8 @@ public class RobotContainer extends RobotFramework {
         frontCamera.SetRobotOrientation(headingDeg, 0,0,0,0,0);
         rearCamera.SetRobotOrientation(headingDeg, 0,0,0,0,0);
         SwerveModulePosition[] modulePositions = driveState.ModulePositions;
-        poseEstimator.update(gyroAngle, modulePositions);
+        poseEstimator.updatePose(gyroAngle, modulePositions);
+        
         PoseAllocate frontPose = frontCamera.getRobotPose();
         PoseAllocate rearPose = rearCamera.getRobotPose();
 
