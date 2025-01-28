@@ -117,6 +117,7 @@ public class RobotContainer extends RobotFramework {
         setupNamedCommands();
         setupPaths();
         configureBindings();
+        swerveSubsystem.printcontroller();
 
 
         // setupVisionImplants();
