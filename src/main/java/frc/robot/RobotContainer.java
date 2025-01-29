@@ -63,7 +63,9 @@ public class RobotContainer extends RobotFramework {
     private final SendableChooser<Command> teleOpChooser;
     private final SendableChooser<Command> autonChooser;
     private final Camera frontCamera;
-    private final Camera rearCamera;
+    private final Camera rearRightCamera;
+    private final Camera rearLeftCamera;
+    // private final Camera rearCamera;
     private final PathConstraints autoAlignConstraints;
     private final SwerveDrivePoseEstimator poseEstimator;
 
@@ -96,11 +98,23 @@ public class RobotContainer extends RobotFramework {
                 ObjectType.APRIL_TAG_FRONT,
                 "limelight-seven");
 
-        rearCamera = new Camera(
-                Subsystems.VISION,
-                Subsystems.VISION.getNetworkTable(),
-                ObjectType.APRIL_TAG_BACK,
-                "limelight-namegoeshere");
+        rearRightCamera = new Camera(
+                    Subsystems.VISION,
+                    Subsystems.VISION.getNetworkTable(),
+                    ObjectType.APRIL_TAG_BACK,
+                    "limelight-one");
+
+        rearLeftCamera = new Camera(
+                        Subsystems.VISION,
+                        Subsystems.VISION.getNetworkTable(),
+                        ObjectType.APRIL_TAG_LEFT,
+                        "limelight-six");
+
+        // rearCamera = new Camera(
+        //         Subsystems.VISION,
+        //         Subsystems.VISION.getNetworkTable(),
+        //         ObjectType.APRIL_TAG_BACK,
+        //         "limelight-namegoeshere");
 
         teleOpChooser = new SendableChooser<>();
         setupDrivetrain();
@@ -137,20 +151,42 @@ public class RobotContainer extends RobotFramework {
         SmartDashboard.putNumber("robot rotation", headingDeg);
         double omega = Units.radiansToRotations(driveState.Speeds.omegaRadiansPerSecond);
         frontCamera.SetRobotOrientation(headingDeg, 0,0,0,0,0);
+        rearRightCamera.SetRobotOrientation(headingDeg, 0,0,0,0,0);
+        rearLeftCamera.SetRobotOrientation(headingDeg, 0,0,0,0,0);
         // rearCamera.SetRobotOrientation(headingDeg, 0,0,0,0,0);
         SwerveModulePosition[] modulePositions = driveState.ModulePositions;
         poseEstimator.update(gyroAngle, modulePositions);
         PoseAllocate frontPose = frontCamera.getRobotPose();
+        PoseAllocate rearRightPose = rearRightCamera.getRobotPose();
+        PoseAllocate rearLeftPose = rearLeftCamera.getRobotPose();
         // PoseAllocate rearPose = rearCamera.getRobotPose();
 
-        if  (
-                frontPose != null
-                        &&    frontPose.getPose() != null
-                        && frontPose.getPoseEstimate().tagCount > 0
-                        && Math.abs(omega) < 2) {
-            DrivetrainConstants.drivetrain.addVisionMeasurement(frontPose.getPose(), frontPose.getTime());
+        // if  (
+        //         frontPose != null
+        //                 &&    frontPose.getPose() != null
+        //                 && frontPose.getPoseEstimate().tagCount > 0
+        //                 && Math.abs(omega) < 2) {
+        //     DrivetrainConstants.drivetrain.addVisionMeasurement(frontPose.getPose(), frontPose.getTime());
             
-        }
+        // }
+
+        if  (
+            rearLeftPose != null
+                    &&    rearLeftPose.getPose() != null
+                    && rearLeftPose.getPoseEstimate().tagCount > 0
+                    && Math.abs(omega) < 2) {
+        DrivetrainConstants.drivetrain.addVisionMeasurement(rearLeftPose.getPose(), rearLeftPose.getTime());
+        
+    }
+
+    if  (
+        rearRightPose != null
+                &&    rearRightPose.getPose() != null
+                && rearRightPose.getPoseEstimate().tagCount > 0
+                && Math.abs(omega) < 2) {
+    DrivetrainConstants.drivetrain.addVisionMeasurement(rearRightPose.getPose(), rearRightPose.getTime());
+    
+}
         // if  (
         //         rearPose != null
         //                 && rearPose.getPose() != null
@@ -214,7 +250,8 @@ public class RobotContainer extends RobotFramework {
         return new SubsystemABS[] {
                 swerveSubsystem,
                 frontCamera,
-                rearCamera
+                rearLeftCamera,
+                rearRightCamera
 
         };
     }
