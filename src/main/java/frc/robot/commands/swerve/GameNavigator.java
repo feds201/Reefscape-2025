@@ -22,15 +22,16 @@ public class GameNavigator extends AutoPathFinder {
       // new PathPair(4, 15, "thispathwasntmadeyetdontrunthis", "thispathwasntmadeyetdontrunthis"),
       // new PathPair(5, 14, "thispathwasntmadeyetdontrunthis", "thispathwasntmadeyetdontrunthis"),
       //Reef Paths
-      new PathPair(6, 19, "66alignRight", "66alignRight"),
-      new PathPair(7, 18, "56alignRight", "56alignRight"),
+      new PathPair(6, 19, "66alignLeft", "66alignRight"),
+      new PathPair(7, 18, "56alignLeft", "56alignRight"),
       new PathPair(8, 17, "46alignLeft", "46alignRight"),
       new PathPair(9, 22, "36alignLeft", "36alignRight"),
       new PathPair(10, 21, "26alignLeft", "26alignRight"),
       new PathPair(11, 20, "16alignLeft", "16alignRight")
   };
 
-  public static Command GoLeft(int TagID) {
+
+  public Command GoLeft(int TagID) {
     if (TagID == -1) {
       return new ParallelCommandGroup();
       //return null;
@@ -48,7 +49,8 @@ public class GameNavigator extends AutoPathFinder {
     //Do nothing (in case something went wrong when traversing the PathPair list)
   }
 
-  public static Command GoRight(int TagID) {
+  public Command GoRight(int TagID) {
+    System.out.println(TagID);
     if (TagID == -1) {
       return new ParallelCommandGroup();
         //return null;

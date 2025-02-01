@@ -32,6 +32,8 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.commands.auton.pathfindToReef;
+import frc.robot.commands.auton.pathfindToReef.reefPole;
 import frc.robot.commands.swerve.DriveForwardCommand;
 import frc.robot.commands.swerve.GameNavigator;
 import frc.robot.constants.*;
@@ -44,6 +46,7 @@ import frc.robot.subsystems.swerve.SwerveSubsystem;
 import frc.robot.subsystems.vision.camera.Camera;
 import frc.robot.utils.AutoPathFinder;
 import frc.robot.utils.DrivetrainConstants;
+import frc.robot.utils.LimelightHelpers;
 import frc.robot.utils.ObjectType;
 import frc.robot.utils.PoseAllocate;
 import frc.robot.utils.RobotFramework;
@@ -65,6 +68,7 @@ public class RobotContainer extends RobotFramework {
     private final Camera frontCamera;
     private final Camera rearRightCamera;
     private final Camera rearLeftCamera;
+    
     // private final Camera rearCamera;
     private final PathConstraints autoAlignConstraints;
     private final SwerveDrivePoseEstimator poseEstimator;
@@ -102,13 +106,13 @@ public class RobotContainer extends RobotFramework {
                     Subsystems.VISION,
                     Subsystems.VISION.getNetworkTable(),
                     ObjectType.APRIL_TAG_BACK,
-                    "limelight-one");
+                    "limelight-five");
 
         rearLeftCamera = new Camera(
                         Subsystems.VISION,
                         Subsystems.VISION.getNetworkTable(),
                         ObjectType.APRIL_TAG_LEFT,
-                        "limelight-six");
+                        "limelight-three");
 
         // rearCamera = new Camera(
         //         Subsystems.VISION,
@@ -211,13 +215,12 @@ public class RobotContainer extends RobotFramework {
         //         .onTrue(AutoPathFinder.GotoPath("lineToRight"));
 
         driverController.leftBumper()
-                .onTrue(GameNavigator.GoLeft(frontCamera.GetAprilTag()));
+                .onTrue(new ParallelCommandGroup( new pathfindToReef(reefPole.LEFT, DrivetrainConstants.drivetrain, frontCamera.GetAprilTag())));
+
+       
 
         driverController.rightBumper()
-                .onTrue(GameNavigator.GoRight(frontCamera.GetAprilTag()));
-
-        // driverController.rightBumper()
-        //         .onTrue(GameNavigator.GoRight(frontCamera.getLastseenAprilTag()));
+                .onTrue(new pathfindToReef(reefPole.RIGHT, DrivetrainConstants.drivetrain, frontCamera.GetAprilTag()));
 
     }
 
