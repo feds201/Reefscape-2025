@@ -215,12 +215,12 @@ public class RobotContainer extends RobotFramework {
         //         .onTrue(AutoPathFinder.GotoPath("lineToRight"));
 
         driverController.leftBumper()
-                .onTrue(new ParallelCommandGroup( new pathfindToReef(reefPole.LEFT, DrivetrainConstants.drivetrain, frontCamera.GetAprilTag())));
+                .onTrue( new pathfindToReef(reefPole.LEFT, DrivetrainConstants.drivetrain, frontCamera));
 
        
 
         driverController.rightBumper()
-                .onTrue(new pathfindToReef(reefPole.RIGHT, DrivetrainConstants.drivetrain, frontCamera.GetAprilTag()));
+                .onTrue(new pathfindToReef(reefPole.RIGHT, DrivetrainConstants.drivetrain, frontCamera));
 
     }
 

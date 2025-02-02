@@ -79,7 +79,7 @@ public class Robot extends TimedRobot
     public void robotPeriodic()
     {
         CommandScheduler.getInstance().run();
-        // robotContainer.setupVisionImplants();
+        robotContainer.setupVisionImplants();
       
        
     }

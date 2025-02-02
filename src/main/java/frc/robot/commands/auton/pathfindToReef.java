@@ -7,9 +7,11 @@ package frc.robot.commands.auton;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathPlannerPath;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.constants.RobotMap.SafetyMap.AutonConstraints;
 import frc.robot.subsystems.swerve.CommandSwerveDrivetrain;
+import frc.robot.subsystems.vision.camera.Camera;
 import frc.robot.utils.AutoPathFinder;
 import frc.robot.utils.PathPair;
 
@@ -19,6 +21,7 @@ public class pathfindToReef extends Command {
     LEFT, RIGHT
   }
   private reefPole pole;
+  private Camera limelight;
   private int tagId;
   private boolean commandFinished;
   private String pathName;
@@ -47,21 +50,22 @@ public class pathfindToReef extends Command {
       new PathPair(11, 20, "16alignLeft", "16alignRight")
   };
 
-  /** Creates a new pathfindToReef. */
-  public pathfindToReef(reefPole pole, CommandSwerveDrivetrain swerve, int tagId) {
+
+  public pathfindToReef(reefPole pole, CommandSwerveDrivetrain swerve, Camera camera) {
     this.pole = pole;
-    this.tagId = tagId;
+    limelight = camera;
 
     addRequirements(swerve);
-    // Use addRequirements() here to declare subsystem dependencies.
+    
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    tagId = limelight.GetAprilTag();
     if (tagId == -1) {
       commandFinished = true;
-    }
+    } else {
 
     switch (pole) {
       case LEFT:
@@ -81,9 +85,12 @@ public class pathfindToReef extends Command {
 
     }
 
-    pathToReefPole = AutoPathFinder.loadPath(pathName);
+  
+      pathToReefPole = AutoPathFinder.loadPath(pathName);
     reefPathCommand = AutoBuilder.pathfindThenFollowPath(pathToReefPole, AutonConstraints.kPathConstraints);
     reefPathCommand.schedule();
+   
+  }
   }
 
  

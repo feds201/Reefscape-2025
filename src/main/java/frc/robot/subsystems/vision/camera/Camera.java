@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.utils.*;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
 public class Camera extends VisionABC {
@@ -103,6 +104,7 @@ public class Camera extends VisionABC {
 		
 		NetworkTableEntry entry = LimelightHelpers.getLimelightNTTableEntry(limelightName, "tid");
 		if (entry.exists()) {
+			SmartDashboard.putNumber("leftBumperTag", entry.getDouble(0));
 			return (int) entry.getDouble(0);
 		}
 		return -1;
