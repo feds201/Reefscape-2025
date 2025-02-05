@@ -65,6 +65,10 @@ public class RobotMap {
         public static final int ELEVATOR_MOTOR = 52;
         public static final int ELEVATOR_MOTOR2 = 54;
         public static final int ELEVATOR_SPEED = 0;
+        public static final int EVEVATOR_ENCODER = 53;
+        public static final double ELEVATOR_P = 0;
+        public static final double ELEVATOR_I = 0;
+        public static final double ELEVATOR_D = 0;
     }
 
     // Additional motor controllers or sensors could be added here

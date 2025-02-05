@@ -29,7 +29,6 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.commands.Elevator.GoUpCommand;
 import frc.robot.commands.swerve.DriveForwardCommand;
 import frc.robot.commands.swerve.GameNavigator;
 import frc.robot.constants.*;
@@ -205,8 +204,8 @@ public class RobotContainer extends RobotFramework {
                 .withProperties(Map.of("position", "0, 1"));
     }
 
-    public void setupElevator() {
-        commandChooser.addOption("GoingUP", new GoUpCommand(elevator, 0.1, 1.0));
+    public void setupElevator(){
+        // commandChooser.addOption("GoingUP", new GoUpCommand(elevator, 0.1, 1.0));
 
         Shuffleboard.getTab(Subsystems.SWERVE_DRIVE.getNetworkTable()).add("Command Chooser", commandChooser)
                 .withSize(2, 1)
