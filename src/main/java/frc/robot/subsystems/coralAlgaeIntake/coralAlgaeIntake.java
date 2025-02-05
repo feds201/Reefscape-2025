@@ -1,5 +1,5 @@
 
-package frc.robot.subsystems.intake;
+package frc.robot.subsystems.intake;b
 
 import com.ctre.phoenix6.hardware.CANrange;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -18,9 +18,14 @@ public class AlgaeCoralIntake extends SubsystemABS {
   private final int algaeIntakeSensorCanId = 2;
   private final int coralIntakeSensorCanId = 3;
 
+  private int kP = 2;
+  private int kI = 3;
+  private int kD = 4;
+
   // constructor
 
   public AlgaeCoralIntake() {
+    PIDController pid = new PIDController(kP, kI, kD);
     intakemotor = new TalonFX(intakemotorCanId); // intializing CANrange sensors
     algaeIntakeSensor = new CANrange(algaeIntakeSensorCanId);
     coralIntakeSensor = new CANrange(coralIntakeSensorCanId);
@@ -28,12 +33,15 @@ public class AlgaeCoralIntake extends SubsystemABS {
 
   @Override
   public void periodic() {
+
+    motor.set(pid.calculate(encoder.getDistance(), setpoint));
+
     double algaeSensorReading = algaeIntakeSensor.getDistance().getValueAsDouble();
     double coralSensorReading = coralIntakeSensor.getDistance().getValueAsDouble();
 
-    System.out.println("Algae Sensor Reading: " + algaeSensorReading);
-    System.out.println("Coral Sensor Reading: " + coralSensorReading);
-
+    SmartDashboard.putNumber(algaeSensorReading);
+    SmartDashboard.putNumber(coralSensorReading);
+    
     if (algaeSensorReading < 0.1) {
       setMotorSpeed(-0.1);
     } else if (coralSensorReading < 1) { // distance is too close so motor is reversed
