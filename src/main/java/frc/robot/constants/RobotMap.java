@@ -113,9 +113,10 @@ public class RobotMap {
     public static class IntakeMap {
 
         public static class SensorConstants {
-            public static final int intakemotorCanId = 1;
-            public static final int algaeIntakeSensorCanId = 2;
-            public static final int coralIntakeSensorCanId = 3;
+        public static int intakemotorId = 21;
+        public static int pivotMotorId = 22;
+        public static int coralCanRangeId = 28;
+        public static int algaeCanRangeId = 289;
         }
 
     }

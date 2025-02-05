@@ -33,15 +33,17 @@ public class coralAlgaeIntake extends SubsystemABS {
 
     SmartDashboard.putNumber("Algae Distance Reading: ", algaeSensorReading);
     SmartDashboard.putNumber("Coral Distance Reading", coralSensorReading);
-
-    // if (algaeSensorReading < 0.1) {
-    //   setMotorSpeed(-0.1);
-    // } else if (coralSensorReading < 1) { // distance is too close so motor is reversed
-    //   setMotorSpeed(0.1);
-    // } else {
-    //   stopMotor(); // if sensor reading is normal range, motor stops
-    // }
+    
+    
+    if (algaeSensorReading < 0.1) {
+      setMotorSpeed(-0.1);
+    } else if (coralSensorReading < 1) { // distance is too close so motor is reversed
+      setMotorSpeed(0.1);
+    } else {
+      stopMotor(); // if sensor reading is normal range, motor stops
+    }
   }
+
 
    //setters
   public void stopMotor() {
