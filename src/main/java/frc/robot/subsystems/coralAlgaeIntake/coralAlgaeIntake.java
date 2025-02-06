@@ -21,9 +21,9 @@ public class coralAlgaeIntake extends SubsystemABS {
   // constructor
 
   public coralAlgaeIntake() {
-    intakemotor = new TalonFX(RobotMap.IntakeMap.SensorConstants.intakemotorCanId); // intializing CANrange sensors
-    algaeIntakeSensor = new CANrange(RobotMap.IntakeMap.SensorConstants.algaeIntakeSensorCanId);
-    coralIntakeSensor = new CANrange(RobotMap.IntakeMap.SensorConstants.coralIntakeSensorCanId);
+    intakemotor = new TalonFX(RobotMap.IntakeMap.SensorConstants.INTAKE_MOTOR); // intializing CANrange sensors
+    algaeIntakeSensor = new CANrange(RobotMap.IntakeMap.SensorConstants.ALGAE_CANRANGE);
+    coralIntakeSensor = new CANrange(RobotMap.IntakeMap.SensorConstants.CORAL_CANRANGE);
   }
 
   @Override

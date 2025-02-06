@@ -12,6 +12,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.constants.RobotMap;
 import frc.robot.utils.SubsystemABS;
 
 public class gooseNeck extends SubsystemABS {
@@ -22,11 +23,11 @@ private CANrange coralCanRange;
 private CANrange algaeCanRange;
 private DoubleSupplier coralCanRangeVal;
 private DoubleSupplier algaeCanRangeVal;
-  public gooseNeck(int intakeMotorId, int pivotMotorId, int coralCanRangeId, int algaeCanRangeId) {
-    intakeMotor = new TalonFX(intakeMotorId);
-    pivotMotor = new TalonFX(pivotMotorId);
-    coralCanRange = new CANrange(coralCanRangeId);
-    algaeCanRange = new CANrange(algaeCanRangeId);
+  public gooseNeck() {
+    intakeMotor = new TalonFX(RobotMap.IntakeMap.SensorConstants.INTAKE_MOTOR);
+    pivotMotor = new TalonFX(RobotMap.IntakeMap.SensorConstants.PIVOT_MOTOR);
+    coralCanRange = new CANrange(RobotMap.IntakeMap.SensorConstants.CORAL_CANRANGE);
+    algaeCanRange = new CANrange(RobotMap.IntakeMap.SensorConstants.ALGAE_CANRANGE);
 
   }
 

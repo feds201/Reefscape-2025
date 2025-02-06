@@ -1,5 +1,8 @@
 package frc.robot.constants;
 
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.configs.TalonFXConfigurator;
 import com.pathplanner.lib.path.PathConstraints;
 
 import edu.wpi.first.math.util.Units;
@@ -62,13 +65,27 @@ public class RobotMap {
     }
 
     public static class ElevatorMap {
-        public static final int ELEVATOR_MOTOR = 52;
-        public static final int ELEVATOR_MOTOR2 = 54;
+        public static final int ELEVATOR_MOTOR = 61;
+        public static final int ELEVATOR_MOTOR2 = 62;
         public static final int ELEVATOR_SPEED = 0;
-        public static final int EVEVATOR_ENCODER = 53;
+        public static final int EVEVATOR_ENCODER = 63;
         public static final double ELEVATOR_P = 0;
         public static final double ELEVATOR_I = 0;
         public static final double ELEVATOR_D = 0;
+
+        public static CurrentLimitsConfigs getElevatorCurrentLimitingConfiguration() {
+            CurrentLimitsConfigs currentConfigs = new CurrentLimitsConfigs();
+            currentConfigs.StatorCurrentLimit = 80;
+            currentConfigs.StatorCurrentLimitEnable = true;
+            return currentConfigs;
+        }
+        
+    }
+
+    public static class ClimberMap {
+        public static final int CLIMBER_MAIN_MOTOR = 51;
+        public static final int CLIMBER_FOLLOWER_MOTOR = 52;
+        public static final int CLIMBER_ENCODER = 53;
     }
 
     // Additional motor controllers or sensors could be added here
@@ -117,10 +134,11 @@ public class RobotMap {
     public static class IntakeMap {
 
         public static class SensorConstants {
-        public static int intakemotorId = 21;
-        public static int pivotMotorId = 22;
-        public static int coralCanRangeId = 28;
-        public static int algaeCanRangeId = 289;
+        public static final int INTAKE_MOTOR = 71;
+        public static final int PIVOT_MOTOR = 72;
+        public static final int CORAL_CANRANGE = 100;
+        public static final int ALGAE_CANRANGE = 100;
+        public static final int INTAKE_ENCODER = 73;
         }
 
     }
