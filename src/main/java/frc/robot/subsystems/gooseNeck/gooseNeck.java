@@ -7,12 +7,13 @@ package frc.robot.subsystems.gooseNeck;
 
 import java.util.function.DoubleSupplier;
 
+import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.CANrange;
 import com.ctre.phoenix6.hardware.TalonFX;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.constants.RobotMap.IntakeMap;
 import frc.robot.utils.SubsystemABS;
+import frc.robot.utils.Subsystems;
 
 public class gooseNeck extends SubsystemABS {
   /** Creates a new gooseNeck. */
@@ -20,49 +21,74 @@ private TalonFX intakeMotor;
 private TalonFX pivotMotor;
 private CANrange coralCanRange;
 private CANrange algaeCanRange;
-private DoubleSupplier coralCanRangeVal;
-private DoubleSupplier algaeCanRangeVal;
-  public gooseNeck(int intakeMotorId, int pivotMotorId, int coralCanRangeId, int algaeCanRangeId) {
+private CANcoder gooseNeckAngler;
+private DoubleSupplier algaeCANrangeVal;
+private DoubleSupplier coralCANrangeVal;
+private DoubleSupplier gooseNeckCANCoderValue;
+
+  public gooseNeck(int intakeMotorId, int pivotMotorId, int coralCanRangeId, int algaeCanRangeId, int gooseNeckAnglerId) {
+    super(Subsystems.INTAKE,"gooseNeck");
     intakeMotor = new TalonFX(intakeMotorId);
     pivotMotor = new TalonFX(pivotMotorId);
     coralCanRange = new CANrange(coralCanRangeId);
     algaeCanRange = new CANrange(algaeCanRangeId);
+    gooseNeckAngler = new CANcoder(gooseNeckAnglerId);
+    lockPivot();
+}
 
-  }
+
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
-    SmartDashboard.putNumber(getName(), 0);
-  }
+    
+  }  
 
 @Override
 public void init() {
-   tab.addDouble("coralCanRangeVal", coralCanRangeVal);
-   tab.addDouble("algaecanRangeVal", algaeCanRangeVal);
+  algaeCANrangeVal = () -> algaeCanRange.getDistance().getValueAsDouble();
+  coralCANrangeVal = () -> coralCanRange.getDistance().getValueAsDouble();
+  gooseNeckCANCoderValue = () -> gooseNeckAngler.getPosition().getValueAsDouble();
+  tab.addNumber("algaeCanRange", algaeCANrangeVal);
+  tab.addNumber("coralCanRange", coralCANrangeVal);
+  tab.addNumber("gooseNeckAngler", gooseNeckCANCoderValue);
 }
 
 @Override
 public void simulationPeriodic() {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'simulationPeriodic'");
 }
 
 @Override
 public void setDefaultCmd() {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'setDefaultCmd'");
+ 
 }
 
 @Override
 public boolean isHealthy() {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'isHealthy'");
+  return true; 
+  
 }
 
 @Override
 public void Failsafe() {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'Failsafe'");
+ intakeMotor.disable();
+ pivotMotor.disable();
+
 }
+
+public void runPivotMotor(double speed){
+  pivotMotor.set(speed);
+}
+
+public double getPivotAngle(){
+  return gooseNeckCANCoderValue.getAsDouble();
+}
+
+private void lockPivot(){
+  pivotMotor.getConfigurator().apply(IntakeMap.getBreakConfiguration());
+}
+
+public void unlockPivot(){
+  pivotMotor.getConfigurator().apply(IntakeMap.getBreakConfiguration());
+}
+
 }

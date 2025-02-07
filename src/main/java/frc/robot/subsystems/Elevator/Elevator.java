@@ -55,7 +55,6 @@ public class Elevator extends SubsystemABS {
     @Override
     public void periodic() {
         // Update Shuffleboard with the latest position
-        tab.add("Elevator Position", getEncoderValue());
     }
 
     @Override

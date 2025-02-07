@@ -1,5 +1,8 @@
 package frc.robot.constants;
 
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.configs.TalonFXConfigurator;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.pathplanner.lib.path.PathConstraints;
 
 import edu.wpi.first.math.util.Units;
@@ -121,6 +124,19 @@ public class RobotMap {
         public static int pivotMotorId = 22;
         public static int coralCanRangeId = 28;
         public static int algaeCanRangeId = 289;
+        
+        }
+
+        public static TalonFXConfiguration getBreakConfiguration(){
+            TalonFXConfiguration configurator = new TalonFXConfiguration();
+            configurator.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+            return configurator;
+        }
+
+        public static TalonFXConfiguration getCoastConfiguration(){
+            TalonFXConfiguration configurator = new TalonFXConfiguration();
+            configurator.MotorOutput.NeutralMode = NeutralModeValue.Coast;
+            return configurator;
         }
 
     }
