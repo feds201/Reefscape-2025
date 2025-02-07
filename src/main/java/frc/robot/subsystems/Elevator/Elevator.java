@@ -19,22 +19,13 @@ public class Elevator extends SubsystemABS {
     private final TalonFX elevatorMotorLeader; // Primary motor
     private final TalonFX elevatorMotorFollower; // Follower motor
     private final CANcoder elevatorEncoder; // Range sensor
-    private final ShuffleboardTab tab;// replace with ABS tab
+    private final ShuffleboardTab tab = Shuffleboard.getTab("Elevator");
     private final PIDController pid;
 
-    public Elevator(/*add part and tab name to follow abs */) {
-        tab = Shuffleboard.getTab("Elevator"); //put in init with get tab AFTER replacing tab with abs tab
-
+    public Elevator() {
         elevatorMotorLeader = new TalonFX(RobotMap.ElevatorMap.ELEVATOR_MOTOR);
         elevatorMotorFollower = new TalonFX(RobotMap.ElevatorMap.ELEVATOR_MOTOR2);
 
-        elevatorEncoder = new CANcoder(RobotMap.ElevatorMap.EVEVATOR_ENCODER);
-        
-        pid = new PIDController(RobotMap.ElevatorMap.ELEVATOR_P, RobotMap.ElevatorMap.ELEVATOR_I, RobotMap.ElevatorMap.ELEVATOR_D);
-    }
-
-    @Override
-    public void init() {
         // Configure follower motor
         elevatorMotorFollower.setControl(new Follower(elevatorMotorLeader.getDeviceID(), false));
 
@@ -42,20 +33,13 @@ public class Elevator extends SubsystemABS {
         elevatorMotorLeader.getConfigurator().apply(RobotMap.ElevatorMap.getElevatorCurrentLimitingConfiguration());
         elevatorMotorFollower.getConfigurator().apply(RobotMap.ElevatorMap.getElevatorCurrentLimitingConfiguration());
 
+        elevatorEncoder = new CANcoder(RobotMap.ElevatorMap.EVEVATOR_ENCODER);
+        
+        pid = new PIDController(RobotMap.ElevatorMap.ELEVATOR_P, RobotMap.ElevatorMap.ELEVATOR_I, RobotMap.ElevatorMap.ELEVATOR_D);
+        
+        
         // Add Shuffleboard widget for the range sensor
         tab.add("Elevator Position", getEncoderValue());
-    }
-
-    @Override
-    public void periodic() {
-        // Update Shuffleboard with the latest position
-        tab.add("Elevator Position", getEncoderValue());
-    }
-    
-    @Override
-    public void simulationPeriodic() {
-        // TODO Auto-generated method stub
-      
     }
 
     public void setMotorSpeed(double speed) {
@@ -76,12 +60,27 @@ public class Elevator extends SubsystemABS {
     }
 
    public double getEncoderValue(){
-        return elevatorEncoder.getAbsolutePosition().getValueAsDouble();
+ 
+    return elevatorEncoder.getAbsolutePosition().getValueAsDouble();
    }
 
+    @Override
+    public void periodic() {
+        // Update Shuffleboard with the latest position
+        tab.add("Elevator Position", getEncoderValue());
+    }
 
+    @Override
+    public void init() {
+        // TODO Auto-generated method stub
+        
+    }
 
-
+    @Override
+    public void simulationPeriodic() {
+        // TODO Auto-generated method stub
+      
+    }
 
     @Override
     public void setDefaultCmd() {
