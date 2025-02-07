@@ -1,5 +1,8 @@
 package frc.robot.subsystems.Elevator;
 
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.configs.TalonFXConfigurator;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.CANrange;
@@ -22,10 +25,18 @@ public class Elevator extends SubsystemABS {
     public Elevator() {
         elevatorMotorLeader = new TalonFX(RobotMap.ElevatorMap.ELEVATOR_MOTOR);
         elevatorMotorFollower = new TalonFX(RobotMap.ElevatorMap.ELEVATOR_MOTOR2);
-        elevatorEncoder = new CANcoder(RobotMap.ElevatorMap.EVEVATOR_ENCODER);
-        pid = new PIDController(RobotMap.ElevatorMap.ELEVATOR_P, RobotMap.ElevatorMap.ELEVATOR_I, RobotMap.ElevatorMap.ELEVATOR_D);
+
         // Configure follower motor
         elevatorMotorFollower.setControl(new Follower(elevatorMotorLeader.getDeviceID(), false));
+
+        // Configure current limits
+        elevatorMotorLeader.getConfigurator().apply(RobotMap.ElevatorMap.getElevatorCurrentLimitingConfiguration());
+        elevatorMotorFollower.getConfigurator().apply(RobotMap.ElevatorMap.getElevatorCurrentLimitingConfiguration());
+
+        elevatorEncoder = new CANcoder(RobotMap.ElevatorMap.EVEVATOR_ENCODER);
+        
+        pid = new PIDController(RobotMap.ElevatorMap.ELEVATOR_P, RobotMap.ElevatorMap.ELEVATOR_I, RobotMap.ElevatorMap.ELEVATOR_D);
+        
         
         // Add Shuffleboard widget for the range sensor
         tab.add("Elevator Position", getEncoderValue());
@@ -49,6 +60,7 @@ public class Elevator extends SubsystemABS {
     }
 
    public double getEncoderValue(){
+ 
     return elevatorEncoder.getAbsolutePosition().getValueAsDouble();
    }
 

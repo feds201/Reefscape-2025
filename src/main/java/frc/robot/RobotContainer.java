@@ -100,12 +100,7 @@ public class RobotContainer extends RobotFramework {
                 Subsystems.VISION.getNetworkTable(),
                 ObjectType.APRIL_TAG_BACK);
 
-        arm = new gooseNeck(
-            IntakeMap.SensorConstants.intakemotorId, 
-            IntakeMap.SensorConstants.pivotMotorId,
-            IntakeMap.SensorConstants.coralCanRangeId,
-            IntakeMap.SensorConstants.algaeCanRangeId
-        );
+        arm = new gooseNeck();
         teleOpChooser = new SendableChooser<>();
         setupDrivetrain();
         autonChooser = AutoBuilder.buildAutoChooser();
