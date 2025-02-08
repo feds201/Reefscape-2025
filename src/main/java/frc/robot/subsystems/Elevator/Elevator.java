@@ -30,8 +30,10 @@ public class Elevator extends SubsystemABS {
         elevatorMotorFollower.setControl(new Follower(elevatorMotorLeader.getDeviceID(), false));
 
         // Configure current limits
-        elevatorMotorLeader.getConfigurator().apply(RobotMap.ElevatorMap.getElevatorCurrentLimitingConfiguration());
-        elevatorMotorFollower.getConfigurator().apply(RobotMap.ElevatorMap.getElevatorCurrentLimitingConfiguration());
+        elevatorMotorLeader.getConfigurator().apply(
+                RobotMap.CurrentLimiter.getCurrentLimitConfiguration(RobotMap.ElevatorMap.ELEVATOR_CURRENT_LIMIT));
+        elevatorMotorFollower.getConfigurator().apply(
+                RobotMap.CurrentLimiter.getCurrentLimitConfiguration(RobotMap.ElevatorMap.ELEVATOR_CURRENT_LIMIT));
 
         elevatorEncoder = new CANcoder(RobotMap.ElevatorMap.EVEVATOR_ENCODER);
         canCodervalue = () -> elevatorEncoder.getPosition().getValueAsDouble();

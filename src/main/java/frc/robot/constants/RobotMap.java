@@ -8,6 +8,7 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfigurator;
 import com.pathplanner.lib.path.PathConstraints;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
@@ -77,21 +78,25 @@ public class RobotMap {
         public static final double ELEVATOR_D = 0;
         public static final double PARENT_GEAR_RADIUS = Units.inchesToMeters(2.5);
         public static final double ELEVATOR_CIRCUMFERENCE = 2 * Math.PI * PARENT_GEAR_RADIUS;
-
-        public static CurrentLimitsConfigs getElevatorCurrentLimitingConfiguration() {
-            CurrentLimitsConfigs currentConfigs = new CurrentLimitsConfigs();
-            currentConfigs.StatorCurrentLimit = 80;
-            currentConfigs.StatorCurrentLimitEnable = true;
-            return currentConfigs;
-        }
-        
+        public static final double ELEVATOR_CURRENT_LIMIT = 20;
+      
     }
 
     public static class ClimberMap {
-        public static final int CLIMBER_MAIN_MOTOR = 51;
+        public static final int CLIMBER_LEADER_MOTOR = 51;
         public static final int CLIMBER_FOLLOWER_MOTOR = 52;
         public static final int CLIMBER_ENCODER = 53;
-    }
+        public static final int CLIMBER_LEFT_DI = 1;
+        public static final int CLIMBER_RIGHT_DI = 2;
+        public static final int CLIMBER_CURRENT_LIMIT = 40;
+        public static final double CLIMBER_PID_TOLERANCE = 3;
+        public static final double CLIMBER_UP_ANGLE = 90;
+        public static final double CLIMBER_STOW_ANGLE = 0;
+        public static final PIDController climberPID = new PIDController(0, 0, 0);
+        ClimberMap(){
+            climberPID.setTolerance(CLIMBER_PID_TOLERANCE);
+        }
+    }   
 
     // Additional motor controllers or sensors could be added here
     public static class SensorMap {
@@ -138,27 +143,41 @@ public class RobotMap {
 
     public static class IntakeMap {
 
-        public static class SensorConstants {
-        public static final int INTAKE_MOTOR = 71;
-        public static final int PIVOT_MOTOR = 72;
-        public static final int CORAL_CANRANGE = 100;
-        public static final int ALGAE_CANRANGE = 100;
-        public static final int INTAKE_ENCODER = 73;
+            public static final int INTAKE_MOTOR_CURRENT_LIMIT = 20;
+            public static final int PIVOT_MOTOR_CURRENT_LIMIT = 20;
+
+        public static class SensorCanId {
+            public static final int INTAKE_MOTOR = 71;
+            public static final int PIVOT_MOTOR = 72;
+            public static final int CORAL_CANRANGE = 100;
+            public static final int ALGAE_CANRANGE = 100;
+            public static final int INTAKE_ENCODER = 73;
 
         }
 
+        public static PIDController intakePid = new PIDController(0, 0, 0);
 
-
-        public static TalonFXConfiguration getBreakConfiguration(){
+        public static TalonFXConfiguration getBreakConfiguration() {
             TalonFXConfiguration configuration = new TalonFXConfiguration();
             configuration.MotorOutput.NeutralMode = NeutralModeValue.Brake;
             return configuration;
         }
 
-        public static TalonFXConfiguration getCoastConfiguration(){
+        public static TalonFXConfiguration getCoastConfiguration() {
             TalonFXConfiguration configuration = new TalonFXConfiguration();
             configuration.MotorOutput.NeutralMode = NeutralModeValue.Coast;
             return configuration;
+        }
+    }
+
+    public static class CurrentLimiter {
+        public static CurrentLimitsConfigs getCurrentLimitConfiguration(double amps) {
+            CurrentLimitsConfigs configs = new CurrentLimitsConfigs();
+
+            configs.StatorCurrentLimit = amps;
+            configs.StatorCurrentLimitEnable = true;
+
+            return configs;
         }
     }
 }

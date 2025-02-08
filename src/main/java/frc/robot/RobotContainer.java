@@ -38,7 +38,7 @@ import frc.robot.constants.RobotMap.SensorMap;
 import frc.robot.constants.RobotMap.UsbMap;
 import frc.robot.constants.RobotMap.SafetyMap.AutonConstraints;
 import frc.robot.subsystems.elevator.Elevator;
-import frc.robot.subsystems.gooseNeck.GooseNeck;
+import frc.robot.subsystems.swanNeck.SwanNeck;
 import frc.robot.subsystems.swerve.CommandSwerveDrivetrain;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
 import frc.robot.subsystems.vision.camera.Camera;
@@ -68,7 +68,7 @@ public class RobotContainer extends RobotFramework {
     private PathConstraints autoAlignConstraints;
     private PoseEstimator poseEstimator;
     private Elevator elevator;
-    private GooseNeck arm;
+    private SwanNeck swanNeck;
 
     public RobotContainer() {
         double swerveSpeedMultiplier = 0.4;
@@ -97,7 +97,7 @@ public class RobotContainer extends RobotFramework {
                 Subsystems.VISION.getNetworkTable(),
                 ObjectType.APRIL_TAG_BACK);
 
-        arm = new GooseNeck(
+        swanNeck = new SwanNeck(
                 Subsystems.INTAKE,
                 Subsystems.INTAKE.getNetworkTable());
         telemetry = new Telemetry(5);
