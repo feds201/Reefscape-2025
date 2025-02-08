@@ -5,6 +5,9 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
+import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
+import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -48,6 +51,22 @@ public class Robot extends TimedRobot
     private Command autonomousCommand;
     private RobotContainer robotContainer;
     private Camera frontCamera;
+    // Create a Mechanism2d dashboard for the elevator
+    private Mechanism2d elevator = new Mechanism2d(48, 96);
+    // ADD: Field for the elevator ligament
+    private MechanismLigament2d elevatorLigament;
+
+    // In robotInit or in a constructor, add the mechanism to SmartDashboard
+    // For this example, we'll add it in an instance initializer block.
+    {
+        SmartDashboard.putData("Elevator Mechanism", elevator);
+        // Get the root node to start drawing
+        MechanismRoot2d elevatorDisplay = elevator.getRoot("Elevator",20,20);
+
+        // Example: Draw a line representing the elevator’s range of motion.
+        // Parameters: start x, start y, end x, end y.
+        elevatorLigament = elevatorDisplay.append(new MechanismLigament2d("Elevator", 0, 90));
+    }
     /**
      * This method is run when the robot is first started up and should be used for any
      * initialization code.
@@ -90,6 +109,12 @@ public class Robot extends TimedRobot
     public void robotPeriodic()
     {
         CommandScheduler.getInstance().run();
+        // ADD: Update elevator mechanism based on current elevator height (meters converted to inches)
+        if(robotContainer != null) {
+            double heightMeters = robotContainer.getElevator().getElevatorHeight();
+            double heightInches = Units.metersToInches(heightMeters);
+            elevatorLigament.setLength(heightInches);
+        }
     }
 
     /** This method is called once each time the robot enters Disabled mode. */

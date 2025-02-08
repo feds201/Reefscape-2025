@@ -88,7 +88,7 @@ private void lockPivot(){
 }
 
 public void unlockPivot(){
-  pivotMotor.getConfigurator().apply(IntakeMap.getBreakConfiguration());
+  pivotMotor.getConfigurator().apply(IntakeMap.getCoastConfiguration());
 }
 
 }

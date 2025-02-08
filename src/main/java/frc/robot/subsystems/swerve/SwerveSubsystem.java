@@ -43,8 +43,7 @@ public class SwerveSubsystem extends SubsystemABS {
         this.drivetrain = DrivetrainConstants.drivetrain;
         printcontroller();
 
-        rPidController = new PIDController(SwerveConstants.kRotationP, SwerveConstants.kRotationI,
-                SwerveConstants.kRotationD);
+        
 
         RobotConfig config;
         try {
@@ -58,6 +57,8 @@ public class SwerveSubsystem extends SubsystemABS {
     @Override
     public void init() {
         robotFacingAngle = 0.0;
+        rPidController = new PIDController(SwerveConstants.kRotationP, SwerveConstants.kRotationI,
+                SwerveConstants.kRotationD);
         rPidController.setTolerance(SwerveConstants.kRotationTolerance);
         tab = getTab();
 

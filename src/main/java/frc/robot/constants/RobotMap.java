@@ -75,6 +75,8 @@ public class RobotMap {
         public static final double ELEVATOR_P = 0;
         public static final double ELEVATOR_I = 0;
         public static final double ELEVATOR_D = 0;
+        public static final double PARENT_GEAR_RADIUS = Units.inchesToMeters(2.5);
+        public static final double ELEVATOR_CIRCUMFERENCE = 2 * Math.PI * PARENT_GEAR_RADIUS;
 
         public static CurrentLimitsConfigs getElevatorCurrentLimitingConfiguration() {
             CurrentLimitsConfigs currentConfigs = new CurrentLimitsConfigs();
@@ -150,6 +152,12 @@ public class RobotMap {
         public static TalonFXConfiguration getBreakConfiguration(){
             TalonFXConfiguration configuration = new TalonFXConfiguration();
             configuration.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+            return configuration;
+        }
+
+        public static TalonFXConfiguration getCoastConfiguration(){
+            TalonFXConfiguration configuration = new TalonFXConfiguration();
+            configuration.MotorOutput.NeutralMode = NeutralModeValue.Coast;
             return configuration;
         }
     }

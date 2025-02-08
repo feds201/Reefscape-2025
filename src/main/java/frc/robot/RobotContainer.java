@@ -83,7 +83,9 @@ public class RobotContainer extends RobotFramework {
         // poseEstimator = new
         // SwerveDrivePoseEstimator(DrivetrainConstants.drivetrain.getKinematics(),
         // gyroAngle, modulePositions, new Pose2d(0, 0, gyroAngle));
-        elevator = new Elevator();
+        elevator = new Elevator(
+                Subsystems.ELEVATOR,
+                Subsystems.ELEVATOR.name());
         swerveSubsystem = new SwerveSubsystem(
                 Subsystems.SWERVE_DRIVE,
                 Subsystems.SWERVE_DRIVE.getNetworkTable(),
@@ -100,7 +102,14 @@ public class RobotContainer extends RobotFramework {
                 Subsystems.VISION.getNetworkTable(),
                 ObjectType.APRIL_TAG_BACK);
 
-        arm = new gooseNeck();
+        arm = new gooseNeck(
+                IntakeMap.SensorConstants.INTAKE_MOTOR,
+                IntakeMap.SensorConstants.PIVOT_MOTOR,
+                IntakeMap.SensorConstants.CORAL_CANRANGE,
+                IntakeMap.SensorConstants.ALGAE_CANRANGE,
+                IntakeMap.SensorConstants.INTAKE_ENCODER);
+        telemetry = new Telemetry(5);
+
         teleOpChooser = new SendableChooser<>();
         setupDrivetrain();
         autonChooser = AutoBuilder.buildAutoChooser();
@@ -123,9 +132,15 @@ public class RobotContainer extends RobotFramework {
         setupPaths();
         configureBindings();
         swerveSubsystem.printcontroller();
+        DrivetrainConstants.drivetrain.registerTelemetry(telemetry::telemeterize);
 
         // setupVisionImplants();
 
+    }
+
+    // ADD: Getter for Elevator
+    public Elevator getElevator() {
+        return elevator;
     }
 
     public void setupVisionImplants() {
@@ -199,7 +214,7 @@ public class RobotContainer extends RobotFramework {
                 .withProperties(Map.of("position", "0, 1"));
     }
 
-    public void setupElevator(){
+    public void setupElevator() {
         // commandChooser.addOption("GoingUP", new GoUpCommand(elevator, 0.1, 1.0));
 
         Shuffleboard.getTab(Subsystems.SWERVE_DRIVE.getNetworkTable()).add("Command Chooser", commandChooser)
