@@ -12,20 +12,18 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.gooseNeck.GooseNeck;
+import frc.robot.constants.RobotMap.IntakeMap;
+import frc.robot.subsystems.swanNeck.SwanNeck;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class Vaulting extends Command {
   private double givenAngle;
-  private GooseNeck gooseneck;
-  private PIDController pidController;
-  private ShuffleboardTab tab;
+  private SwanNeck swanNeck;
 
   /** Creates a new Vaulting. */
-  public Vaulting(double setAngle, GooseNeck neck) {
+  public Vaulting(double setAngle, SwanNeck neck) {
     this.givenAngle = setAngle;
-    this.gooseneck = neck;
-    tab = Shuffleboard.getTab("getName()");
+    this.swanNeck = neck;
     addRequirements(neck);
 
   }
@@ -33,17 +31,13 @@ public class Vaulting extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    // gooseneck.unlockPivot();
-    pidController = new PIDController(0,0,0);
-    pidController.setTolerance(2);
-    tab.add(gooseneck);
-    pidController.setSetpoint(givenAngle);
+    IntakeMap.intakePid.setSetpoint(givenAngle);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    gooseneck.runPivotMotor(pidController.calculate(gooseneck.getPivotAngle()));
+    swanNeck.runPivotMotor(IntakeMap.intakePid.calculate(swanNeck.getPivotAngle()));
   }
 
   // Called once the command ends or is interrupted.
@@ -54,6 +48,6 @@ public class Vaulting extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return pidController.atSetpoint();
+    return IntakeMap.intakePid.atSetpoint();
   }
 }
