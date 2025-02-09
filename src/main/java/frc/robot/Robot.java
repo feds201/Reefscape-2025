@@ -16,7 +16,7 @@ import com.ctre.phoenix6.SignalLogger;
 import com.pathplanner.lib.commands.PathfindingCommand;
 import com.pathplanner.lib.pathfinding.Pathfinding;
 
-
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.net.WebServer;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -38,7 +38,7 @@ public class Robot extends TimedRobot
 {
     private Command autonomousCommand;
     private RobotContainer robotContainer;
-    private Camera frontCamera;
+
     // Create a Mechanism2d dashboard for the elevator
     private Mechanism2d elevator = new Mechanism2d(48, 96);
     // ADD: Field for the elevator ligament

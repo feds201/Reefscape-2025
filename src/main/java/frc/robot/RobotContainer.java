@@ -71,8 +71,8 @@ public class RobotContainer extends RobotFramework {
     private final SendableChooser<Command> autonChooser;
     private SendableChooser<Command> commandChooser;
     private final Camera frontCamera;
-    // private final Camera rearRightCamera;
-    // private final Camera rearLeftCamera;
+    private final Camera rearRightCamera;
+    private final Camera rearLeftCamera;
     
     // private final Camera rearCamera;
     private final PathConstraints autoAlignConstraints;
@@ -82,10 +82,7 @@ public class RobotContainer extends RobotFramework {
 
      private final NetworkTableInstance inst = NetworkTableInstance.getDefault();
 
-    /* Robot swerve drive state */
-    private final NetworkTable driveStateTable = inst.getTable("PoseEstimation");
-    private final StructPublisher<Pose2d> estimatedPose = driveStateTable.getStructTopic("PoseEstimation", Pose2d.struct).publish();
-
+  
     public RobotContainer() {
         double swerveSpeedMultiplier = 0.4;
         driverController = UsbMap.driverController;
@@ -109,6 +106,9 @@ public class RobotContainer extends RobotFramework {
                 ObjectType.APRIL_TAG_FRONT,
                 "limelight-seven");
 
+        rearLeftCamera = new Camera(Subsystems.VISION, Subsystems.VISION.getNetworkTable(), ObjectType.APRIL_TAG_LEFT, "limelight-three");
+
+        rearRightCamera = new Camera(Subsystems.VISION, Subsystems.VISION.getNetworkTable(), ObjectType.APRIL_TAG_BACK, "limelight-five");
         // rearCamera = new Camera(
         //         Subsystems.VISION,
         //         Subsystems.VISION.getNetworkTable(),
@@ -159,16 +159,16 @@ public class RobotContainer extends RobotFramework {
         SmartDashboard.putNumber("robot rotation", headingDeg);
         double omega = Units.radiansToRotations(driveState.Speeds.omegaRadiansPerSecond);
         frontCamera.SetRobotOrientation(headingDeg, 0,0,0,0,0);
-        // rearRightCamera.SetRobotOrientation(headingDeg, 0,0,0,0,0);
-        // rearLeftCamera.SetRobotOrientation(headingDeg, 0,0,0,0,0);
-        // rearCamera.SetRobotOrientation(headingDeg, 0,0,0,0,0);
+        rearRightCamera.SetRobotOrientation(headingDeg, 0,0,0,0,0);
+        rearLeftCamera.SetRobotOrientation(headingDeg, 0,0,0,0,0);
+       
         SwerveModulePosition[] modulePositions = driveState.ModulePositions;
         poseEstimator.updatePose();
 
         PoseAllocate frontPose = frontCamera.getRobotPose();
-        // PoseAllocate rearRightPose = rearRightCamera.getRobotPose();
-        // PoseAllocate rearLeftPose = rearLeftCamera.getRobotPose();
-        // PoseAllocate rearPose = rearCamera.getRobotPose();
+        PoseAllocate rearRightPose = rearRightCamera.getRobotPose();
+        PoseAllocate rearLeftPose = rearLeftCamera.getRobotPose();
+       
 
         if (frontPose != null
                 && frontPose.getPose() != null
@@ -178,31 +178,25 @@ public class RobotContainer extends RobotFramework {
             
         }
 
-    //     if  (
-    //         rearLeftPose != null
-    //                 &&    rearLeftPose.getPose() != null
-    //                 && rearLeftPose.getPoseEstimate().tagCount > 0
-    //                 && Math.abs(omega) < 2) {
-    //     DrivetrainConstants.drivetrain.addVisionMeasurement(rearLeftPose.getPose(), rearLeftPose.getTime());
+        if  (
+            rearLeftPose != null
+                    &&    rearLeftPose.getPose() != null
+                    && rearLeftPose.getPoseEstimate().tagCount > 0
+                    && Math.abs(omega) < 2) {
+        DrivetrainConstants.drivetrain.addVisionMeasurement(rearLeftPose.getPose(), rearLeftPose.getTime());
         
-    // }
+    }
 
-//     if  (
-//         rearRightPose != null
-//                 &&    rearRightPose.getPose() != null
-//                 && rearRightPose.getPoseEstimate().tagCount > 0
-//                 && Math.abs(omega) < 2) {
-//     DrivetrainConstants.drivetrain.addVisionMeasurement(rearRightPose.getPose(), rearRightPose.getTime());
+    if  (
+        rearRightPose != null
+                &&    rearRightPose.getPose() != null
+                && rearRightPose.getPoseEstimate().tagCount > 0
+                && Math.abs(omega) < 2) {
+    DrivetrainConstants.drivetrain.addVisionMeasurement(rearRightPose.getPose(), rearRightPose.getTime());
     
-// }
-        // if  (
-        //         rearPose != null
-        //                 && rearPose.getPose() != null
-        //                 && rearPose.getPoseEstimate().tagCount > 0
-        //                 && Math.abs(omega) < 2) {
-        //     DrivetrainConstants.drivetrain.addVisionMeasurement(rearPose.getPose(), rearPose.getTime());
-        // }
-        estimatedPose.set(poseEstimator.getEstimatedPosition());
+}
+      
+      
 
 
     }

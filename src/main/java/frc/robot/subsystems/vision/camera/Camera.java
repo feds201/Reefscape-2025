@@ -1,5 +1,6 @@
 package frc.robot.subsystems.vision.camera;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.utils.*;
@@ -13,6 +14,7 @@ public class Camera extends VisionABC {
 	public int lastseenAprilTag;
 	public GenericEntry lastseentag_sim;
 	private String limelightName;
+	private PIDController controller;
 	
 	public Camera(Subsystems vision, String networkTable, ObjectType objectType, String limelightName) {
 		super(vision, networkTable);
