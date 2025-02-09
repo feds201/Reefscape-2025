@@ -11,6 +11,14 @@ import com.ctre.phoenix6.hardware.CANrange;
 import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
+import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
+import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.constants.RobotMap.CurrentLimiter;
 import frc.robot.constants.RobotMap.IntakeMap;
 import frc.robot.utils.SubsystemABS;
@@ -26,6 +34,12 @@ public class SwanNeck extends SubsystemABS {
     private DoubleSupplier algaeCANrangeVal;
     private DoubleSupplier coralCANrangeVal;
     private DoubleSupplier swanNeckCANCoderValue;
+
+    private Mechanism2d mech;
+    private MechanismRoot2d root;
+    private MechanismLigament2d pivotLigament;
+    private MechanismLigament2d intakeLigament;
+    
   
 
     public SwanNeck(Subsystems subsystem, String name) {
@@ -47,6 +61,14 @@ public class SwanNeck extends SubsystemABS {
         tab.addNumber("algaeCanRange", algaeCANrangeVal);
         tab.addNumber("coralCanRange", coralCANrangeVal);
         tab.addNumber("gooseNeckAngler", swanNeckCANCoderValue);
+
+
+        // change the pose3d to 45degree angle
+        mech = new Mechanism2d(1,2);
+        root = mech.getRoot("root", .5, .5);
+        pivotLigament = new MechanismLigament2d("pivot", 0.5, 90);
+        root.append(pivotLigament);
+        SmartDashboard.putData("mech", mech);
     }
 
     @Override

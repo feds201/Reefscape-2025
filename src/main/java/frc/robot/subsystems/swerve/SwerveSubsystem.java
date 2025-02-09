@@ -1,5 +1,6 @@
 package frc.robot.subsystems.swerve;
 
+import java.util.List;
 import java.util.Map;
 import java.util.function.DoubleSupplier;
 
@@ -20,6 +21,8 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.constants.RobotMap;
 import frc.robot.constants.RobotMap.SafetyMap;
 import frc.robot.constants.RobotMap.SafetyMap.SwerveConstants;
+import frc.robot.contract.Graduated_Mean_Function;
+import frc.robot.subsystems.vision.camera.Camera;
 import frc.robot.utils.SubsystemABS;
 import frc.robot.utils.Subsystems;
 import frc.robot.utils.Telemetry;
@@ -68,12 +71,11 @@ public class SwerveSubsystem extends SubsystemABS {
                 .withProperties(Map.of("min", 0, "max", 100))
                 .withSize(6, 2);
         tab.add("Rotation PID", rPidController);
-        tab.addNumber("Band/Robot X", ()-> drivetrain.getState().Pose.getX());
-        tab.addNumber("Band/Robot Y", ()-> drivetrain.getState().Pose.getY());
+        tab.addNumber("Band/Robot X", () -> drivetrain.getState().Pose.getX());
+        tab.addNumber("Band/Robot Y", () -> drivetrain.getState().Pose.getY());
 
-        if (Utils.isSimulation()) DrivetrainConstants.drivetrain.registerTelemetry(telemetry::telemeterize);
-
-        
+        if (Utils.isSimulation())
+            DrivetrainConstants.drivetrain.registerTelemetry(telemetry::telemeterize);
 
         RobotConfig config;
         try {
@@ -84,6 +86,12 @@ public class SwerveSubsystem extends SubsystemABS {
         }
     }
 
+    private void addVisionMeasurement(List<Camera> cameras) {
+        Graduated_Mean_Function meanFunction = new Graduated_Mean_Function();
+        Pose2d pose = meanFunction.getBetterEstimate(cameras);
+        tab.add("Mean Pose", pose);
+        
+    }
 
     @Override
     public void periodic() {
@@ -93,8 +101,6 @@ public class SwerveSubsystem extends SubsystemABS {
     @Override
     public void simulationPeriodic() {
         robotFacingAngle = drivetrain.getState().Pose.getRotation().getDegrees();
-        
-
 
     }
 
@@ -257,5 +263,4 @@ public class SwerveSubsystem extends SubsystemABS {
         return drivetrain.getState().Speeds;
     }
 
- 
 }

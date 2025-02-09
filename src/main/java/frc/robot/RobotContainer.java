@@ -77,10 +77,15 @@ public class RobotContainer extends RobotFramework {
         autoAlignConstraints = AutonConstraints.kPathConstraints;
 
         poseEstimator = new PoseEstimator(DrivetrainConstants.drivetrain);
-
+        // SwerveDriveState driveState = DrivetrainConstants.drivetrain.getState();
+        // Rotation2d gyroAngle = driveState.Pose.getRotation();
+        // SwerveModulePosition[] modulePositions = driveState.ModulePositions;
+        // poseEstimator = new
+        // SwerveDrivePoseEstimator(DrivetrainConstants.drivetrain.getKinematics(),
+        // gyroAngle, modulePositions, new Pose2d(0, 0, gyroAngle));
         elevator = new Elevator(
                 Subsystems.ELEVATOR,
-                Subsystems.ELEVATOR.getNetworkTable());
+                Subsystems.ELEVATOR.name());
         swerveSubsystem = new SwerveSubsystem(
                 Subsystems.SWERVE_DRIVE,
                 Subsystems.SWERVE_DRIVE.getNetworkTable(),
@@ -99,7 +104,8 @@ public class RobotContainer extends RobotFramework {
 
         swanNeck = new SwanNeck(
                 Subsystems.INTAKE,
-                Subsystems.INTAKE.getNetworkTable());
+                Subsystems.INTAKE.getNetworkTable()
+        );
         telemetry = new Telemetry(5);
 
         teleOpChooser = new SendableChooser<>();
@@ -124,15 +130,12 @@ public class RobotContainer extends RobotFramework {
         setupPaths();
         configureBindings();
         swerveSubsystem.printcontroller();
+        DrivetrainConstants.drivetrain.registerTelemetry(telemetry::telemeterize);
 
         // setupVisionImplants();
 
     }
 
-    // ADD: Getter for Elevator
-    public Elevator getElevator() {
-        return elevator;
-    }
 
     public void setupVisionImplants() {
         var driveState = DrivetrainConstants.drivetrain.getState();

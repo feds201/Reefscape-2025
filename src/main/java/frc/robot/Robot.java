@@ -13,16 +13,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
 import com.ctre.phoenix6.SignalLogger;
-import com.ctre.phoenix6.hardware.CANrange;
 import com.pathplanner.lib.commands.PathfindingCommand;
 import com.pathplanner.lib.pathfinding.Pathfinding;
 
-import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.kinematics.SwerveModulePosition;
-import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.net.WebServer;
 import edu.wpi.first.wpilibj.DataLogManager;
@@ -31,13 +24,9 @@ import edu.wpi.first.wpilibj.Filesystem;
 import frc.robot.constants.ComandCenter;
 import frc.robot.subsystems.vision.camera.Camera;
 import frc.robot.utils.AutonTester;
-import frc.robot.utils.DrivetrainConstants;
 import frc.robot.utils.LocalADStarAK;
-import frc.robot.utils.ObjectType;
-import frc.robot.utils.PoseAllocate;
 import frc.robot.utils.RobotTester;
 import frc.robot.utils.SafetyManager;
-import frc.robot.utils.Subsystems;
 import frc.robot.utils.SystemCheckUp;
 
 /**
@@ -50,27 +39,7 @@ public class Robot extends TimedRobot
 {
     private Command autonomousCommand;
     private RobotContainer robotContainer;
-    private Camera frontCamera;
-    // Create a Mechanism2d dashboard for the elevator
-    private Mechanism2d elevator = new Mechanism2d(48, 96);
-    // ADD: Field for the elevator ligament
-    private MechanismLigament2d elevatorLigament;
-
-    // In robotInit or in a constructor, add the mechanism to SmartDashboard
-    // For this example, we'll add it in an instance initializer block.
-    {
-        SmartDashboard.putData("Elevator Mechanism", elevator);
-        // Get the root node to start drawing
-        MechanismRoot2d elevatorDisplay = elevator.getRoot("Elevator",20,20);
-
-        // Example: Draw a line representing the elevator’s range of motion.
-        // Parameters: start x, start y, end x, end y.
-        elevatorLigament = elevatorDisplay.append(new MechanismLigament2d("Elevator", 0, 90));
-    }
-    /**
-     * This method is run when the robot is first started up and should be used for any
-     * initialization code.
-     */
+   
     @Override
     public void robotInit()
     {
@@ -110,11 +79,7 @@ public class Robot extends TimedRobot
     {
         CommandScheduler.getInstance().run();
         // ADD: Update elevator mechanism based on current elevator height (meters converted to inches)
-        if(robotContainer != null) {
-            double heightMeters = robotContainer.getElevator().getElevatorHeight();
-            double heightInches = Units.metersToInches(heightMeters);
-            elevatorLigament.setLength(heightInches);
-        }
+    
     }
 
     /** This method is called once each time the robot enters Disabled mode. */

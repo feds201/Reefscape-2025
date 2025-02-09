@@ -129,4 +129,9 @@ public class Camera extends VisionABC {
 		LimelightHelpers.SetRobotOrientation(cameraName, headingDeg, yawRate, pitch, pitchRate, roll, rollRate);
 	}
 
+    public double getAprilTagCount() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getAprilTagCount'");
+    }
+
 }
