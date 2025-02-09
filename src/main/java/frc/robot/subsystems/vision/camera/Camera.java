@@ -27,45 +27,74 @@ public class Camera extends VisionABC {
 
 		
 		controller.calculate(10);
+
+
 	}
 
 	@Override
 	public boolean CheckTarget() {
-		// Implementation needed
-		return false;
+		return LimelightHelpers.getTV(limelightName);
 	}
 
 	@Override
 	public Translation2d GetTarget(VisionObject object) {
-		// Implementation needed
-		return null;
+		double x = LimelightHelpers.getTX(limelightName);
+		double y = LimelightHelpers.getTY(limelightName);
+		return new Translation2d(x, y);
 	}
 
 	@Override
 	public void setPipeline(int pipeline) {
-		// Implementation needed
+		LimelightHelpers.setPipelineIndex(limelightName, pipeline);
 	}
 
-	@Override
-	public void setLEDMode(int mode) {
-		// Implementation needed
-	}
 
 	@Override
 	public void setCamMode(int mode) {
-		// Implementation needed
+		switch (mode) {
+			case 1:
+				LimelightHelpers.setStreamMode_PiPMain(limelightName);
+				break;
+			case 2:
+				LimelightHelpers.setStreamMode_PiPSecondary(limelightName);
+				break;
+			case 3:
+				LimelightHelpers.setStreamMode_Standard(limelightName);
+				break;
+		
+			default:
+				break;
+		}
 	}
 
 	@Override
 	public Command BlinkLED() {
-		// Implementation needed
-		return null;
+		return new Command() {
+			@Override
+			public void initialize() {
+				LimelightHelpers.setLEDMode_ForceBlink(limelightName);
+			}
+
+			@Override
+			public boolean isFinished() {
+				return true;
+			}
+		};
 	}
 
 	@Override
 	public Command TurnOffLED() {
-		// Implementation needed
-		return null;
+		return new Command() {
+			@Override
+			public void initialize() {
+				LimelightHelpers.setLEDMode_ForceOff(limelightName);
+			}
+
+			@Override
+			public boolean isFinished() {
+				return true;
+			}
+		};
 	}
 
 	@Override
@@ -135,6 +164,20 @@ public class Camera extends VisionABC {
 
 	public void SetRobotOrientation(double headingDeg, double yawRate, double pitch, double pitchRate, double roll, double rollRate) {
 		LimelightHelpers.SetRobotOrientation(limelightName, headingDeg, yawRate, pitch, pitchRate, roll, rollRate);
+	}
+
+    public double getAprilTagCount() {
+		NetworkTableEntry entry = LimelightHelpers.getLimelightNTTableEntry(limelightName, "actags");
+		if (entry.exists()) {
+			return entry.getDouble(0);
+		}
+		return -1;
+    }
+
+	@Override
+	public void setLEDMode(int mode) {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException("Unimplemented method 'setLEDMode'");
 	}
 
 }

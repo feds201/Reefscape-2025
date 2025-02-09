@@ -4,7 +4,7 @@ import com.ctre.phoenix6.swerve.SwerveModule;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import frc.robot.constants.RobotMap.SafetyMap;
-import frc.robot.subsystems.swerve.CommandSwerveDrivetrain;
+import frc.robot.subsystems.swerve.CommandSwerveDrivetrain; // Ensure this class is defined and available
 import frc.robot.subsystems.swerve.generated.TunerConstants;
 
 /**

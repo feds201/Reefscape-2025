@@ -14,7 +14,6 @@ import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.FileVersionException;
-
 import edu.wpi.first.math.controller.HolonomicDriveController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -56,9 +55,11 @@ import frc.robot.utils.PoseAllocate;
 import frc.robot.utils.PoseEstimator;
 import frc.robot.utils.RobotFramework;
 import frc.robot.utils.SafetyManager;
+import frc.robot.utils.SimUtils;
 import frc.robot.utils.SubsystemABS;
 import frc.robot.utils.Subsystems;
 import frc.robot.utils.Telemetry;
+import frc.robot.utils.PosePair.ReefPole;
 
 @SuppressWarnings("unused") // DO NOT REMOVE
 
@@ -74,14 +75,10 @@ public class RobotContainer extends RobotFramework {
     private final Camera frontCamera;
     private final Camera rearRightCamera;
     private final Camera rearLeftCamera;
-
-    // private final Camera rearCamera;
     private final PathConstraints autoAlignConstraints;
     private final PoseEstimator poseEstimator;
-    private Elevator elevator;
-    private SwanNeck swanNeck;
-
-    private final NetworkTableInstance inst = NetworkTableInstance.getDefault();
+    private final Elevator elevator;
+    private final SwanNeck swanNeck;
 
     public RobotContainer() {
         double swerveSpeedMultiplier = 0.4;
@@ -91,53 +88,114 @@ public class RobotContainer extends RobotFramework {
 
         poseEstimator = new PoseEstimator(DrivetrainConstants.drivetrain);
 
-        elevator = new Elevator(
-                Subsystems.ELEVATOR,
-                Subsystems.ELEVATOR.getNetworkTable());
-        swerveSubsystem = new SwerveSubsystem(
-                Subsystems.SWERVE_DRIVE,
-                Subsystems.SWERVE_DRIVE.getNetworkTable(),
-                SensorMap.GYRO_PORT,
-                driverController);
+        switch (SimUtils.currentMode) {
+            case REAL_ROBOT:
+                elevator = new Elevator(
+                        Subsystems.ELEVATOR,
+                        Subsystems.ELEVATOR.getNetworkTable());
 
-        frontCamera = new Camera(
-                Subsystems.VISION,
-                Subsystems.VISION.getNetworkTable(),
-                ObjectType.APRIL_TAG_FRONT,
-                "limelight-seven");
+                swerveSubsystem = new SwerveSubsystem(
+                        Subsystems.SWERVE_DRIVE,
+                        Subsystems.SWERVE_DRIVE.getNetworkTable(),
+                        SensorMap.GYRO_PORT,
+                        driverController);
 
-        rearRightCamera = new Camera(Subsystems.VISION, Subsystems.VISION.getNetworkTable(), ObjectType.APRIL_TAG_BACK,
-                "limelight-three");
+                frontCamera = new Camera(
+                        Subsystems.VISION,
+                        Subsystems.VISION.getNetworkTable(),
+                        ObjectType.APRIL_TAG_FRONT,
+                        "limelight-seven");
 
-        rearLeftCamera = new Camera(Subsystems.VISION, Subsystems.VISION.getNetworkTable(), ObjectType.APRIL_TAG_LEFT,
-                "limelight-one");
-        // rearCamera = new Camera(
-        // Subsystems.VISION,
-        // Subsystems.VISION.getNetworkTable(),
-        // ObjectType.APRIL_TAG_BACK);
+                rearRightCamera = new Camera(
+                        Subsystems.VISION,
+                        Subsystems.VISION.getNetworkTable(),
+                        ObjectType.APRIL_TAG_BACK,
+                        "limelight-three");
 
-        swanNeck = new SwanNeck(
-                Subsystems.INTAKE,
-                Subsystems.INTAKE.getNetworkTable());
-        telemetry = new Telemetry(5);
+                rearLeftCamera = new Camera(
+                        Subsystems.VISION,
+                        Subsystems.VISION.getNetworkTable(),
+                        ObjectType.APRIL_TAG_LEFT,
+                        "limelight-one");
+
+                swanNeck = new SwanNeck(
+                        Subsystems.INTAKE,
+                        Subsystems.INTAKE.getNetworkTable());
+                break;
+            case SIM_ROBOT:
+
+                elevator = new Elevator(
+                        Subsystems.ELEVATOR,
+                        Subsystems.ELEVATOR.getNetworkTable());
+
+                swerveSubsystem = new SwerveSubsystem(
+                        Subsystems.SWERVE_DRIVE,
+                        Subsystems.SWERVE_DRIVE.getNetworkTable(),
+                        SensorMap.GYRO_PORT,
+                        driverController);
+
+                frontCamera = new Camera(
+                        Subsystems.VISION,
+                        Subsystems.VISION.getNetworkTable(),
+                        ObjectType.APRIL_TAG_FRONT,
+                        "limelight-seven");
+
+                rearRightCamera = new Camera(
+                        Subsystems.VISION,
+                        Subsystems.VISION.getNetworkTable(),
+                        ObjectType.APRIL_TAG_BACK,
+                        "limelight-three");
+
+                rearLeftCamera = new Camera(
+                        Subsystems.VISION,
+                        Subsystems.VISION.getNetworkTable(),
+                        ObjectType.APRIL_TAG_LEFT,
+                        "limelight-one");
+
+                swanNeck = new SwanNeck(
+                        Subsystems.INTAKE,
+                        Subsystems.INTAKE.getNetworkTable());
+                break;
+            default:
+                elevator = new Elevator(
+                        Subsystems.ELEVATOR,
+                        Subsystems.ELEVATOR.getNetworkTable());
+
+                swerveSubsystem = new SwerveSubsystem(
+                        Subsystems.SWERVE_DRIVE,
+                        Subsystems.SWERVE_DRIVE.getNetworkTable(),
+                        SensorMap.GYRO_PORT,
+                        driverController);
+
+                frontCamera = new Camera(
+                        Subsystems.VISION,
+                        Subsystems.VISION.getNetworkTable(),
+                        ObjectType.APRIL_TAG_FRONT,
+                        "limelight-seven");
+
+                rearRightCamera = new Camera(
+                        Subsystems.VISION,
+                        Subsystems.VISION.getNetworkTable(),
+                        ObjectType.APRIL_TAG_BACK,
+                        "limelight-three");
+
+                rearLeftCamera = new Camera(
+                        Subsystems.VISION,
+                        Subsystems.VISION.getNetworkTable(),
+                        ObjectType.APRIL_TAG_LEFT,
+                        "limelight-one");
+
+                swanNeck = new SwanNeck(
+                        Subsystems.INTAKE,
+                        Subsystems.INTAKE.getNetworkTable());
+                break;
+        }
+
+        telemetry = new Telemetry(SafetyMap.kMaxSpeed);
 
         teleOpChooser = new SendableChooser<>();
         setupDrivetrain();
         autonChooser = AutoBuilder.buildAutoChooser();
-        DrivetrainConstants.drivetrain.setDefaultCommand(new Command() {
-
-            {
-                addRequirements(DrivetrainConstants.drivetrain, swerveSubsystem);
-            }
-
-            @Override
-            public void execute() {
-                Command selectedCommand = teleOpChooser.getSelected();
-                if (selectedCommand != null) {
-                    selectedCommand.schedule();
-                }
-            }
-        });
 
         setupNamedCommands();
         setupPaths();
@@ -146,11 +204,6 @@ public class RobotContainer extends RobotFramework {
         telemetry = new Telemetry(SafetyMap.kMaxSpeed);
         DrivetrainConstants.drivetrain.registerTelemetry(telemetry::telemeterize);
 
-    }
-
-    // ADD: Getter for Elevator
-    public Elevator getElevator() {
-        return elevator;
     }
 
     public void setupVisionImplants() {
@@ -202,17 +255,10 @@ public class RobotContainer extends RobotFramework {
                         .runOnce(() -> DrivetrainConstants.drivetrain.seedFieldCentric()));
 
         driverController.leftTrigger()
-                .onTrue(new posePathfindToReef(frc.robot.commands.auton.posePathfindToReef.reefPole.LEFT,
-                        DrivetrainConstants.drivetrain, frontCamera));
-                        
-        driverController.rightTrigger()
-                .onTrue(new posePathfindToReef(frc.robot.commands.auton.posePathfindToReef.reefPole.RIGHT,
-                        DrivetrainConstants.drivetrain, frontCamera));
-        // driverController.b()
-        // .onTrue(AutoPathFinder.GotoPath("Pathto1"));
+                .onTrue(new posePathfindToReef(ReefPole.LEFT, DrivetrainConstants.drivetrain, frontCamera));
 
-        // driverController.y()
-        // .onTrue(AutoPathFinder.GotoPath("lineToRight"));
+        driverController.rightTrigger()
+                .onTrue(new posePathfindToReef(ReefPole.RIGHT, DrivetrainConstants.drivetrain, frontCamera));
 
         driverController.leftBumper()
                 .onTrue(new pathfindToReef(reefPole.LEFT, DrivetrainConstants.drivetrain, frontCamera));
@@ -244,14 +290,21 @@ public class RobotContainer extends RobotFramework {
         Shuffleboard.getTab(Subsystems.SWERVE_DRIVE.getNetworkTable()).add("TeleOp Chooser", teleOpChooser)
                 .withSize(2, 1)
                 .withProperties(Map.of("position", "0, 1"));
-    }
 
-    public void setupElevator() {
-        // commandChooser.addOption("GoingUP", new GoUpCommand(elevator, 0.1, 1.0));
+        DrivetrainConstants.drivetrain.setDefaultCommand(new Command() {
 
-        Shuffleboard.getTab(Subsystems.SWERVE_DRIVE.getNetworkTable()).add("Command Chooser", commandChooser)
-                .withSize(2, 1)
-                .withProperties(Map.of("position", "0, 2"));
+            {
+                addRequirements(DrivetrainConstants.drivetrain, swerveSubsystem);
+            }
+
+            @Override
+            public void execute() {
+                Command selectedCommand = teleOpChooser.getSelected();
+                if (selectedCommand != null) {
+                    selectedCommand.schedule();
+                }
+            }
+        });
     }
 
     // DO NOT REMOVE
@@ -259,9 +312,10 @@ public class RobotContainer extends RobotFramework {
         return new SubsystemABS[] {
                 swerveSubsystem,
                 frontCamera,
-                // rearLeftCamera,
-                // rearRightCamera
-
+                rearLeftCamera,
+                rearRightCamera,
+                elevator,
+                swanNeck
         };
     }
 

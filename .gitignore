@@ -102,7 +102,7 @@ Icon
 Network Trash Folder
 Temporary Items
 .apdisk
-
+.simgui-ds.json
 ### VisualStudioCode ###
 .vscode/*
 !.vscode/settings.json

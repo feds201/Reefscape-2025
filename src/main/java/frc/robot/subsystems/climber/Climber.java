@@ -9,12 +9,12 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.Follower;
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.motorcontrol.Talon;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.RobotMap.ClimberMap;
 import frc.robot.constants.RobotMap.CurrentLimiter;
+import frc.robot.utils.SubsystemABS;
 
-public class Climber extends SubsystemBase {
+public class Climber extends SubsystemABS {
   /** Creates a new Climber. */
   private DigitalInput leftSwitch;
   private DigitalInput rightSwitch;
@@ -72,5 +72,29 @@ public class Climber extends SubsystemBase {
 
   public double getEncoderValue() {
     return climberEncoder.getPosition().getValueAsDouble();
+  }
+
+  @Override
+  public void simulationPeriodic() {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'simulationPeriodic'");
+  }
+
+  @Override
+  public void setDefaultCmd() {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'setDefaultCmd'");
+  }
+
+  @Override
+  public boolean isHealthy() {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'isHealthy'");
+  }
+
+  @Override
+  public void Failsafe() {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'Failsafe'");
   }
 }

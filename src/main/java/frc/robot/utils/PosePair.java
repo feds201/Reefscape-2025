@@ -34,4 +34,9 @@ public class PosePair {
         }
     }
 
+    public enum ReefPole {
+        LEFT, RIGHT
+      }
+
 }
+

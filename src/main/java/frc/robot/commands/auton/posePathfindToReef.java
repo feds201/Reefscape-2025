@@ -8,24 +8,19 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathPlannerPath;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.constants.RobotMap.AutonPosesMap;
 import frc.robot.constants.RobotMap.SafetyMap.AutonConstraints;
 import frc.robot.subsystems.swerve.CommandSwerveDrivetrain;
 import frc.robot.subsystems.vision.camera.Camera;
-import frc.robot.utils.AutoPathFinder;
-import frc.robot.utils.PathPair;
 import frc.robot.utils.PosePair;
+import frc.robot.utils.PosePair.ReefPole;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class posePathfindToReef extends Command {
-  public enum reefPole {
-    LEFT, RIGHT
-  }
+
  
-  private reefPole pole;
+  private ReefPole pole;
   private Camera limelight;
   private int tagId;
   private boolean commandFinished;
@@ -56,7 +51,7 @@ public class posePathfindToReef extends Command {
   };
 
 
-  public posePathfindToReef(reefPole pole, CommandSwerveDrivetrain swerve, Camera camera) {
+  public posePathfindToReef(ReefPole pole, CommandSwerveDrivetrain swerve, Camera camera) {
     this.pole = pole;
     limelight = camera;
 
