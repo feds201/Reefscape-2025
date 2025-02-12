@@ -9,6 +9,8 @@ import com.ctre.phoenix6.configs.TalonFXConfigurator;
 import com.pathplanner.lib.path.PathConstraints;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
@@ -79,7 +81,7 @@ public class RobotMap {
         public static final double PARENT_GEAR_RADIUS = Units.inchesToMeters(2.5);
         public static final double ELEVATOR_CIRCUMFERENCE = 2 * Math.PI * PARENT_GEAR_RADIUS;
         public static final double ELEVATOR_CURRENT_LIMIT = 20;
-      
+
     }
 
     public static class ClimberMap {
@@ -93,10 +95,11 @@ public class RobotMap {
         public static final double CLIMBER_UP_ANGLE = 90;
         public static final double CLIMBER_STOW_ANGLE = 0;
         public static final PIDController climberPID = new PIDController(0, 0, 0);
-        ClimberMap(){
+
+        ClimberMap() {
             climberPID.setTolerance(CLIMBER_PID_TOLERANCE);
         }
-    }   
+    }
 
     // Additional motor controllers or sensors could be added here
     public static class SensorMap {
@@ -143,8 +146,8 @@ public class RobotMap {
 
     public static class IntakeMap {
 
-            public static final int INTAKE_MOTOR_CURRENT_LIMIT = 20;
-            public static final int PIVOT_MOTOR_CURRENT_LIMIT = 20;
+        public static final int INTAKE_MOTOR_CURRENT_LIMIT = 20;
+        public static final int PIVOT_MOTOR_CURRENT_LIMIT = 20;
 
         public static class SensorCanId {
             public static final int INTAKE_MOTOR = 71;
@@ -179,5 +182,20 @@ public class RobotMap {
 
             return configs;
         }
+    }
+
+    public static class AutonPosesMap {
+        public static final Pose2d right16 = new Pose2d(4.953, 5.185, Rotation2d.fromDegrees(-120));
+        public static final Pose2d left16 = new Pose2d(5.226, 5.058, Rotation2d.fromDegrees(-120));
+        public static final Pose2d right26 = new Pose2d(5.704, 4.152, Rotation2d.fromDegrees(180));
+        public static final Pose2d left26 = new Pose2d(5.713, 3.879, Rotation2d.fromDegrees(180));
+        public static final Pose2d right36 = new Pose2d(5.245, 3.03, Rotation2d.fromDegrees(120));
+        public static final Pose2d left36 = new Pose2d(4.953, 2.874, Rotation2d.fromDegrees(120));
+        public static final Pose2d right46 = new Pose2d(4, 2.874, Rotation2d.fromDegrees(60));
+        public static final Pose2d left46 = new Pose2d(3.715, 3.03, Rotation2d.fromDegrees(60));
+        public static final Pose2d right56 = new Pose2d(3.247, 3.849, Rotation2d.fromDegrees(0));
+        public static final Pose2d left56 = new Pose2d(3.256, 4.191, Rotation2d.fromDegrees(0));
+        public static final Pose2d right66 = new Pose2d(3.715, 5.029, Rotation2d.fromDegrees(-60));
+        public static final Pose2d left66 = new Pose2d(4.014, 5.187, Rotation2d.fromDegrees(-60));
     }
 }

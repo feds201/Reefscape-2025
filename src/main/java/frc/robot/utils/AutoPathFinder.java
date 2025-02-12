@@ -14,9 +14,11 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.constants.RobotMap.SafetyMap.AutonConstraints;
 
 public class AutoPathFinder {
+ 
 
     public Command GotoPath(String pathName) {
       
+        
             try {
                 return new ParallelCommandGroup(AutoBuilder.pathfindThenFollowPath(PathPlannerPath.fromPathFile(pathName), AutonConstraints.kPathConstraints));
             } catch (FileVersionException | IOException | ParseException e) {

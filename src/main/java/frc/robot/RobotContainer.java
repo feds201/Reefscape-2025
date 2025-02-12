@@ -33,6 +33,7 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.auton.pathfindToReef;
+import frc.robot.commands.auton.posePathfindToReef;
 import frc.robot.commands.auton.pathfindToReef.reefPole;
 import frc.robot.commands.swerve.DriveForwardCommand;
 import frc.robot.commands.swerve.GameNavigator;
@@ -42,7 +43,7 @@ import frc.robot.constants.RobotMap.SafetyMap;
 import frc.robot.constants.RobotMap.SensorMap;
 import frc.robot.constants.RobotMap.UsbMap;
 import frc.robot.constants.RobotMap.SafetyMap.AutonConstraints;
-import frc.robot.subsystems.Elevator.Elevator;
+import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.swanNeck.SwanNeck;
 import frc.robot.subsystems.swerve.CommandSwerveDrivetrain;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
@@ -73,16 +74,15 @@ public class RobotContainer extends RobotFramework {
     private final Camera frontCamera;
     private final Camera rearRightCamera;
     private final Camera rearLeftCamera;
-    
+
     // private final Camera rearCamera;
     private final PathConstraints autoAlignConstraints;
     private final PoseEstimator poseEstimator;
     private Elevator elevator;
     private SwanNeck swanNeck;
 
-     private final NetworkTableInstance inst = NetworkTableInstance.getDefault();
+    private final NetworkTableInstance inst = NetworkTableInstance.getDefault();
 
-  
     public RobotContainer() {
         double swerveSpeedMultiplier = 0.4;
         driverController = UsbMap.driverController;
@@ -106,13 +106,15 @@ public class RobotContainer extends RobotFramework {
                 ObjectType.APRIL_TAG_FRONT,
                 "limelight-seven");
 
-        rearLeftCamera = new Camera(Subsystems.VISION, Subsystems.VISION.getNetworkTable(), ObjectType.APRIL_TAG_LEFT, "limelight-three");
+        rearRightCamera = new Camera(Subsystems.VISION, Subsystems.VISION.getNetworkTable(), ObjectType.APRIL_TAG_BACK,
+                "limelight-three");
 
-        rearRightCamera = new Camera(Subsystems.VISION, Subsystems.VISION.getNetworkTable(), ObjectType.APRIL_TAG_BACK, "limelight-five");
+        rearLeftCamera = new Camera(Subsystems.VISION, Subsystems.VISION.getNetworkTable(), ObjectType.APRIL_TAG_LEFT,
+                "limelight-one");
         // rearCamera = new Camera(
-        //         Subsystems.VISION,
-        //         Subsystems.VISION.getNetworkTable(),
-        //         ObjectType.APRIL_TAG_BACK);
+        // Subsystems.VISION,
+        // Subsystems.VISION.getNetworkTable(),
+        // ObjectType.APRIL_TAG_BACK);
 
         swanNeck = new SwanNeck(
                 Subsystems.INTAKE,
@@ -141,7 +143,6 @@ public class RobotContainer extends RobotFramework {
         setupPaths();
         configureBindings();
 
-
         telemetry = new Telemetry(SafetyMap.kMaxSpeed);
         DrivetrainConstants.drivetrain.registerTelemetry(telemetry::telemeterize);
 
@@ -158,46 +159,40 @@ public class RobotContainer extends RobotFramework {
         Rotation2d gyroAngle = driveState.Pose.getRotation();
         SmartDashboard.putNumber("robot rotation", headingDeg);
         double omega = Units.radiansToRotations(driveState.Speeds.omegaRadiansPerSecond);
-        frontCamera.SetRobotOrientation(headingDeg, 0,0,0,0,0);
-        rearRightCamera.SetRobotOrientation(headingDeg, 0,0,0,0,0);
-        rearLeftCamera.SetRobotOrientation(headingDeg, 0,0,0,0,0);
-       
+        frontCamera.SetRobotOrientation(headingDeg, 0, 0, 0, 0, 0);
+        rearRightCamera.SetRobotOrientation(headingDeg, 0, 0, 0, 0, 0);
+        rearLeftCamera.SetRobotOrientation(headingDeg, 0, 0, 0, 0, 0);
+
         SwerveModulePosition[] modulePositions = driveState.ModulePositions;
         poseEstimator.updatePose();
 
         PoseAllocate frontPose = frontCamera.getRobotPose();
         PoseAllocate rearRightPose = rearRightCamera.getRobotPose();
         PoseAllocate rearLeftPose = rearLeftCamera.getRobotPose();
-       
 
         if (frontPose != null
                 && frontPose.getPose() != null
                 && frontPose.getPoseEstimate().tagCount > 0
                 && Math.abs(omega) < 2) {
             DrivetrainConstants.drivetrain.addVisionMeasurement(frontPose.getPose(), frontPose.getTime());
-            
+
         }
 
-        if  (
-            rearLeftPose != null
-                    &&    rearLeftPose.getPose() != null
-                    && rearLeftPose.getPoseEstimate().tagCount > 0
-                    && Math.abs(omega) < 2) {
-        DrivetrainConstants.drivetrain.addVisionMeasurement(rearLeftPose.getPose(), rearLeftPose.getTime());
-        
-    }
+        if (rearLeftPose != null
+                && rearLeftPose.getPose() != null
+                && rearLeftPose.getPoseEstimate().tagCount > 0
+                && Math.abs(omega) < 2) {
+            DrivetrainConstants.drivetrain.addVisionMeasurement(rearLeftPose.getPose(), rearLeftPose.getTime());
 
-    if  (
-        rearRightPose != null
-                &&    rearRightPose.getPose() != null
+        }
+
+        if (rearRightPose != null
+                && rearRightPose.getPose() != null
                 && rearRightPose.getPoseEstimate().tagCount > 0
                 && Math.abs(omega) < 2) {
-    DrivetrainConstants.drivetrain.addVisionMeasurement(rearRightPose.getPose(), rearRightPose.getTime());
-    
-}
-      
-      
+            DrivetrainConstants.drivetrain.addVisionMeasurement(rearRightPose.getPose(), rearRightPose.getTime());
 
+        }
 
     }
 
@@ -206,16 +201,21 @@ public class RobotContainer extends RobotFramework {
                 .onTrue(DrivetrainConstants.drivetrain
                         .runOnce(() -> DrivetrainConstants.drivetrain.seedFieldCentric()));
 
+        driverController.leftTrigger()
+                .onTrue(new posePathfindToReef(frc.robot.commands.auton.posePathfindToReef.reefPole.LEFT,
+                        DrivetrainConstants.drivetrain, frontCamera));
+                        
+        driverController.rightTrigger()
+                .onTrue(new posePathfindToReef(frc.robot.commands.auton.posePathfindToReef.reefPole.RIGHT,
+                        DrivetrainConstants.drivetrain, frontCamera));
         // driverController.b()
-        //         .onTrue(AutoPathFinder.GotoPath("Pathto1"));
+        // .onTrue(AutoPathFinder.GotoPath("Pathto1"));
 
         // driverController.y()
-        //         .onTrue(AutoPathFinder.GotoPath("lineToRight"));
+        // .onTrue(AutoPathFinder.GotoPath("lineToRight"));
 
         driverController.leftBumper()
-                .onTrue( new pathfindToReef(reefPole.LEFT, DrivetrainConstants.drivetrain, frontCamera));
-
-       
+                .onTrue(new pathfindToReef(reefPole.LEFT, DrivetrainConstants.drivetrain, frontCamera));
 
         driverController.rightBumper()
                 .onTrue(new pathfindToReef(reefPole.RIGHT, DrivetrainConstants.drivetrain, frontCamera));
