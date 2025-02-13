@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.constants.RobotMap;
 import frc.robot.constants.RobotMap.SafetyMap;
 import frc.robot.constants.RobotMap.SafetyMap.SwerveConstants;
+import frc.robot.contract.Graduated_Mean_Function;
 import frc.robot.subsystems.vision.camera.Camera;
 import frc.robot.utils.SubsystemABS;
 import frc.robot.utils.Subsystems;
@@ -85,6 +86,12 @@ public class SwerveSubsystem extends SubsystemABS {
         }
     }
 
+    private void addVisionMeasurement(List<Camera> cameras) {
+        Graduated_Mean_Function meanFunction = new Graduated_Mean_Function();
+        Pose2d pose = meanFunction.getBetterEstimate(cameras);
+        tab.add("Mean Pose", pose);
+        
+    }
 
     @Override
     public void periodic() {
