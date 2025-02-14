@@ -150,8 +150,8 @@ public class RobotMap {
         public static final int PIVOT_MOTOR_CURRENT_LIMIT = 20;
 
         public static class SensorCanId {
-            public static final int INTAKE_MOTOR = 71;
-            public static final int PIVOT_MOTOR = 72;
+            public static final int INTAKE_MOTOR = 21;
+            public static final int PIVOT_MOTOR = 22;
             public static final int CORAL_CANRANGE = 100;
             public static final int ALGAE_CANRANGE = 100;
             public static final int INTAKE_ENCODER = 73;

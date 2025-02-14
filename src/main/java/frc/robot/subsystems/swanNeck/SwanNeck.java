@@ -22,7 +22,7 @@ public class SwanNeck extends SubsystemABS {
     private TalonFX pivotMotor;
     private CANrange coralCanRange;
     private CANrange algaeCanRange;
-    private CANcoder gooseNeckAngler;
+    // private CANcoder gooseNeckAngler;
     private DoubleSupplier algaeCANrangeVal;
     private DoubleSupplier coralCANrangeVal;
     private DoubleSupplier swanNeckCANCoderValue;
@@ -36,14 +36,14 @@ public class SwanNeck extends SubsystemABS {
             pivotMotor.getConfigurator().apply(CurrentLimiter.getCurrentLimitConfiguration(IntakeMap.PIVOT_MOTOR_CURRENT_LIMIT));
         coralCanRange = new CANrange(IntakeMap.SensorCanId.CORAL_CANRANGE);
         algaeCanRange = new CANrange(IntakeMap.SensorCanId.ALGAE_CANRANGE);
-        gooseNeckAngler = new CANcoder(IntakeMap.SensorCanId.INTAKE_ENCODER);
+        // gooseNeckAngler = new CANcoder(IntakeMap.SensorCanId.INTAKE_ENCODER);
         
 
         pivotMotor.getConfigurator().apply(IntakeMap.getBreakConfiguration());
 
         algaeCANrangeVal = () -> algaeCanRange.getDistance().getValueAsDouble();
         coralCANrangeVal = () -> coralCanRange.getDistance().getValueAsDouble();
-        swanNeckCANCoderValue = () -> gooseNeckAngler.getPosition().getValueAsDouble();
+        swanNeckCANCoderValue = () -> pivotMotor.getPosition().getValueAsDouble();
         tab.addNumber("algaeCanRange", algaeCANrangeVal);
         tab.addNumber("coralCanRange", coralCANrangeVal);
         tab.addNumber("gooseNeckAngler", swanNeckCANCoderValue);
