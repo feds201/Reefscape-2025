@@ -1,4 +1,4 @@
-package frc.robot.subsystems.elevator;
+package frc.robot.subsystems.lift ;
 
 import java.util.function.DoubleSupplier;
 
@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.utils.SubsystemABS;
 import frc.robot.utils.Subsystems;
 
-public class Elevator extends SubsystemABS {
+public class Lift extends SubsystemABS {
     private TalonFX elevatorMotorLeader; // Primary motor
     private TalonFX elevatorMotorFollower; // Follower motor
     // private CANcoder elevatorEncoder; // Range sensor
@@ -21,7 +21,7 @@ public class Elevator extends SubsystemABS {
     // private final ShuffleboardTab tab = Shuffleboard.getTab("Elevator");
     private final PIDController pid;
 
-    public Elevator(Subsystems subsystem, String name) {
+    public Lift(Subsystems subsystem, String name) {
         super(subsystem, name);
         elevatorMotorLeader = new TalonFX(RobotMap.ElevatorMap.ELEVATOR_MOTOR);
         elevatorMotorFollower = new TalonFX(RobotMap.ElevatorMap.ELEVATOR_MOTOR2);
