@@ -70,6 +70,10 @@ public class Climber extends SubsystemBase {
     return rightSwitch.get();
   }
 
+  public boolean climberEngaged(){
+    return getLeftValue() && getRightValue();
+  }
+
   public double getEncoderValue() {
     return climberMotorLeader.getPosition().getValueAsDouble();
   }

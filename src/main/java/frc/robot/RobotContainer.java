@@ -3,6 +3,7 @@ package frc.robot;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Map;
+import java.util.function.DoubleSupplier;
 
 import org.json.simple.parser.ParseException;
 
@@ -25,6 +26,7 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -35,6 +37,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.auton.pathfindToReef;
 import frc.robot.commands.auton.posePathfindToReef;
 import frc.robot.commands.auton.pathfindToReef.reefPole;
+import frc.robot.commands.lift.RotateElevatorBasic;
 import frc.robot.commands.swerve.DriveForwardCommand;
 import frc.robot.commands.swerve.GameNavigator;
 import frc.robot.constants.*;
@@ -80,6 +83,7 @@ public class RobotContainer extends RobotFramework {
     private final PoseEstimator poseEstimator;
     private Lift elevator;
     private SwanNeck swanNeck;
+
 
     private final NetworkTableInstance inst = NetworkTableInstance.getDefault();
 
@@ -137,6 +141,8 @@ public class RobotContainer extends RobotFramework {
                     selectedCommand.schedule();
                 }
             }
+
+        
         });
 
         setupNamedCommands();
@@ -208,6 +214,11 @@ public class RobotContainer extends RobotFramework {
         driverController.rightTrigger()
                 .onTrue(new posePathfindToReef(frc.robot.commands.auton.posePathfindToReef.reefPole.RIGHT,
                         DrivetrainConstants.drivetrain, frontCamera));
+
+        driverController.a()
+                .whileTrue(new RotateElevatorBasic(elevator.m_elevatorSpeed.getAsDouble(), elevator));
+
+                
         // driverController.b()
         // .onTrue(AutoPathFinder.GotoPath("Pathto1"));
 

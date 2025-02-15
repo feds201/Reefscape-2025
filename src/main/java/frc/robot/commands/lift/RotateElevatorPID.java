@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.elevator;
+package frc.robot.commands.lift;
 import frc.robot.subsystems.lift.Lift;
 
 import java.util.function.DoubleSupplier;
@@ -11,14 +11,15 @@ import edu.wpi.first.wpilibj2.command.Command;
 
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class rotateElevator extends Command {
+public class RotateElevatorPID extends Command {
   /** Creates a new rotateElevator. */
   private final Lift c_Elevator;
   private final DoubleSupplier c_ElevatorAngle;
-  public rotateElevator(Lift elevator, DoubleSupplier elevatorAngle) {
+  public RotateElevatorPID(Lift elevator, DoubleSupplier elevatorAngle) {
     // Use addRequirements() here to declare subsystem dependencies.
     c_Elevator = elevator;
     c_ElevatorAngle = elevatorAngle;
+    addRequirements(c_Elevator);
   }
 
   // Called when the command is initially scheduled.
