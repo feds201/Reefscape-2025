@@ -44,7 +44,7 @@ public class Lift extends SubsystemABS {
         m_encoderValue = () -> elevatorMotorLeader.getPosition().getValueAsDouble();
         pid = new PIDController(RobotMap.ElevatorMap.ELEVATOR_P, RobotMap.ElevatorMap.ELEVATOR_I, RobotMap.ElevatorMap.ELEVATOR_D);
         
-        tab.add("Intake PID", pid)
+        tab.add("Elevator PID", pid)
             .withWidget(BuiltInWidgets.kPIDController);
 
         tab.addNumber("Elevator Position", m_encoderValue);

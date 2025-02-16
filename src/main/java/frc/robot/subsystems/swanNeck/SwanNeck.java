@@ -11,6 +11,8 @@ import com.ctre.phoenix6.hardware.CANrange;
 import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.WidgetType;
 import frc.robot.constants.RobotMap.CurrentLimiter;
 import frc.robot.constants.RobotMap.IntakeMap;
 import frc.robot.utils.SubsystemABS;
@@ -26,6 +28,7 @@ public class SwanNeck extends SubsystemABS {
     private DoubleSupplier algaeCANrangeVal;
     private DoubleSupplier coralCANrangeVal;
     private DoubleSupplier swanNeckAngleValue;
+    private PIDController pid;
   
 
     public SwanNeck(Subsystems subsystem, String name) {
@@ -36,6 +39,7 @@ public class SwanNeck extends SubsystemABS {
             pivotMotor.getConfigurator().apply(CurrentLimiter.getCurrentLimitConfiguration(IntakeMap.PIVOT_MOTOR_CURRENT_LIMIT));
         coralCanRange = new CANrange(IntakeMap.SensorCanId.CORAL_CANRANGE);
         algaeCanRange = new CANrange(IntakeMap.SensorCanId.ALGAE_CANRANGE);
+        pid = IntakeMap.intakePid;
         // gooseNeckAngler = new CANcoder(IntakeMap.SensorCanId.INTAKE_ENCODER);
         
 
@@ -47,6 +51,7 @@ public class SwanNeck extends SubsystemABS {
         tab.addNumber("algae CanRange Value", algaeCANrangeVal);
         tab.addNumber("coral CanRange Value", coralCANrangeVal);
         tab.addNumber("gooseNeck Angle", swanNeckAngleValue);
+        tab.add("GooseNeck PID", pid).withWidget(BuiltInWidgets.kPIDController);
     }
 
     @Override
@@ -79,6 +84,20 @@ public class SwanNeck extends SubsystemABS {
     public void runPivotMotor(double speed) {
         pivotMotor.set(speed);
     }
+
+    public void setPIDTarget(double target) {
+        pid.setSetpoint(target);
+    }
+
+    public boolean pidAtSetpoint() {
+        return pid.atSetpoint();
+    }
+
+    public void rotateElevatorPID() {
+        double output = pid.calculate(getPivotAngle());
+        runPivotMotor(output);
+    }
+
 
     public double getPivotAngle() {
         return swanNeckAngleValue.getAsDouble();
