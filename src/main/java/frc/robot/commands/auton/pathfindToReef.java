@@ -22,10 +22,13 @@ public class pathfindToReef extends Command {
   public enum reefPole {
     LEFT, RIGHT
   }
- 
+
   private reefPole pole;
-  private Camera limelight;
-  private int tagId;
+  private Camera rightLimelight;
+  private Camera leftLimelight;
+  private int tagIdRight;
+  private int tagIdLeft;
+  private int tagIdFinal;
   private boolean commandFinished;
   private String pathName;
   private PathPlannerPath pathToReefPole;
@@ -53,51 +56,62 @@ public class pathfindToReef extends Command {
       new PathPair(11, 20, "16alignLeft", "16alignRight")
   };
 
-
-  public pathfindToReef(reefPole pole, CommandSwerveDrivetrain swerve, Camera camera) {
+  public pathfindToReef(reefPole pole, CommandSwerveDrivetrain swerve, Camera rightCamera, Camera leftCamera) {
     this.pole = pole;
-    limelight = camera;
-
+    rightLimelight = rightCamera;
+    leftLimelight = leftCamera;
     addRequirements(swerve);
-    
+
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    tagId = limelight.GetAprilTag();
-    tagId = 18;
-    if (tagId == -1) {
+    tagIdRight = rightLimelight.GetAprilTag();
+    tagIdLeft = leftLimelight.GetAprilTag();
+
+    if (tagIdLeft == tagIdRight) {
+      tagIdFinal = tagIdLeft;
+
+    } else if (tagIdRight != -1) {
+      tagIdFinal = tagIdRight;
+
+    } else if (tagIdLeft != -1){
+      tagIdFinal = tagIdLeft;
+
+    } else {
+      tagIdFinal = -1;
+    }
+    // tagIdFinal = 18;
+    if (tagIdFinal == -1) {
       commandFinished = true;
     } else {
 
-    switch (pole) {
-      case LEFT:
-        for (PathPair path : paths) {
-          if (path.tagToPath(tagId)) {
-            pathName = path.getLeftPath();
+      switch (pole) {
+        case LEFT:
+          for (PathPair path : paths) {
+            if (path.tagToPath(tagIdFinal)) {
+              pathName = path.getLeftPath();
+            }
           }
-        }
-        break;
-      case RIGHT:
-        for (PathPair path : paths) {
-          if (path.tagToPath(tagId)) {
-            pathName = path.getRightPath();
+          break;
+        case RIGHT:
+          for (PathPair path : paths) {
+            if (path.tagToPath(tagIdFinal)) {
+              pathName = path.getRightPath();
+            }
           }
-        }
-        break;
+          break;
 
-    }
+      }
 
-  
+      if(pathName != null){
       pathToReefPole = AutoPathFinder.loadPath(pathName);
-    reefPathCommand = AutoBuilder.pathfindThenFollowPath(pathToReefPole, AutonConstraints.kPathConstraints);
-    reefPathCommand.schedule();
-   
+      reefPathCommand = AutoBuilder.pathfindThenFollowPath(pathToReefPole, AutonConstraints.kPathConstraints);
+      reefPathCommand.schedule();
+      }
+    }
   }
-  }
-
- 
 
   // Called once the command ends or is interrupted.
   @Override

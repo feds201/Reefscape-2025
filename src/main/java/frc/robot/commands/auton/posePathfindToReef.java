@@ -6,9 +6,12 @@ package frc.robot.commands.auton;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathPlannerPath;
+import com.pathplanner.lib.util.FlippingUtil;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.constants.RobotMap.AutonPosesMap;
@@ -26,10 +29,13 @@ public class posePathfindToReef extends Command {
   }
  
   private reefPole pole;
-  private Camera limelight;
-  private int tagId;
+  private Camera rightLimelight;
+  private Camera leftLimelight;
+  private int tagIdRight;
+  private int tagIdLeft;
+  private int tagIdFinal;
   private boolean commandFinished;
-  private Pose2d poseName;
+  private Pose2d poseName; //put in intitialize instead?
   private PathPlannerPath pathToReefPole;
   private Command reefPathCommand;
   private final PosePair[] poses = {
@@ -56,49 +62,70 @@ public class posePathfindToReef extends Command {
   };
 
 
-  public posePathfindToReef(reefPole pole, CommandSwerveDrivetrain swerve, Camera camera) {
+  public posePathfindToReef(reefPole pole, CommandSwerveDrivetrain swerve, Camera rightCamera, Camera leftCamera) {
     this.pole = pole;
-    limelight = camera;
-
+    rightLimelight = rightCamera;
+    leftLimelight = leftCamera;
     addRequirements(swerve);
-    
+
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    tagId = limelight.GetAprilTag();
-    // tagId = 18;
-    if (tagId == -1) {
+    tagIdRight = rightLimelight.GetAprilTag();
+    tagIdLeft = leftLimelight.GetAprilTag();
+
+    if (tagIdLeft == tagIdRight) {
+      tagIdFinal = tagIdLeft;
+
+    } else if (tagIdRight != -1) {
+      tagIdFinal = tagIdRight;
+
+    } else if (tagIdLeft != -1){
+      tagIdFinal = tagIdLeft;
+
+    } else {
+      tagIdFinal = -1;
+    }
+    // tagIdFinal = 18;
+
+    if (tagIdFinal == -1) {
       commandFinished = true;
     } else {
 
     switch (pole) {
       case LEFT:
         for (PosePair pose : poses) {
-          if (pose.tagToPath(tagId)) {
+          if (pose.tagToPath(tagIdFinal)) {
             poseName = pose.getLeftPath();
           }
         }
         break;
       case RIGHT:
         for (PosePair pose : poses) {
-          if (pose.tagToPath(tagId)) {
+          if (pose.tagToPath(tagIdFinal)) {
             poseName = pose.getRightPath();
           }
         }
         break;
 
     }
-
-  
-     
+      
+    if(poseName != null){
+     if(DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red){
+      poseName = FlippingUtil.flipFieldPose(poseName);
+     }
     reefPathCommand = AutoBuilder.pathfindToPose(poseName, AutonConstraints.kPathConstraints, 0);
-    reefPathCommand.schedule();
-   
+    
+    }
   }
   }
-
+ @Override
+ public void execute(){
+  reefPathCommand.schedule();
+  commandFinished = true;
+ }
  
 
   // Called once the command ends or is interrupted.

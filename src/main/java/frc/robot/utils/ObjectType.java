@@ -7,9 +7,10 @@ import edu.wpi.first.networktables.NetworkTableInstance;
  * Enum representing different object types for vision processing.
  */
 public enum ObjectType {
-    APRIL_TAG_FRONT("April Tag Front", "This object type is for AprilTags", "limelight-seven", 480, 640, 0.0, 59.6, 45.7),
-    APRIL_TAG_BACK("April Tag Back", "This object type is for AprilTags", "limelight-three", 480, 640, 0.0, 59.6, 45.7),
-    APRIL_TAG_LEFT("April Tag Left", "This object type is for AprilTags", "limelight-one", 480, 640, 0.0, 59.6, 45.7);
+    APRIL_TAG_FRONT("April Tag Front Right", "This object type is for AprilTags", "limelight-seven", 480, 640, 0.0, 59.6, 45.7),
+    APRIL_TAG_FRONT_LEFT("April Tag Front Left", "This object type is for AprilTags", "limelight-five", 480, 640, 0.0, 59.6, 45.7),
+    APRIL_TAG_BACK("April Tag Back Right", "This object type is for AprilTags", "limelight-three", 480, 640, 0.0, 59.6, 45.7),
+    APRIL_TAG_LEFT("April Tag Back Left", "This object type is for AprilTags", "limelight-one", 480, 640, 0.0, 59.6, 45.7);
 
 
     // INFINITE_CHARGE_BALLS("Infinite Charge Balls", "This object type is for Infinite Charge Balls", "limelight-notes", 480, 640, 0.0, 59.6, 45.7),

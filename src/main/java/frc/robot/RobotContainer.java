@@ -84,7 +84,8 @@ public class RobotContainer extends RobotFramework {
     private final SendableChooser<Command> teleOpChooser;
     private final SendableChooser<Command> autonChooser;
     private SendableChooser<Command> commandChooser;
-    private final Camera frontCamera;
+    private final Camera frontRightCamera;
+    private final Camera frontLeftCamera;
     private final Camera rearRightCamera;
     private final Camera rearLeftCamera;
     private final Climber climber;
@@ -119,11 +120,15 @@ public class RobotContainer extends RobotFramework {
                 SensorMap.GYRO_PORT,
                 driverController);
 
-        frontCamera = new Camera(
+        frontRightCamera = new Camera(
                 Subsystems.VISION,
                 Subsystems.VISION.getNetworkTable(),
                 ObjectType.APRIL_TAG_FRONT,
                 "limelight-seven");
+
+        frontLeftCamera = new Camera(
+            Subsystems.VISION, Subsystems.VISION.getNetworkTable(), ObjectType.APRIL_TAG_FRONT_LEFT, "limelight-five"
+        );
 
         rearRightCamera = new Camera(Subsystems.VISION, Subsystems.VISION.getNetworkTable(), ObjectType.APRIL_TAG_BACK,
                 "limelight-three");
@@ -179,22 +184,32 @@ public class RobotContainer extends RobotFramework {
         Rotation2d gyroAngle = driveState.Pose.getRotation();
         SmartDashboard.putNumber("robot rotation", headingDeg);
         double omega = Units.radiansToRotations(driveState.Speeds.omegaRadiansPerSecond);
-        frontCamera.SetRobotOrientation(headingDeg, 0, 0, 0, 0, 0);
+        frontRightCamera.SetRobotOrientation(headingDeg, 0, 0, 0, 0, 0);
         rearRightCamera.SetRobotOrientation(headingDeg, 0, 0, 0, 0, 0);
         rearLeftCamera.SetRobotOrientation(headingDeg, 0, 0, 0, 0, 0);
+        frontLeftCamera.SetRobotOrientation(headingDeg, 0, 0, 0, 0, 0);
 
         SwerveModulePosition[] modulePositions = driveState.ModulePositions;
         poseEstimator.updatePose();
 
-        PoseAllocate frontPose = frontCamera.getRobotPose();
+        PoseAllocate frontRightPose = frontRightCamera.getRobotPose();
         PoseAllocate rearRightPose = rearRightCamera.getRobotPose();
         PoseAllocate rearLeftPose = rearLeftCamera.getRobotPose();
+        PoseAllocate frontLeftPose = frontLeftCamera.getRobotPose();
 
-        if (frontPose != null
-                && frontPose.getPose() != null
-                && frontPose.getPoseEstimate().tagCount > 0
+        if (frontRightPose != null
+                && frontRightPose.getPose() != null
+                && frontRightPose.getPoseEstimate().tagCount > 0
                 && Math.abs(omega) < 2) {
-            DrivetrainConstants.drivetrain.addVisionMeasurement(frontPose.getPose(), frontPose.getTime());
+            DrivetrainConstants.drivetrain.addVisionMeasurement(frontRightPose.getPose(), frontRightPose.getTime());
+
+        }
+
+        if (frontLeftPose != null
+                && frontLeftPose.getPose() != null
+                && frontLeftPose.getPoseEstimate().tagCount > 0
+                && Math.abs(omega) < 2) {
+            DrivetrainConstants.drivetrain.addVisionMeasurement(frontLeftPose.getPose(), frontLeftPose.getTime());
 
         }
 
@@ -248,10 +263,10 @@ public class RobotContainer extends RobotFramework {
 
 
         driverController.leftBumper()
-                .onTrue(new pathfindToReef(reefPole.LEFT, DrivetrainConstants.drivetrain, frontCamera));
+                .onTrue(new pathfindToReef(reefPole.LEFT, DrivetrainConstants.drivetrain, frontRightCamera, frontLeftCamera));
 
         driverController.rightBumper()
-                .onTrue(new pathfindToReef(reefPole.RIGHT, DrivetrainConstants.drivetrain, frontCamera));
+                .onTrue(new pathfindToReef(reefPole.RIGHT, DrivetrainConstants.drivetrain, frontRightCamera, frontLeftCamera));
         driverController.povRight().onTrue(new InstantCommand(()-> CommandScheduler.getInstance().cancelAll()));
     }
 
@@ -291,9 +306,10 @@ public class RobotContainer extends RobotFramework {
     public SubsystemABS[] SafeGuardSystems() {
         return new SubsystemABS[] {
                 swerveSubsystem,
-                frontCamera,
-                // rearLeftCamera,
-                // rearRightCamera
+                frontRightCamera,
+                rearLeftCamera,
+                rearRightCamera,
+                frontLeftCamera
 
         };
     }
