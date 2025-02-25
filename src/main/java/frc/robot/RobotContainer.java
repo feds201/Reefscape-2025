@@ -244,6 +244,13 @@ public class RobotContainer extends RobotFramework {
         //         .onTrue(new posePathfindToReef(frc.robot.commands.auton.posePathfindToReef.reefPole.RIGHT,
         //                 DrivetrainConstants.drivetrain, frontCamera));
 
+        operatorController.a().whileTrue(new RotateElevatorBasic(elevator.m_elevatorSpeed, elevator));
+        operatorController.rightBumper().whileTrue(new RaiseSwanNeckPID(()-> .11, swanNeck));
+        operatorController.leftBumper().whileTrue(new RaiseSwanNeckPID(()-> .07, swanNeck));
+        operatorController.x().whileTrue(new RaiseSwanNeckPID(()-> .14, swanNeck));
+       
+       
+
         driverController.y()
                 .whileTrue(new RotateElevatorPID(elevator, () -> ElevatorMap.L2ROTATION));
         driverController.b()
@@ -257,7 +264,7 @@ public class RobotContainer extends RobotFramework {
         .whileTrue(new RaiseClimberBasic(climber.m_climberSpeed , climber));
 
         // driverController.leftTrigger().whileTrue(new RaiseSwanNeck(swanNeck, swanNeck.m_swanNeckPivotSpeed));
-        driverController.leftTrigger().whileTrue(new RaiseSwanNeckPID(()-> .1, swanNeck));
+        driverController.leftTrigger().whileTrue(new RaiseSwanNeckPID(()-> .062, swanNeck));
 
         driverController.rightTrigger().whileTrue(new SpinSwanWheels(swanNeck, swanNeck.m_swanNeckWheelSpeed));
 

@@ -85,7 +85,7 @@ public class RobotMap {
         public static final double L1ROTATION = 4; //tune
         public static final double L2ROTATION = 8.48;
         public static final double L3ROTATION = 15.35;
-        public static final double L4ROTATION = 27.65;
+        public static final double L4ROTATION = 29.65;
         public static final double GEAR_RATIO = 5.70136;
 
     }
