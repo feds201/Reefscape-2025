@@ -126,7 +126,7 @@ public class SwanNeck extends SubsystemABS {
         } else {
             pidOutput -= IntakeMap.ks;
         }
-        double output = pidOutput + (IntakeMap.kg * Math.cos((getPivotPosition() + .223) * 2 * Math.PI));
+        double output = pidOutput + (IntakeMap.kg * Math.cos((getPivotPosition() - .223) * 2 * Math.PI));
         
         setPivotSpeed(output);
     }
@@ -136,7 +136,7 @@ public class SwanNeck extends SubsystemABS {
     }
 
     public void resetGooseNeckEncoder() {
-        pivotMotor.setPosition(.2);
+        pivotMotor.setPosition(0);
     }
 
     public boolean getCoralLoaded(){
