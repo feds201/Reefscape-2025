@@ -82,8 +82,8 @@ public class RobotMap {
         public static final double PARENT_GEAR_RADIUS = Units.inchesToMeters(2.5);
         public static final double ELEVATOR_CIRCUMFERENCE = 2 * Math.PI * PARENT_GEAR_RADIUS;
         public static final double ELEVATOR_CURRENT_LIMIT = 40;
-        public static final double L1ROTATION = 4; //tune
-        public static final double L2ROTATION = 8.48;
+        public static final double L1ROTATION = 6.24; //tune
+        public static final double L2ROTATION = 9.48;
         public static final double L3ROTATION = 15.35;
         public static final double L4ROTATION = 29.65;
         public static final double GEAR_RATIO = 5.70136;
@@ -158,14 +158,16 @@ public class RobotMap {
         public static final double GEAR_RATIO = 55.22727273;
         public static final double WHEEL_SPEED_INTAKE = -0.2;
         public static final double WHEEL_SPEED_SCORE = -0.4;
+        public static final double L1_SPEED_SCORE = -0.3;
 
         public static class ReefStops {
-            public static final double L4ANGLE = .04;
+            public static final double L4ANGLE = .088;
             public static final double STARTANGLE = .00;
-            public static final double SAFEANGLE = .023;
+            public static final double SAFEANGLE = .0122;
             public static final double L1ANGLE = .04;  // TODO tune it!
             public static final double L2ANGLE = .042; // TODO tune it!
             public static final double L3ANGLE = .042; // TODO tune it!
+          
         }
 
         public static class SensorCanId {

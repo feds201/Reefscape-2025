@@ -4,8 +4,6 @@
 
 package frc.robot.commands.swanNeck;
 
-import java.lang.annotation.ElementType;
-
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -22,24 +20,24 @@ import frc.robot.utils.DrivetrainConstants;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class PlaceLTwo extends SequentialCommandGroup {
+public class PlaceLFour extends SequentialCommandGroup {
   SwanNeck m_SwanNeck;
   Lift m_elevator;
   /** Creates a new scoreLTwo. */
-  public PlaceLTwo(Lift lift, SwanNeck swanNeck) {
+  public PlaceLFour(Lift lift, SwanNeck swanNeck) {
     m_SwanNeck = swanNeck;
     m_elevator = lift;
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(new RaiseSwanNeckPID(()-> IntakeMap.ReefStops.SAFEANGLE , m_SwanNeck).until(m_SwanNeck :: pidAtSetpoint), 
 
-    new RotateElevatorPID(m_elevator, ()-> ElevatorMap.L2ROTATION).until(m_elevator :: pidAtSetpoint), 
+    new RotateElevatorPID(m_elevator, ()-> ElevatorMap.L4ROTATION).until(m_elevator :: pidAtSetpoint), 
 
-    new ParallelCommandGroup(new RotateElevatorPID(m_elevator, ()-> ElevatorMap.L2ROTATION), 
-    new RaiseSwanNeckPID(()-> IntakeMap.ReefStops.SAFEANGLE, m_SwanNeck)).until(m_SwanNeck :: pidAtSetpoint),
+    new ParallelCommandGroup(new RotateElevatorPID(m_elevator, ()-> ElevatorMap.L4ROTATION), 
+    new RaiseSwanNeckPID(()-> IntakeMap.ReefStops.L4ANGLE, m_SwanNeck)).until(m_SwanNeck :: pidAtSetpoint),
 
-    new ParallelDeadlineGroup(new WaitCommand(1), new RotateElevatorPID(m_elevator, ()-> ElevatorMap.L2ROTATION), 
-    new SpinSwanWheels(m_SwanNeck, ()-> IntakeMap.WHEEL_SPEED_SCORE)),
+    new ParallelDeadlineGroup(new WaitCommand(1), new RotateElevatorPID(m_elevator, ()-> ElevatorMap.L4ROTATION), 
+    new SpinSwanWheels(m_SwanNeck, ()-> IntakeMap.WHEEL_SPEED_SCORE / 4)),
     new RaiseSwanNeckPID(()-> IntakeMap.ReefStops.SAFEANGLE, m_SwanNeck).until(m_SwanNeck :: pidAtSetpoint),
     new ParallelDeadlineGroup(new WaitCommand(0.25), new MoveBack(DrivetrainConstants.drivetrain)),
     new RotateElevatorDownPID(m_elevator).until(m_elevator :: pidDownAtSetpoint)

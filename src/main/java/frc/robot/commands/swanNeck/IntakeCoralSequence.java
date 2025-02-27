@@ -21,7 +21,7 @@ public class IntakeCoralSequence extends SequentialCommandGroup {
     addCommands(new RaiseSwanNeckPID(()-> IntakeMap.ReefStops.SAFEANGLE, m_SwanNeck).until(m_SwanNeck :: pidAtSetpoint),
       new SpinSwanWheels(m_SwanNeck, ()-> IntakeMap.WHEEL_SPEED_INTAKE).until(m_SwanNeck :: getCoralLoaded),
       new SpinSwanWheels(m_SwanNeck, ()-> IntakeMap.WHEEL_SPEED_INTAKE).until(m_SwanNeck :: getCoralLoadedOpposite),
-      new SpinSwanWheels(m_SwanNeck, ()-> -IntakeMap.WHEEL_SPEED_INTAKE).until(m_SwanNeck :: getCoralLoaded)
+      new SpinSwanWheels(m_SwanNeck, ()-> -IntakeMap.WHEEL_SPEED_INTAKE/2).until(m_SwanNeck :: getCoralLoaded)
     );
   }
 }

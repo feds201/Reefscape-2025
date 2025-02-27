@@ -37,11 +37,13 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.commands.auton.MoveBack;
 import frc.robot.commands.auton.pathfindToReef;
 import frc.robot.commands.auton.posePathfindToReef;
 import frc.robot.commands.auton.pathfindToReef.reefPole;
 import frc.robot.commands.climber.RaiseClimberBasic;
 import frc.robot.commands.lift.RotateElevatorBasic;
+import frc.robot.commands.lift.RotateElevatorDownPID;
 import frc.robot.commands.lift.RotateElevatorPID;
 import frc.robot.commands.swanNeck.PlaceLTwo;
 import frc.robot.commands.swanNeck.RaiseSwanNeck;
@@ -49,6 +51,8 @@ import frc.robot.commands.swanNeck.RaiseSwanNeckPID;
 import frc.robot.commands.swanNeck.PlaceLThree;
 import frc.robot.commands.swanNeck.SpinSwanWheels;
 import frc.robot.commands.swanNeck.IntakeCoralSequence;
+import frc.robot.commands.swanNeck.PlaceLFour;
+import frc.robot.commands.swanNeck.PlaceLOne;
 import frc.robot.commands.swerve.DriveForwardCommand;
 import frc.robot.commands.swerve.GameNavigator;
 import frc.robot.constants.*;
@@ -237,6 +241,8 @@ public class RobotContainer extends RobotFramework {
     private void configureBindings() {
 
         //Operator
+        operatorController.y()
+            .whileTrue(new PlaceLOne(elevator, swanNeck));
         operatorController.b()
             .whileTrue(new PlaceLTwo(elevator, swanNeck));
 
@@ -244,7 +250,14 @@ public class RobotContainer extends RobotFramework {
             .whileTrue(new PlaceLThree(elevator, swanNeck));
 
         operatorController.x()
-            .whileTrue(new RotateElevatorPID(elevator, () -> ElevatorMap.L4ROTATION));
+            .whileTrue(new PlaceLFour(elevator, swanNeck));
+
+        operatorController.povLeft()
+            .whileTrue(new RaiseSwanNeckPID(()-> RobotMap.IntakeMap.ReefStops.SAFEANGLE, swanNeck));
+
+        operatorController.leftBumper().whileTrue(new MoveBack(DrivetrainConstants.drivetrain));
+
+        operatorController.rightBumper().whileTrue(new RotateElevatorDownPID(elevator));
 
 
         
@@ -293,7 +306,7 @@ public class RobotContainer extends RobotFramework {
 
                 //testing purposes
       
-        // driverController.leftTrigger().whileTrue(new RaiseSwanNeck(swanNeck, swanNeck.m_swanNeckPivotSpeed));
+        driverController.a().whileTrue(new RaiseSwanNeck(swanNeck, swanNeck.m_swanNeckPivotSpeed));
        
        
         // driverController.leftBumper()
