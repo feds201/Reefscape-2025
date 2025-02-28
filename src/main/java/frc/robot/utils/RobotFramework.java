@@ -2,6 +2,7 @@ package frc.robot.utils;
 
 import java.util.Map;
 
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -14,10 +15,11 @@ import frc.robot.subsystems.swerve.SwerveSubsystem;
  * Class for configuring robot drive modes.
  */
 public class RobotFramework {
-
+        private pythonicCurve filter_x = new pythonicCurve(2, 5, 1, 2, 0);
+        private pythonicCurve filter_y = new pythonicCurve(2, 5, 1, 2, 0);
         private double snappedAngle = 0.0;
         private double angle = 0.0;
-        private Smooth anglerate = new Smooth(10);
+        private Smooth anglerate = new Smooth(2);
 
         /**
          * Configures the hologenic drive mode.
@@ -30,13 +32,19 @@ public class RobotFramework {
                         SwerveSubsystem swerveSubsystem) {
                 return new ParallelCommandGroup(
                                 DrivetrainConstants.drivetrain.applyRequest(() -> DrivetrainConstants.drive
-                                                .withVelocityX(-driverController.getLeftY() * SafetyMap.kMaxSpeed
-                                                                * SafetyMap.kMaxSpeedChange)
-                                                .withVelocityY(-driverController.getLeftX() * SafetyMap.kMaxSpeed
-                                                                * SafetyMap.kMaxSpeedChange)
-                                                .withRotationalRate(-driverController.getRightX()
+                                                .withVelocityX(
+                                                                filter_x.calculate
+                                                                (-driverController.getLeftY()
+                                                                                * SafetyMap.kMaxSpeed
+                                                                                * SafetyMap.kMaxSpeedChange))
+                                                .withVelocityY(
+                                                                filter_y.calculate
+                                                                (-driverController.getLeftX()
+                                                                                * SafetyMap.kMaxSpeed
+                                                                                * SafetyMap.kMaxSpeedChange))
+                                                .withRotationalRate(anglerate.calculate(-driverController.getRightX()
                                                                 * SafetyMap.kMaxAngularRate
-                                                                * SafetyMap.kAngularRateMultiplier)));
+                                                                * SafetyMap.kAngularRateMultiplier))));
         }
 
         /**
@@ -222,7 +230,5 @@ public class RobotFramework {
                                 }));
 
         }
-
-        
 
 }

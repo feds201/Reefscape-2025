@@ -180,9 +180,4 @@ public class Camera extends VisionABC {
 		throw new UnsupportedOperationException("Unimplemented method 'setLEDMode'");
 	}
 
-    public double getAprilTagCount() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getAprilTagCount'");
-    }
-
 }
