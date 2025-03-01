@@ -2,6 +2,7 @@ package frc.robot.utils;
 
 import java.util.Map;
 
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -18,6 +19,9 @@ public class RobotFramework {
         private double snappedAngle = 0.0;
         private double angle = 0.0;
         private Smooth anglerate = new Smooth(10);
+        private SlewRateLimiter slewX = new SlewRateLimiter(2);
+        private SlewRateLimiter slewY = new SlewRateLimiter(2);
+        
 
         /**
          * Configures the hologenic drive mode.
@@ -38,6 +42,19 @@ public class RobotFramework {
                                                                 * SafetyMap.kMaxAngularRate
                                                                 * SafetyMap.kAngularRateMultiplier)));
         }
+
+        public Command ConfigureHologenicDriveSlew(CommandXboxController driverController,
+        SwerveSubsystem swerveSubsystem) {
+return new ParallelCommandGroup(
+                DrivetrainConstants.drivetrain.applyRequest(() -> DrivetrainConstants.drive
+                                .withVelocityX(slewX.calculate(-driverController.getLeftY() * SafetyMap.kMaxSpeed
+                                                * SafetyMap.kMaxSpeedChange))
+                                .withVelocityY(slewY.calculate(-driverController.getLeftX() * SafetyMap.kMaxSpeed
+                                                * SafetyMap.kMaxSpeedChange))
+                                .withRotationalRate(-driverController.getRightX()
+                                                * SafetyMap.kMaxAngularRate
+                                                * SafetyMap.kAngularRateMultiplier)));
+}
 
         /**
          * Configures the beyblade drive mode.

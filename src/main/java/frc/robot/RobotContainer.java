@@ -163,7 +163,12 @@ public class RobotContainer extends RobotFramework {
 
             @Override
             public void execute() {
-                Command selectedCommand = teleOpChooser.getSelected();
+                Command selectedCommand;
+                if(elevator.getEncoderValue() > ElevatorMap.L3ROTATION - 1){
+                    selectedCommand = ConfigureHologenicDriveSlew(driverController, swerveSubsystem);
+                } else {
+                    selectedCommand = ConfigureHologenicDrive(driverController, swerveSubsystem);
+                }
                 if (selectedCommand != null) {
                     selectedCommand.schedule();
                 }
