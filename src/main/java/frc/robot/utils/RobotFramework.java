@@ -8,7 +8,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.constants.RobotMap;
 import frc.robot.constants.RobotMap.SafetyMap;
+import frc.robot.subsystems.lift.Lift;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
 
 /**
@@ -19,8 +21,8 @@ public class RobotFramework {
         private double snappedAngle = 0.0;
         private double angle = 0.0;
         private Smooth anglerate = new Smooth(10);
-        private SlewRateLimiter slewX = new SlewRateLimiter(2);
-        private SlewRateLimiter slewY = new SlewRateLimiter(2);
+        private SlewRateLimiter slewX = new SlewRateLimiter(.4);
+        private SlewRateLimiter slewY = new SlewRateLimiter(.4);
         
 
         /**
@@ -31,7 +33,19 @@ public class RobotFramework {
          * @return the command to configure hologenic drive.
          */
         public Command ConfigureHologenicDrive(CommandXboxController driverController,
-                        SwerveSubsystem swerveSubsystem) {
+                        SwerveSubsystem swerveSubsystem, Lift elevator){
+                                
+                                if(elevator.getEncoderValueFromMotor() > RobotMap.ElevatorMap.L2ROTATION -1){
+                                        return new ParallelCommandGroup(
+                DrivetrainConstants.drivetrain.applyRequest(() -> DrivetrainConstants.drive
+                                .withVelocityX(slewX.calculate(-driverController.getLeftY() * SafetyMap.kMaxSpeed
+                                                * SafetyMap.kMaxSpeedChange))
+                                .withVelocityY(slewY.calculate(-driverController.getLeftX() * SafetyMap.kMaxSpeed
+                                                * SafetyMap.kMaxSpeedChange))
+                                .withRotationalRate(-driverController.getRightX()
+                                                * SafetyMap.kMaxAngularRate
+                                                * SafetyMap.kAngularRateMultiplier)));
+                                } else {
                 return new ParallelCommandGroup(
                                 DrivetrainConstants.drivetrain.applyRequest(() -> DrivetrainConstants.drive
                                                 .withVelocityX(-driverController.getLeftY() * SafetyMap.kMaxSpeed
@@ -41,7 +55,7 @@ public class RobotFramework {
                                                 .withRotationalRate(-driverController.getRightX()
                                                                 * SafetyMap.kMaxAngularRate
                                                                 * SafetyMap.kAngularRateMultiplier)));
-        }
+        }}
 
         public Command ConfigureHologenicDriveSlew(CommandXboxController driverController,
         SwerveSubsystem swerveSubsystem) {

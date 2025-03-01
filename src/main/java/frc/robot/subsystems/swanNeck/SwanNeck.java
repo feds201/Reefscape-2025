@@ -147,6 +147,9 @@ public class SwanNeck extends SubsystemABS {
         return !(coralCanRange.getDistance().getValueAsDouble() <= .14);
     }
 
+    public void zeroPivotPosition(){
+        pivotMotor.setPosition(0);
+    }
 
     public double getPivotPosition() {
         return pivotMotor.getPosition().getValueAsDouble();

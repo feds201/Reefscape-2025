@@ -112,6 +112,10 @@ public class Lift extends SubsystemABS {
         return m_encoderValue.getAsDouble();
     }
 
+    public double getEncoderValueFromMotor(){
+        return elevatorMotorLeader.getPosition().getValueAsDouble();
+    }
+
     public double getElevatorHeight() {
         return m_encoderValue.getAsDouble() * ElevatorMap.ELEVATOR_CIRCUMFERENCE;
     }

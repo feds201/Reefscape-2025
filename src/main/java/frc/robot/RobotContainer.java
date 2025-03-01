@@ -96,6 +96,7 @@ public class RobotContainer extends RobotFramework {
     private final Camera rearRightCamera;
     private final Camera rearLeftCamera;
     private final Climber climber;
+    public Command zeroMechanisms;
 
     // private final Camera rearCamera;
     private final PathConstraints autoAlignConstraints;
@@ -163,18 +164,22 @@ public class RobotContainer extends RobotFramework {
 
             @Override
             public void execute() {
-                Command selectedCommand;
-                if(elevator.getEncoderValue() > ElevatorMap.L3ROTATION - 1){
-                    selectedCommand = ConfigureHologenicDriveSlew(driverController, swerveSubsystem);
-                } else {
-                    selectedCommand = ConfigureHologenicDrive(driverController, swerveSubsystem);
-                }
+                Command selectedCommand = ConfigureHologenicDrive(driverController, swerveSubsystem, elevator);
+                SmartDashboard.putNumber("executeEncoderVal", elevator.getEncoderValueFromMotor());
+                // if(elevator.getEncoderValueFromMotor() > ElevatorMap.L2ROTATION ){
+                //     selectedCommand = ConfigureHologenicDriveSlew(driverController, swerveSubsystem);
+                // } else {
+                //     selectedCommand = ConfigureHologenicDrive(driverController, swerveSubsystem, elevator);
+                // }
                 if (selectedCommand != null) {
                     selectedCommand.schedule();
                 }
             }
 
         });
+
+        zeroMechanisms = new InstantCommand(()-> elevator.zeroElevator())
+        .alongWith(new InstantCommand(()-> swanNeck.zeroPivotPosition()));
 
         setupNamedCommands();
         autonChooser = AutoBuilder.buildAutoChooser();
@@ -273,7 +278,7 @@ public class RobotContainer extends RobotFramework {
         driverController.povRight()
                 .onTrue(new InstantCommand(()-> CommandScheduler.getInstance().cancelAll()));
 
-        driverController.b().onTrue(new InstantCommand(()-> elevator.zeroElevator()));
+        driverController.b().onTrue(zeroMechanisms);
         
         driverController.start()
                 .onTrue(DrivetrainConstants.drivetrain
@@ -340,7 +345,7 @@ public class RobotContainer extends RobotFramework {
     }
 
     public void setupDrivetrain() {
-        teleOpChooser.setDefaultOption("Holo-Genic Drive", ConfigureHologenicDrive(driverController, swerveSubsystem));
+        teleOpChooser.setDefaultOption("Holo-Genic Drive", ConfigureHologenicDrive(driverController, swerveSubsystem, elevator));
         teleOpChooser.addOption("Arcade Drive", ConfigureArcadeDrive(driverController, swerveSubsystem));
         teleOpChooser.addOption("Tank Drive", ConfigureTankDrive(driverController, swerveSubsystem));
         teleOpChooser.addOption("Orbit Mode (Beta)", ConfigureOrbitMode(driverController, swerveSubsystem));
