@@ -100,7 +100,7 @@ public class Robot extends TimedRobot
     {
         SmartDashboard.putData("command scheduler", CommandScheduler.getInstance());
         CommandScheduler.getInstance().run();
-        robotContainer.setupVisionImplants();
+       
 
         
       
@@ -144,7 +144,9 @@ public class Robot extends TimedRobot
 
     /** This method is called periodically during autonomous. */
     @Override
-    public void autonomousPeriodic() {}
+    public void autonomousPeriodic() {
+        robotContainer.setupVisionImplants();
+    }
 
 
     @Override
@@ -161,6 +163,7 @@ public class Robot extends TimedRobot
     /** This method is called periodically during operator control. */
     @Override
     public void teleopPeriodic() {
+        robotContainer.setupVisionImplants();
     }
 
 

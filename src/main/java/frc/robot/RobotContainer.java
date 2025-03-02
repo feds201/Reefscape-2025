@@ -35,8 +35,10 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.auton.MoveBack;
 import frc.robot.commands.auton.pathfindToReef;
 import frc.robot.commands.auton.posePathfindToReef;
@@ -44,6 +46,7 @@ import frc.robot.commands.auton.pathfindToReef.reefPole;
 import frc.robot.commands.climber.RaiseClimberBasic;
 import frc.robot.commands.lift.RotateElevatorBasic;
 import frc.robot.commands.lift.RotateElevatorDownPID;
+import frc.robot.commands.lift.RotateElevatorL3PID;
 import frc.robot.commands.lift.RotateElevatorPID;
 import frc.robot.commands.swanNeck.PlaceLTwo;
 import frc.robot.commands.swanNeck.RaiseSwanNeck;
@@ -278,7 +281,10 @@ public class RobotContainer extends RobotFramework {
     }
 
     private void configureBindings() {
-
+        //Triggers
+        // new Trigger(elevator :: getElevatorAboveThreshold).whileTrue(new ConfigureHologenicDrive(driverController, DrivetrainConstants.drivetrain));
+        
+        new Trigger(elevator :: getElevatorAboveThreshold).onTrue(new ConfigureHologenicDrive(driverController, DrivetrainConstants.drivetrain)).onFalse(ConfigureHologenicDrive(driverController, swerveSubsystem, elevator));
         //Operator
         operatorController.y()
             .whileTrue(new PlaceLOne(elevator, swanNeck));
@@ -364,6 +370,7 @@ public class RobotContainer extends RobotFramework {
         NamedCommands.registerCommand("L4", new PlaceLFour(elevator, swanNeck));
         NamedCommands.registerCommand("ElevatorDown", new RotateElevatorDownPID(elevator).until(elevator :: pidDownAtSetpoint));
         NamedCommands.registerCommand("Feed", new IntakeCoralSequence(swanNeck));
+        NamedCommands.registerCommand("L3Infinite", new RotateElevatorL3PID(elevator));
     }
 
     public void setupPaths() {
@@ -371,6 +378,7 @@ public class RobotContainer extends RobotFramework {
         Shuffleboard.getTab(Subsystems.SWERVE_DRIVE.getNetworkTable()).add("Auton Chooser", autonChooser).withSize(2, 1)
                 .withProperties(Map.of("position", "0, 0"));
     }
+
 
     public void setupDrivetrain() {
         teleOpChooser.setDefaultOption("Holo-Genic Drive", ConfigureHologenicDrive(driverController, swerveSubsystem, elevator));

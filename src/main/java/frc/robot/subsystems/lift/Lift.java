@@ -1,6 +1,7 @@
 package frc.robot.subsystems.lift;
 
 import java.util.Map;
+import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
 import com.ctre.phoenix6.controls.Follower;
@@ -23,6 +24,7 @@ public class Lift extends SubsystemABS {
     // private CANcoder elevatorEncoder; // Range sensor
     private DoubleSupplier m_encoderValue;
     public DoubleSupplier m_elevatorSpeed;
+    private BooleanSupplier elevatorAboveThreshold;
 
     // private final ShuffleboardTab tab = Shuffleboard.getTab("Elevator");
     private final PIDController pid;
@@ -45,6 +47,7 @@ public class Lift extends SubsystemABS {
 
         // elevatorEncoder = new CANcoder(RobotMap.ElevatorMap.EVEVATOR_ENCODER);
         m_encoderValue = () -> elevatorMotorLeader.getPosition().getValueAsDouble();
+        elevatorAboveThreshold = ()-> getElevatorAboveThreshold();
         pid = new PIDController(RobotMap.ElevatorMap.ELEVATOR_P, RobotMap.ElevatorMap.ELEVATOR_I, RobotMap.ElevatorMap.ELEVATOR_D);
         pid.setTolerance(.2);
 
@@ -67,11 +70,14 @@ public class Lift extends SubsystemABS {
                 .withProperties(Map.of("min", 0, "max", .2))
                 .getEntry();
         m_elevatorSpeed = () -> elevatorSpeedSetter.getDouble(0);
+
+        tab.addBoolean("elevator Threshold" , elevatorAboveThreshold);
     }
 
     @Override
     public void periodic() {
         m_encoderValue = () -> elevatorMotorLeader.getPosition().getValueAsDouble();
+        elevatorAboveThreshold = ()-> getElevatorAboveThreshold();
     }
 
     @Override
@@ -136,6 +142,10 @@ public class Lift extends SubsystemABS {
 
     public void zeroElevator(){
         elevatorMotorLeader.setPosition(0);
+    }
+
+    public boolean getElevatorAboveThreshold(){
+        return getEncoderValue() > RobotMap.ElevatorMap.L3ROTATION - 1;
     }
 
     @Override

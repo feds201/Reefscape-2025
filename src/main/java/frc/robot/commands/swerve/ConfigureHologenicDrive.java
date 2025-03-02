@@ -18,9 +18,10 @@ import frc.robot.utils.DrivetrainConstants;
 public class ConfigureHologenicDrive extends Command {
   private CommandXboxController m_driverController;
   private CommandSwerveDrivetrain m_drivetrain;
+  private Command driveCommand;
   
-  private SlewRateLimiter slewX = new SlewRateLimiter(.4);
-  private SlewRateLimiter slewY = new SlewRateLimiter(.4);
+  private SlewRateLimiter slewX = new SlewRateLimiter(2.5);
+  private SlewRateLimiter slewY = new SlewRateLimiter(2.5);
   /** Creates a new ConfigureHologenicDrive. */
   public ConfigureHologenicDrive(CommandXboxController driverController, CommandSwerveDrivetrain drivetrain) {
     m_driverController = driverController;
@@ -32,7 +33,7 @@ public class ConfigureHologenicDrive extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    Command driveCommand = 
+    driveCommand = 
               DrivetrainConstants.drivetrain.applyRequest(() -> DrivetrainConstants.drive
                               .withVelocityX(slewX.calculate(-m_driverController.getLeftY() * SafetyMap.kMaxSpeed
                                               * SafetyMap.kMaxSpeedChange))
@@ -54,7 +55,9 @@ public class ConfigureHologenicDrive extends Command {
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+   driveCommand.cancel();
+  }
 
   // Returns true when the command should end.
   @Override

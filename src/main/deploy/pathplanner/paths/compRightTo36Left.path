@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.276536885245902,
-        "y": 0.4107069672131138
+        "x": 7.22475,
+        "y": 0.49549999999999955
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.377459016393443,
-        "y": 1.070030737704917
+        "x": 6.325672131147542,
+        "y": 1.1548237704918027
       },
       "isLocked": false,
       "linkedName": "compRightStart"
@@ -31,7 +31,14 @@
   "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "L3Infinite",
+      "waypointRelativePos": 0.5715953307393018,
+      "endWaypointRelativePos": 0.9856031128404373,
+      "command": null
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 2.0,
     "maxAcceleration": 3.0,

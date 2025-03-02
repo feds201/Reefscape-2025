@@ -34,19 +34,7 @@ public class RobotFramework {
          */
         public Command ConfigureHologenicDrive(CommandXboxController driverController,
                         SwerveSubsystem swerveSubsystem, Lift elevator){
-                                SmartDashboard.putNumber("hologenic elevator motor position", elevator.getEncoderValueFromMotor());
-                                SmartDashboard.putNumber("hologenic doublesupplier elevator position", elevator.getEncoderValue());
-                                if(elevator.getEncoderValueFromMotor() > RobotMap.ElevatorMap.L2ROTATION -1){
-                                        return new ParallelCommandGroup(
-                DrivetrainConstants.drivetrain.applyRequest(() -> DrivetrainConstants.drive
-                                .withVelocityX(slewX.calculate(-driverController.getLeftY() * SafetyMap.kMaxSpeed
-                                                * SafetyMap.kMaxSpeedChange))
-                                .withVelocityY(slewY.calculate(-driverController.getLeftX() * SafetyMap.kMaxSpeed
-                                                * SafetyMap.kMaxSpeedChange))
-                                .withRotationalRate(-driverController.getRightX()
-                                                * SafetyMap.kMaxAngularRate
-                                                * SafetyMap.kAngularRateMultiplier)));
-                                } else {
+                                
                 return new ParallelCommandGroup(
                                 DrivetrainConstants.drivetrain.applyRequest(() -> DrivetrainConstants.drive
                                                 .withVelocityX(-driverController.getLeftY() * SafetyMap.kMaxSpeed
@@ -56,7 +44,7 @@ public class RobotFramework {
                                                 .withRotationalRate(-driverController.getRightX()
                                                                 * SafetyMap.kMaxAngularRate
                                                                 * SafetyMap.kAngularRateMultiplier)));
-        }}
+        }
 
         public Command ConfigureHologenicDriveSlew(CommandXboxController driverController,
         SwerveSubsystem swerveSubsystem) {
