@@ -42,7 +42,7 @@ import frc.robot.constants.RobotMap.SafetyMap;
 import frc.robot.constants.RobotMap.SensorMap;
 import frc.robot.constants.RobotMap.UsbMap;
 import frc.robot.constants.RobotMap.SafetyMap.AutonConstraints;
-import frc.robot.subsystems.elevator.Elevator;
+import frc.robot.subsystems.Elevator.Elevator;
 import frc.robot.subsystems.swanNeck.SwanNeck;
 import frc.robot.subsystems.swerve.CommandSwerveDrivetrain;
 import frc.robot.subsystems.swerve.SwerveSubsystem;

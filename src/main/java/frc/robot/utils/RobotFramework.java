@@ -15,8 +15,8 @@ import frc.robot.subsystems.swerve.SwerveSubsystem;
  * Class for configuring robot drive modes.
  */
 public class RobotFramework {
-        private pythonicCurve filter_x = new pythonicCurve(2, 5, 1, 2, 0);
-        private pythonicCurve filter_y = new pythonicCurve(2, 5, 1, 2, 0);
+        private pythonicCurve filter_x = new pythonicCurve(2, 2, 1, 2, 2);
+        private pythonicCurve filter_y = new pythonicCurve(2, 2, 1, 2, 2);
         private double snappedAngle = 0.0;
         private double angle = 0.0;
         private Smooth anglerate = new Smooth(2);
