@@ -299,7 +299,10 @@ public class RobotContainer extends RobotFramework {
 
             @Override
             public void execute() {
+                
                 Command selectedCommand = teleOpChooser.getSelected();
+                operatorController.a().whileTrue(selectedCommand = ConfigureHologenicDrive(driverController, swerveSubsystem))
+                .onFalse(selectedCommand = ConfigureHologenicDriveNoSlew(driverController, swerveSubsystem));
                 if (selectedCommand != null) {
                     selectedCommand.schedule();
                 }

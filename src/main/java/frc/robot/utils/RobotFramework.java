@@ -20,6 +20,8 @@ public class RobotFramework {
         private double snappedAngle = 0.0;
         private double angle = 0.0;
         private Smooth anglerate = new Smooth(2);
+        private SlewRateLimiter slewX = new SlewRateLimiter(2);
+        private SlewRateLimiter slewY = new SlewRateLimiter(2);
 
         /**
          * Configures the hologenic drive mode.
@@ -33,18 +35,36 @@ public class RobotFramework {
                 return new ParallelCommandGroup(
                                 DrivetrainConstants.drivetrain.applyRequest(() -> DrivetrainConstants.drive
                                                 .withVelocityX(
-                                                                filter_x.calculate
+                                                                slewX.calculate
                                                                 (-driverController.getLeftY()
                                                                                 * SafetyMap.kMaxSpeed
                                                                                 * SafetyMap.kMaxSpeedChange))
                                                 .withVelocityY(
-                                                                filter_y.calculate
+                                                                slewY.calculate
                                                                 (-driverController.getLeftX()
                                                                                 * SafetyMap.kMaxSpeed
                                                                                 * SafetyMap.kMaxSpeedChange))
-                                                .withRotationalRate(anglerate.calculate(-driverController.getRightX()
+                                                .withRotationalRate(-driverController.getRightX()
                                                                 * SafetyMap.kMaxAngularRate
-                                                                * SafetyMap.kAngularRateMultiplier))));
+                                                                * SafetyMap.kAngularRateMultiplier)));
+        }
+
+
+        public Command ConfigureHologenicDriveNoSlew(CommandXboxController driverController,
+                        SwerveSubsystem swerveSubsystem) {
+                return new ParallelCommandGroup(
+                                DrivetrainConstants.drivetrain.applyRequest(() -> DrivetrainConstants.drive
+                                                .withVelocityX(
+                                                                (-driverController.getLeftY()
+                                                                                * SafetyMap.kMaxSpeed
+                                                                                * SafetyMap.kMaxSpeedChange))
+                                                .withVelocityY(
+                                                                (-driverController.getLeftX()
+                                                                                * SafetyMap.kMaxSpeed
+                                                                                * SafetyMap.kMaxSpeedChange))
+                                                .withRotationalRate(-driverController.getRightX()
+                                                                * SafetyMap.kMaxAngularRate
+                                                                * SafetyMap.kAngularRateMultiplier)));
         }
 
         /**
