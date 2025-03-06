@@ -159,4 +159,13 @@ public class Lift extends SubsystemABS {
         // elevatorMotorLeader.disable();
         // elevatorMotorFollower.disable();
     }
+
+    public void StopElevator(){
+        elevatorMotorLeader.set(0);
+
+    }
+
+    // public void configurePIDFProfile(){
+    //     elevatorMotorLeader.getConfigurator().apply(RobotMap.ElevatorMap.ELEVATOR_PIDF);
+    // }
 }

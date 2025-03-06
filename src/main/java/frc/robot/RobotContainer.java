@@ -274,7 +274,7 @@ public class RobotContainer extends RobotFramework {
        
 
         operatorController.leftBumper().whileTrue(new RotateElevatorDownPID(elevator));
-        driverController.y().and(operatorController.povDown()).whileTrue(new RaiseClimberBasic(()-> .15, climber).until(climber:: climberPastZero).unless(climber :: climberPastZero));
+        operatorController.povDown().whileTrue(new RaiseClimberBasic(()-> .15, climber).until(climber:: climberPastZero).unless(climber :: climberPastZero));
 
 
         
@@ -297,7 +297,7 @@ public class RobotContainer extends RobotFramework {
                 .onTrue(new posePathfindToReef(frc.robot.commands.auton.posePathfindToReef.reefPole.RIGHT,
                         DrivetrainConstants.drivetrain, frontRightCamera, frontLeftCamera));
 
-        driverController.y().and(operatorController.povUp())
+        operatorController.povUp()
                 .whileTrue(new RaiseClimberBasic(()-> -.25 , climber).until(climber :: climberPastMax).unless(climber :: climberPastMax));
         
         driverController.rightTrigger()

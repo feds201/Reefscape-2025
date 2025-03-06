@@ -4,6 +4,7 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfigurator;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
+import com.ctre.phoenix6.configs.Slot2Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfigurator;
 import com.pathplanner.lib.path.PathConstraints;
@@ -87,6 +88,19 @@ public class RobotMap {
         public static final double L3ROTATION = 15.15;
         public static final double L4ROTATION = 28.85;
         public static final double GEAR_RATIO = 5.70136;
+        // public static final Slot2Configs slot2Configs = new Slot2Configs();
+        // static {
+        //     slot2Configs.kP = 0.04;
+        //     slot2Configs.kI = 0;
+        //     slot2Configs.kD = 0;
+        //     slot2Configs.k
+        //     slot2Configs.kF = 0.06;
+        // }
+        // public static final TalonFXConfiguration ELEVATOR_PIDF = new TalonFXConfiguration();
+        // static {
+        //     ELEVATOR_PIDF.slot2 = slot2Configs;
+        // }
+        
 
     }
 
@@ -176,6 +190,7 @@ public class RobotMap {
             public static final int CORAL_CANRANGE = 57;
             public static final int ALGAE_CANRANGE = 100;
             public static final int INTAKE_ENCODER = 73;
+
 
         }
 

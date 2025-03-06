@@ -40,6 +40,7 @@ public class RotateElevatorBasic extends Command {
   @Override
   public void end(boolean interrupted) {
     m_Elevator.setMotorSpeed(0);
+  
   }
 
   // Returns true when the command should end.
