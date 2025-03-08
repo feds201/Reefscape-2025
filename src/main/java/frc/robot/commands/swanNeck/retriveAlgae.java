@@ -49,7 +49,7 @@ public class retriveAlgae extends SequentialCommandGroup {
 
         new ParallelDeadlineGroup( 
           new RotateElevatorPID(m_elevator, () -> m_algaePosition),
-          new SpinSwanWheels(m_SwanNeckWheels, () -> IntakeMap.WHEEL_SPEED_SCORE)
+          new SpinSwanWheels(m_SwanNeckWheels, () -> IntakeMap.ALGAE_WHEEL_SPEED)
         )
         // new ParallelRaceGroup(new WaitCommand(0.35), new
         // MoveBack(DrivetrainConstants.drivetrain)),

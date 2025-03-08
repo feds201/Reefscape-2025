@@ -172,6 +172,7 @@ public class RobotMap {
         public static final double GEAR_RATIO = 55.22727273;
         public static final double WHEEL_SPEED_INTAKE = -0.2;
         public static final double WHEEL_SPEED_SCORE = -0.4;
+        public static final double ALGAE_WHEEL_SPEED = -.8;
         public static final double L1_SPEED_SCORE = -0.3;
 
         public static class ReefStops {

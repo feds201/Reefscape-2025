@@ -273,8 +273,8 @@ public class RobotContainer extends RobotFramework {
 
         operatorController.axisLessThan(Axis.kRightY.value, -0.1).whileTrue(new RotateElevatorBasic(()-> .1, elevator));
         operatorController.axisGreaterThan(Axis.kRightY.value, 0.1).whileTrue(new RotateElevatorBasic(()-> -.1, elevator));
-        operatorController.rightBumper().whileTrue(new retriveAlgae(elevator, swanNeck, swanNeckWheels, ElevatorMap.L1ROTATION+2)).onFalse(new ParallelCommandGroup(new RotateElevatorDownPID(elevator), new SpinSwanWheels(swanNeckWheels, ()-> IntakeMap.WHEEL_SPEED_SCORE)));
-        operatorController.rightTrigger().whileTrue(new retriveAlgae(elevator, swanNeck, swanNeckWheels, ElevatorMap.L2ROTATION+4)).onFalse(new ParallelCommandGroup(new RotateElevatorDownPID(elevator), new SpinSwanWheels(swanNeckWheels, ()-> IntakeMap.WHEEL_SPEED_SCORE)));
+        operatorController.rightBumper().whileTrue(new retriveAlgae(elevator, swanNeck, swanNeckWheels, ElevatorMap.L1ROTATION+2)).onFalse(new ParallelCommandGroup(new RotateElevatorDownPID(elevator), new SpinSwanWheels(swanNeckWheels, ()-> IntakeMap.ALGAE_WHEEL_SPEED)));
+        operatorController.rightTrigger().whileTrue(new retriveAlgae(elevator, swanNeck, swanNeckWheels, ElevatorMap.L2ROTATION+4)).onFalse(new ParallelCommandGroup(new RotateElevatorDownPID(elevator), new SpinSwanWheels(swanNeckWheels, ()-> IntakeMap.ALGAE_WHEEL_SPEED)));
         
         // operatorController.rightTrigger().whileTrue(zeroMechanisms);
        
