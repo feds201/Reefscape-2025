@@ -12,12 +12,15 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
+import org.littletonrobotics.junction.LogFileUtil;
+
 import com.ctre.phoenix6.SignalLogger;
 import com.pathplanner.lib.commands.PathfindingCommand;
 import com.pathplanner.lib.pathfinding.Pathfinding;
 
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.net.WebServer;
+import edu.wpi.first.util.datalog.DataLogWriter;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
@@ -79,6 +82,7 @@ public class Robot extends TimedRobot
         // Start logging data log
         SignalLogger.start();
         DataLogManager.start();
+        
 
 
         DriverStation.startDataLog(DataLogManager.getLog());
@@ -145,7 +149,7 @@ public class Robot extends TimedRobot
     /** This method is called periodically during autonomous. */
     @Override
     public void autonomousPeriodic() {
-        robotContainer.setupVisionImplants();
+        robotContainer.setupVisionImplantsAuto();
     }
 
 
@@ -163,7 +167,7 @@ public class Robot extends TimedRobot
     /** This method is called periodically during operator control. */
     @Override
     public void teleopPeriodic() {
-        robotContainer.setupVisionImplants();
+        robotContainer.setupVisionImplantsTele();
     }
 
 

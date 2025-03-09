@@ -199,22 +199,22 @@ public class RobotContainer extends RobotFramework {
     }
 
 
-    public void setupVisionImplants() {
+    public void setupVisionImplantsAuto() {
         var driveState = DrivetrainConstants.drivetrain.getState();
         double headingDeg = driveState.Pose.getRotation().getDegrees();
         SmartDashboard.putNumber("heading Deg", headingDeg);
         // Rotation2d gyroAngle = driveState.Pose.getRotation();
         double omega = Math.abs(Units.radiansToRotations(driveState.Speeds.omegaRadiansPerSecond));
         frontRightCamera.SetRobotOrientation(headingDeg, 0, 0, 0, 0, 0);
-        // rearRightCamera.SetRobotOrientation(headingDeg, 0, 0, 0, 0, 0);
-        // rearLeftCamera.SetRobotOrientation(headingDeg, 0, 0, 0, 0, 0);
+        rearRightCamera.SetRobotOrientation(headingDeg, 0, 0, 0, 0, 0);
+        rearLeftCamera.SetRobotOrientation(headingDeg, 0, 0, 0, 0, 0);
         frontLeftCamera.SetRobotOrientation(headingDeg, 0, 0, 0, 0, 0);
 
         // poseEstimator.updatePose();
 
         PoseAllocate frontRightPose = frontRightCamera.getRobotPose();
-        // PoseAllocate rearRightPose = rearRightCamera.getRobotPose();
-        // PoseAllocate rearLeftPose = rearLeftCamera.getRobotPose();
+        PoseAllocate rearRightPose = rearRightCamera.getRobotPose();
+        PoseAllocate rearLeftPose = rearLeftCamera.getRobotPose();
         PoseAllocate frontLeftPose = frontLeftCamera.getRobotPose();
 
         if (frontRightPose != null
@@ -233,23 +233,54 @@ public class RobotContainer extends RobotFramework {
 
         }
 
-        // if (rearLeftPose != null
-        //         && rearLeftPose.getPose() != null
-        //         && rearLeftPose.getPoseEstimate().tagCount > 0
-        //         && omega < 2) {
-        //     DrivetrainConstants.drivetrain.addVisionMeasurement(rearLeftPose.getPose(), rearLeftPose.getTime());
+        if (rearLeftPose != null
+                && rearLeftPose.getPose() != null
+                && rearLeftPose.getPoseEstimate().tagCount > 0
+                && omega < 2) {
+            DrivetrainConstants.drivetrain.addVisionMeasurement(rearLeftPose.getPose(), rearLeftPose.getTime());
 
-        // }
+        }
 
-        // if (rearRightPose != null
+        if (rearRightPose != null
 
-        //         && rearRightPose.getPose() != null
-        //         && rearRightPose.getPoseEstimate().tagCount > 0
-        //         && omega < 2) {
-        //     DrivetrainConstants.drivetrain.addVisionMeasurement(rearRightPose.getPose(), rearRightPose.getTime());
+                && rearRightPose.getPose() != null
+                && rearRightPose.getPoseEstimate().tagCount > 0
+                && omega < 2) {
+            DrivetrainConstants.drivetrain.addVisionMeasurement(rearRightPose.getPose(), rearRightPose.getTime());
 
-        // }
+        }
 
+    }
+
+    public void setupVisionImplantsTele() {
+        var driveState = DrivetrainConstants.drivetrain.getState();
+        double headingDeg = driveState.Pose.getRotation().getDegrees();
+        SmartDashboard.putNumber("heading Deg", headingDeg);
+        // Rotation2d gyroAngle = driveState.Pose.getRotation();
+        double omega = Math.abs(Units.radiansToRotations(driveState.Speeds.omegaRadiansPerSecond));
+        frontRightCamera.SetRobotOrientation(headingDeg, 0, 0, 0, 0, 0);
+        frontLeftCamera.SetRobotOrientation(headingDeg, 0, 0, 0, 0, 0);
+
+        // poseEstimator.updatePose();
+
+        PoseAllocate frontRightPose = frontRightCamera.getRobotPose();
+        PoseAllocate frontLeftPose = frontLeftCamera.getRobotPose();
+
+        if (frontRightPose != null
+                && frontRightPose.getPose() != null
+                && frontRightPose.getPoseEstimate().tagCount > 0
+                && omega < 2) {
+            DrivetrainConstants.drivetrain.addVisionMeasurement(frontRightPose.getPose(), frontRightPose.getTime());
+
+        }
+
+        if (frontLeftPose != null
+                && frontLeftPose.getPose() != null
+                && frontLeftPose.getPoseEstimate().tagCount > 0
+                && omega < 2) {
+            DrivetrainConstants.drivetrain.addVisionMeasurement(frontLeftPose.getPose(), frontLeftPose.getTime());
+
+        }
     }
 
     private void configureBindings() {
@@ -261,9 +292,6 @@ public class RobotContainer extends RobotFramework {
             .whileTrue(new PlaceLOne(elevator, swanNeck, swanNeckWheels));
         operatorController.b()
             .whileTrue(new PlaceLTwo(elevator, swanNeck, swanNeckWheels));
-
-        // operatorController.a()
-        //     .whileTrue(new PlaceLThree(elevator, swanNeck));
 
         operatorController.a().whileTrue(new PlaceLThree(elevator, swanNeck, swanNeckWheels));
 

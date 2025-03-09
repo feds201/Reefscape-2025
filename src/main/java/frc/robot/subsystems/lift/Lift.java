@@ -65,11 +65,11 @@ public class Lift extends SubsystemABS {
         tab.add("Elevator PID Down", pidDown).withWidget(BuiltInWidgets.kPIDController);
 
         tab.addNumber("Elevator Position", m_encoderValue);
-        GenericEntry elevatorSpeedSetter = tab.add("Elevator Speed", 0.0)
-                .withWidget(BuiltInWidgets.kNumberSlider)
-                .withProperties(Map.of("min", 0, "max", .2))
-                .getEntry();
-        m_elevatorSpeed = () -> elevatorSpeedSetter.getDouble(0);
+        // GenericEntry elevatorSpeedSetter = tab.add("Elevator Speed", 0.0)
+        //         .withWidget(BuiltInWidgets.kNumberSlider)
+        //         .withProperties(Map.of("min", 0, "max", .2))
+        //         .getEntry();
+        // m_elevatorSpeed = () -> elevatorSpeedSetter.getDouble(0);
 
         tab.addBoolean("elevator Threshold" , elevatorAboveThreshold);
     }

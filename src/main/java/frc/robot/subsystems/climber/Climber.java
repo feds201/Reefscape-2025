@@ -50,11 +50,11 @@ public class Climber extends SubsystemABS {
 
 
      tab.addNumber("Climber Position", m_encoderValue);
-        GenericEntry climberSpeedSetter = tab.add("Climber Speed", 0.0)
-                .withWidget(BuiltInWidgets.kNumberSlider)
-                .withProperties(Map.of("min", 0, "max", .2))
-                .getEntry();
-        m_climberSpeed = () -> climberSpeedSetter.getDouble(0);
+        // GenericEntry climberSpeedSetter = tab.add("Climber Speed", 0.0)
+        //         .withWidget(BuiltInWidgets.kNumberSlider)
+        //         .withProperties(Map.of("min", 0, "max", .2))
+        //         .getEntry();
+        // m_climberSpeed = () -> climberSpeedSetter.getDouble(0);
   }
 
   @Override
@@ -65,7 +65,7 @@ public class Climber extends SubsystemABS {
 
   public void rotateClimber(double speed) {
     climberMotorLeader.set(speed);
-    SmartDashboard.putNumber("Actual Climber Speed", speed);
+    // SmartDashboard.putNumber("Actual Climber Speed", speed);
   }
 
   public void setPIDTarget(double targetAngle) {
