@@ -74,6 +74,7 @@ public class RobotMap {
     public static class ElevatorMap {
         public static final int ELEVATOR_MOTOR = 61;
         public static final int ELEVATOR_MOTOR2 = 62;
+        public static final int ELEVATOR_CANCODER = 18;
         public static final int ELEVATOR_SPEED = 0;
         public static final int EVEVATOR_ENCODER = 63;
         public static final double ELEVATOR_P = 0.04;
@@ -107,6 +108,7 @@ public class RobotMap {
     public static class ClimberMap {
         public static final int CLIMBER_LEADER_MOTOR = 51;
         public static final int CLIMBER_FOLLOWER_MOTOR = 52;
+        public static final int CLIMBER_CANCODER = 19;
         public static final int CLIMBER_ENCODER = 53;
         public static final int CLIMBER_LEFT_DI = 1;
         public static final int CLIMBER_RIGHT_DI = 2;

@@ -35,6 +35,8 @@ public class Lift extends SubsystemABS {
         super(subsystem, name);
         elevatorMotorLeader = new TalonFX(RobotMap.ElevatorMap.ELEVATOR_MOTOR);
         elevatorMotorFollower = new TalonFX(RobotMap.ElevatorMap.ELEVATOR_MOTOR2);
+       
+        // elevatorEncoder.setPosition(0);
 
         // Configure follower motor
         elevatorMotorFollower.setControl(new Follower(elevatorMotorLeader.getDeviceID(), false));
@@ -45,7 +47,6 @@ public class Lift extends SubsystemABS {
         elevatorMotorFollower.getConfigurator().apply(
                 RobotMap.CurrentLimiter.getCurrentLimitConfiguration(RobotMap.ElevatorMap.ELEVATOR_CURRENT_LIMIT));
 
-        // elevatorEncoder = new CANcoder(RobotMap.ElevatorMap.EVEVATOR_ENCODER);
         m_encoderValue = () -> elevatorMotorLeader.getPosition().getValueAsDouble();
         elevatorAboveThreshold = ()-> getElevatorAboveThreshold();
         pid = new PIDController(RobotMap.ElevatorMap.ELEVATOR_P, RobotMap.ElevatorMap.ELEVATOR_I, RobotMap.ElevatorMap.ELEVATOR_D);
@@ -139,6 +140,8 @@ public class Lift extends SubsystemABS {
     public double getElevatorHeight() {
         return m_encoderValue.getAsDouble() * ElevatorMap.ELEVATOR_CIRCUMFERENCE;
     }
+
+    
 
     public void zeroElevator(){
         elevatorMotorLeader.setPosition(0);

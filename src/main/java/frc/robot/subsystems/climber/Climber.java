@@ -8,6 +8,7 @@ import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 
 import java.util.Map;
+import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
 import com.ctre.phoenix6.controls.DutyCycleOut;
@@ -26,12 +27,12 @@ import frc.robot.utils.Subsystems;
 
 public class Climber extends SubsystemABS {
   /** Creates a new Climber. */
-  private DigitalInput leftSwitch;
-  private DigitalInput rightSwitch;
+  private CANcoder climberCANCoder;
   private TalonFX climberMotorLeader;
   private TalonFX climberMotorFollower;
-  private DoubleSupplier m_encoderValue;
+  private BooleanSupplier m_climberAtMax;
   public DoubleSupplier m_climberSpeed;
+  private DoubleSupplier m_CANcoderValue;
   //private CANcoder climberEncoder;
 
   public Climber(Subsystems subsystem, String name) {
@@ -43,13 +44,14 @@ public class Climber extends SubsystemABS {
     climberMotorFollower.getConfigurator()
         .apply(CurrentLimiter.getCurrentLimitConfiguration(ClimberMap.CLIMBER_CURRENT_LIMIT));
     climberMotorFollower.setControl(new Follower(climberMotorLeader.getDeviceID(), false));
-    leftSwitch = new DigitalInput(ClimberMap.CLIMBER_LEFT_DI);
-    rightSwitch = new DigitalInput(ClimberMap.CLIMBER_RIGHT_DI);
-    m_encoderValue = ()-> getEncoderValue();
+    climberCANCoder = new CANcoder(ClimberMap.CLIMBER_CANCODER);
+    m_climberAtMax = ()-> climberPastMax();
+    m_CANcoderValue = ()-> climberCANCoder.getAbsolutePosition().getValueAsDouble();
     //climberEncoder = new CANcoder(ClimberMap.CLIMBER_ENCODER);
 
+    tab.addNumber("Climber CANCoder Position", m_CANcoderValue);
 
-     tab.addNumber("Climber Position", m_encoderValue);
+     tab.addBoolean("Climber Out", m_climberAtMax);
         // GenericEntry climberSpeedSetter = tab.add("Climber Speed", 0.0)
         //         .withWidget(BuiltInWidgets.kNumberSlider)
         //         .withProperties(Map.of("min", 0, "max", .2))
@@ -59,7 +61,8 @@ public class Climber extends SubsystemABS {
 
   @Override
   public void periodic() {
-    m_encoderValue = ()-> getEncoderValue();
+    m_climberAtMax = ()-> climberPastMax();
+    m_CANcoderValue = ()-> climberCANCoder.getAbsolutePosition().getValueAsDouble();
     // This method will be called once per scheduler run
   }
 
@@ -100,16 +103,20 @@ public class Climber extends SubsystemABS {
     return climberMotorLeader.getPosition().getValueAsDouble();
   }
 
+  public double getCANcoderValue(){
+    return climberCANCoder.getAbsolutePosition().getValueAsDouble();
+  }
+
   public void zeroClimber(){
     climberMotorLeader.setPosition(0);
   }
 
   public boolean climberPastZero(){
-    return getEncoderValue() > 27;
+    return getCANcoderValue() < -.275 && getCANcoderValue() > -.28;
   }
 
   public boolean climberPastMax(){
-    return getEncoderValue() < -70;
+    return getCANcoderValue() > .44 && getCANcoderValue() < .48;
   }
 
   @Override

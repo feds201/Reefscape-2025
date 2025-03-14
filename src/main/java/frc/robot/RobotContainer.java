@@ -51,6 +51,7 @@ import frc.robot.commands.auton.pathfindToReef;
 import frc.robot.commands.auton.posePathfindToReef;
 import frc.robot.commands.auton.pathfindToReef.reefPole;
 import frc.robot.commands.climber.RaiseClimberBasic;
+import frc.robot.commands.climber.climbingSequenceUp;
 import frc.robot.commands.lift.RotateElevatorBasic;
 import frc.robot.commands.lift.RotateElevatorDownPID;
 import frc.robot.commands.lift.RotateElevatorPID;
@@ -264,15 +265,15 @@ public class RobotContainer extends RobotFramework {
 
         operatorController.leftBumper().whileTrue(new RotateElevatorDownPID(elevator));
         operatorController.povDown()
-            .whileTrue(new RaiseClimberBasic(()-> .15, climber));
-        operatorController.povDownLeft().whileTrue(new RaiseClimberBasic(()-> .15, climber));
+            .whileTrue(new RaiseClimberBasic(()-> .15, climber).until(climber:: climberPastZero));
+        operatorController.povDownLeft().whileTrue(new RaiseClimberBasic(()-> .15, climber).until(climber:: climberPastZero));
 
-        operatorController.povDownRight().whileTrue(new RaiseClimberBasic(()-> .15, climber));
+        operatorController.povDownRight().whileTrue(new RaiseClimberBasic(()-> .15, climber).until(climber:: climberPastZero));
         
         operatorController.povUp()
-            .whileTrue(new RaiseClimberBasic(()-> -.35 , climber));
-        operatorController.povUpLeft() .whileTrue(new RaiseClimberBasic(()-> -.35 , climber));
-        operatorController.povUpRight() .whileTrue(new RaiseClimberBasic(()-> -.35 , climber));
+            .whileTrue(new climbingSequenceUp(climber));
+        operatorController.povUpLeft() .whileTrue(new climbingSequenceUp(climber));
+        operatorController.povUpRight() .whileTrue(new climbingSequenceUp(climber));
 
         operatorController.leftTrigger().whileTrue(new PlaceBarge(elevator, swanNeck, swanNeckWheels)).onFalse( new SequentialCommandGroup(new ParallelDeadlineGroup(new WaitCommand(.8), new RotateElevatorPID(elevator, ()-> ElevatorMap.L4ROTATION), new SpinSwanWheels(swanNeckWheels, ()-> -IntakeMap.ALGAE_WHEEL_SPEED)), new RaiseSwanNeckPID(()-> IntakeMap.ReefStops.SAFEANGLE, swanNeck).until(swanNeck :: pidAtSetpoint),
          new RotateElevatorDownPID(elevator).until(elevator :: pidDownAtSetpoint)));
@@ -284,8 +285,7 @@ public class RobotContainer extends RobotFramework {
 
         
         //Driver
-
-        driverController.povRight()
+       driverController.povRight()
                 .onTrue(new InstantCommand(()-> CommandScheduler.getInstance().cancelAll()));
 
         driverController.povDown().whileTrue(new MoveBack(DrivetrainConstants.drivetrain));
