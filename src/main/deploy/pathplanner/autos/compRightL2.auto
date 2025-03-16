@@ -76,70 +76,8 @@
                 "data": {
                   "pathName": "rightSourceTo56Right"
                 }
-              },
-              {
-                "type": "sequential",
-                "data": {
-                  "commands": [
-                    {
-                      "type": "wait",
-                      "data": {
-                        "waitTime": 0.7
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "L3Infinite"
-                      }
-                    }
-                  ]
-                }
               }
             ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "L2"
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "ElevatorDown"
-                }
-              },
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "56RightToRightSource"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Feed"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "rightSourceTo46Right"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "L4"
           }
         }
       ]
