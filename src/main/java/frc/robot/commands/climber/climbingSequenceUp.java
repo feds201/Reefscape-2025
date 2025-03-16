@@ -10,7 +10,10 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathPlannerPath;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.constants.RobotMap;
 import frc.robot.constants.RobotMap.ClimberMap;
 import frc.robot.constants.RobotMap.SafetyMap;
@@ -29,6 +32,6 @@ public class climbingSequenceUp extends SequentialCommandGroup {
     public climbingSequenceUp(Climber climber) {
         m_climber = climber;
         // addCommands(new FooCommand(), new BarCommand());
-        addCommands(new RaiseClimberBasic(()-> -.35, climber).until(m_climber :: climberPastMax));
+        addCommands(new ParallelDeadlineGroup(new WaitCommand(3), new InstantCommand(()-> m_climber.setServoIn())), new RaiseClimberBasic(()-> -.35, climber).until(m_climber :: climberPastMax));
     }
 }

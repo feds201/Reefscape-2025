@@ -7,6 +7,8 @@ package frc.robot.subsystems.climber;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 
+import static edu.wpi.first.units.Units.Micro;
+
 import java.util.Map;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
@@ -16,6 +18,7 @@ import com.ctre.phoenix6.controls.Follower;
 
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.motorcontrol.Talon;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -33,6 +36,7 @@ public class Climber extends SubsystemABS {
   private BooleanSupplier m_climberAtMax;
   public DoubleSupplier m_climberSpeed;
   private DoubleSupplier m_CANcoderValue;
+  private Servo m_Servo;
   //private CANcoder climberEncoder;
 
   public Climber(Subsystems subsystem, String name) {
@@ -45,6 +49,7 @@ public class Climber extends SubsystemABS {
         .apply(CurrentLimiter.getCurrentLimitConfiguration(ClimberMap.CLIMBER_CURRENT_LIMIT));
     climberMotorFollower.setControl(new Follower(climberMotorLeader.getDeviceID(), false));
     climberCANCoder = new CANcoder(ClimberMap.CLIMBER_CANCODER);
+    m_Servo = new Servo(ClimberMap.CLIMBER_SERVO);
     m_climberAtMax = ()-> climberPastMax();
     m_CANcoderValue = ()-> climberCANCoder.getAbsolutePosition().getValueAsDouble();
     //climberEncoder = new CANcoder(ClimberMap.CLIMBER_ENCODER);
@@ -85,6 +90,13 @@ public class Climber extends SubsystemABS {
 
   public void setPIDTolerance(double tolerance){
     ClimberMap.climberPID.setTolerance(tolerance);
+  }
+
+  public void setServoOut(){
+    m_Servo.set(.5);
+  }
+  public void setServoIn(){
+    m_Servo.set(.1);
   }
 
   // public boolean getLeftValue() {

@@ -30,12 +30,12 @@ public class SwanNeck extends SubsystemABS {
     private TalonFX pivotMotor;
     private CANrange coralCanRange;
     // private CANcoder gooseNeckAngler;
-    private DoubleSupplier algaeCANrangeVal = ()-> 0.0;
     private DoubleSupplier coralCANrangeVal = ()-> 0.0;
     private DoubleSupplier swanNeckAngleValue = ()-> 0.0;
     public DoubleSupplier m_swanNeckPivotSpeed;
    
     private PIDController pid;
+    private PIDController algaePid;
   
 
     public SwanNeck(Subsystems subsystem, String name) {
@@ -45,6 +45,8 @@ public class SwanNeck extends SubsystemABS {
             pivotMotor.getConfigurator().apply(CurrentLimiter.getCurrentLimitConfiguration(IntakeMap.PIVOT_MOTOR_CURRENT_LIMIT));
         coralCanRange = new CANrange(IntakeMap.SensorCanId.CORAL_CANRANGE);
         pid = IntakeMap.intakePid;
+        algaePid = new PIDController(.2, 0, 0);
+        algaePid.setTolerance(.003);
         pid.setTolerance(.003);
     
         // gooseNeckAngler = new CANcoder(IntakeMap.SensorCanId.INTAKE_ENCODER);
@@ -54,8 +56,6 @@ public class SwanNeck extends SubsystemABS {
         coralCANrangeVal = () -> coralCanRange.getDistance().getValueAsDouble();
         swanNeckAngleValue = () -> pivotMotor.getPosition().getValueAsDouble();
 
-      
-        tab.addNumber("algae CanRange Value", algaeCANrangeVal);
         tab.addNumber("coral CanRange Value", coralCANrangeVal);
         tab.addNumber("gooseNeck Angle", swanNeckAngleValue);
         tab.add("GooseNeck PID", pid).withWidget(BuiltInWidgets.kPIDController);
@@ -112,6 +112,26 @@ public class SwanNeck extends SubsystemABS {
 
     public void rotateSwanNeckPID() {
         double pidOutput = pid.calculate(getPivotPosition());
+        if(pidOutput >= 0){
+            pidOutput += IntakeMap.ks;
+        } else {
+            pidOutput -= IntakeMap.ks;
+        }
+        double output = pidOutput + (IntakeMap.kg * Math.cos((getPivotPosition() - .223) * 2 * Math.PI));
+        
+        setPivotSpeed(output);
+    }
+
+    public void setAlgaePIDTarget(double target) {
+        algaePid.setSetpoint(target);
+    }
+
+    public boolean algaePidAtSetpoint() {
+        return algaePid.atSetpoint();
+    }
+
+    public void rotateAlgaePID() {
+        double pidOutput = algaePid.calculate(getPivotPosition());
         if(pidOutput >= 0){
             pidOutput += IntakeMap.ks;
         } else {

@@ -36,7 +36,7 @@ public class PlaceBarge extends SequentialCommandGroup {
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
      new ParallelDeadlineGroup( new SequentialCommandGroup(
-    new RaiseSwanNeckPID(()-> IntakeMap.ReefStops.SAFEANGLE, m_SwanNeck).until(m_SwanNeck :: pidAtSetpoint), 
+    new RaiseSwanNeckPIDAlgae(()-> IntakeMap.ReefStops.SAFEANGLE, m_SwanNeck).until(m_SwanNeck :: pidAtSetpoint), 
     new RotateElevatorPID(m_elevator, ()-> ElevatorMap.L4ROTATION).until(m_elevator :: pidAtSetpoint))), new SequentialCommandGroup(new SpinSwanWheels(swanNeckWheels, ()-> IntakeMap.ALGAE_WHEEL_SPEED), new RotateElevatorPID(lift, ()-> ElevatorMap.L4ROTATION)) 
    
     // ,
