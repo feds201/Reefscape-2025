@@ -128,7 +128,7 @@ public class Climber extends SubsystemABS {
   }
 
   public boolean climberPastMax(){
-    return getCANcoderValue() > .44 && getCANcoderValue() < .48;
+    return getCANcoderValue() > .24 && getCANcoderValue() < .33;
   }
 
   @Override
