@@ -103,7 +103,7 @@ public class Climber extends SubsystemABS {
   }
 
   public void setServoOut(){
-    m_Servo.set(.5);
+    m_Servo.set(.7);
   }
   public void setServoIn(){
     m_Servo.set(.1);
@@ -134,7 +134,7 @@ public class Climber extends SubsystemABS {
   }
 
   public boolean climberPastZero(){
-    return getCANcoderValue() < -.275 && getCANcoderValue() > -.28;
+    return getCANcoderValue() < -.405 && getCANcoderValue() > -.42;
   }
 
   public boolean climberPastMax(){

@@ -109,7 +109,7 @@ public class RobotMap {
         public static final int CLIMBER_LEADER_MOTOR = 51;
         public static final int CLIMBER_FOLLOWER_MOTOR = 52;
         public static final int CLIMBER_CANCODER = 19;
-        public static final int CLIMBER_SERVO = 3;
+        public static final int CLIMBER_SERVO = 9;
         public static final int CLIMBER_ENCODER = 53;
         public static final int CLIMBER_LEFT_DI = 1;
         public static final int CLIMBER_RIGHT_DI = 2;
@@ -199,7 +199,7 @@ public class RobotMap {
         }
 
         public static PIDController intakePid = new PIDController(5, 0, 0);
-        public static final double ks = 0.0075;
+        public static final double ks = 0.008;
         public static final double kg = 0.015;
 
         public static TalonFXConfiguration getBreakConfigurationGooseNeck() {

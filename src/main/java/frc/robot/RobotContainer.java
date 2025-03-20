@@ -51,6 +51,7 @@ import frc.robot.commands.auton.pathfindToReef;
 import frc.robot.commands.auton.posePathfindToReef;
 import frc.robot.commands.auton.pathfindToReef.reefPole;
 import frc.robot.commands.climber.RaiseClimberBasic;
+import frc.robot.commands.climber.ServoOut;
 import frc.robot.commands.climber.climbingSequenceUp;
 import frc.robot.commands.lift.RotateElevatorBasic;
 import frc.robot.commands.lift.RotateElevatorDownPID;
@@ -103,6 +104,7 @@ public class RobotContainer extends RobotFramework {
     private final SwerveSubsystem swerveSubsystem;
     private final CommandXboxController driverController;
     private final CommandXboxController operatorController;
+    private final CommandXboxController testController;
     private Telemetry telemetry;
     private final SendableChooser<Command> teleOpChooser;
     private final SendableChooser<Command> autonChooser;
@@ -128,6 +130,7 @@ public class RobotContainer extends RobotFramework {
         driverController = UsbMap.driverController;
         operatorController = UsbMap.operatorController;
         autoAlignConstraints = AutonConstraints.kPathConstraints;
+        testController = new CommandXboxController(2);
 
         poseEstimator = new PoseEstimator(DrivetrainConstants.drivetrain);
 
@@ -237,6 +240,7 @@ public class RobotContainer extends RobotFramework {
     }
 
     private void configureBindings() {
+        testController.a().whileTrue(new ServoOut(climber));
         //Triggers 
         new Trigger(elevator :: getElevatorAboveThreshold).and(RobotModeTriggers.teleop()).onTrue(new ConfigureHologenicDrive(driverController, DrivetrainConstants.drivetrain)).onFalse(ConfigureHologenicDrive(driverController, swerveSubsystem, elevator));
         // new Trigger (operatorController.leftTrigger()).whileTrue(zeroMechanisms).onTrue(new ConfigureSlowDrive(driverController, DrivetrainConstants.drivetrain, 0.1)).onFalse(ConfigureHologenicDrive(driverController, swerveSubsystem, elevator));
