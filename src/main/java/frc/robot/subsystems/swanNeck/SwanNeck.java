@@ -45,7 +45,7 @@ public class SwanNeck extends SubsystemABS {
             pivotMotor.getConfigurator().apply(CurrentLimiter.getCurrentLimitConfiguration(IntakeMap.PIVOT_MOTOR_CURRENT_LIMIT));
         coralCanRange = new CANrange(IntakeMap.SensorCanId.CORAL_CANRANGE);
         pid = IntakeMap.intakePid;
-        algaePid = new PIDController(.2, 0, 0);
+        algaePid = new PIDController(6.5, 0, 0);
         algaePid.setTolerance(.003);
         pid.setTolerance(.003);
     
@@ -109,7 +109,8 @@ public class SwanNeck extends SubsystemABS {
     public boolean pidAtSetpoint() {
         return pid.atSetpoint();
     }
-
+//.355
+//
     public void rotateSwanNeckPID() {
         double pidOutput = pid.calculate(getPivotPosition());
         if(pidOutput >= 0){
@@ -131,13 +132,13 @@ public class SwanNeck extends SubsystemABS {
     }
 
     public void rotateAlgaePID() {
-        double pidOutput = algaePid.calculate(getPivotPosition());
+        double pidOutput = pid.calculate(getPivotPosition());
         if(pidOutput >= 0){
-            pidOutput += IntakeMap.ks;
+            pidOutput += IntakeMap.ksAlgae;
         } else {
-            pidOutput -= IntakeMap.ks;
+            pidOutput -= IntakeMap.ksAlgae;
         }
-        double output = pidOutput + (IntakeMap.kg * Math.cos((getPivotPosition() - .223) * 2 * Math.PI));
+        double output = pidOutput - (IntakeMap.kgAlgae * Math.cos((getPivotPosition() - .223) * 2 * Math.PI));
         
         setPivotSpeed(output);
     }
@@ -149,11 +150,11 @@ public class SwanNeck extends SubsystemABS {
     }
 
     public boolean getCoralLoaded(){
-        return coralCanRange.getDistance().getValueAsDouble() <= .14;
+        return coralCanRange.getDistance().getValueAsDouble() <= .2;
     }
 
     public boolean getCoralLoadedOpposite(){
-        return !(coralCanRange.getDistance().getValueAsDouble() <= .14);
+        return !(coralCanRange.getDistance().getValueAsDouble() <= .2);
     }
 
     public void zeroPivotPosition(){

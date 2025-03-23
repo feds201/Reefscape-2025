@@ -25,6 +25,6 @@ public class FeedThenL3 extends SequentialCommandGroup {
     m_elevator = lift;
     m_swanNeckWheels = swanNeckWheels;
     m_gooseNeck = swanNeck;
-    addCommands(new IntakeCoralSequence(m_gooseNeck, m_swanNeckWheels), new RotateElevatorPID(lift, ()-> ElevatorMap.L3ROTATION));
+    addCommands(new IntakeCoralSequence(m_gooseNeck, m_swanNeckWheels, m_elevator), new RotateElevatorPID(lift, ()-> ElevatorMap.L3ROTATION));
   }
 }

@@ -88,6 +88,7 @@ public class RobotMap {
         public static final double L2ROTATION = 8.58;
         public static final double L3ROTATION = 15.15;
         public static final double L4ROTATION = 28.85;
+        public static final double BARGEROTATION = 33;
         public static final double GEAR_RATIO = 5.70136;
         // public static final Slot2Configs slot2Configs = new Slot2Configs();
         // static {
@@ -182,6 +183,8 @@ public class RobotMap {
             public static final double L4ANGLE = .113;
             public static final double STARTANGLE = .00;
             public static final double SAFEANGLE = .04; //0.04
+            public static final double INTAKEANGLE = .055;
+            public static final double BARGEANGLE = .082;
             public static final double L1ANGLE = .0678;  // TODO tune it!
             public static final double L2ANGLE = .0678; // TODO tune it!
             public static final double L3ANGLE = .0678; // TODO tune it!
@@ -201,6 +204,8 @@ public class RobotMap {
         public static PIDController intakePid = new PIDController(5, 0, 0);
         public static final double ks = 0.008;
         public static final double kg = 0.015;
+        public static final double kgAlgae = .035;
+        public static final double ksAlgae = .01;
 
         public static TalonFXConfiguration getBreakConfigurationGooseNeck() {
             TalonFXConfiguration configuration = new TalonFXConfiguration();

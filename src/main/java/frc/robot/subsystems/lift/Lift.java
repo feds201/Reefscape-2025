@@ -151,6 +151,14 @@ public class Lift extends SubsystemABS {
         return getEncoderValue() > RobotMap.ElevatorMap.L3ROTATION - 1;
     }
 
+    public boolean getElevatorAtBelowL4(){
+        return getEncoderValue() < RobotMap.ElevatorMap.L4ROTATION + 1;
+    }
+
+    public boolean getElevatorAtBarge(){
+        return getEncoderValue() > RobotMap.ElevatorMap.BARGEROTATION-2;
+    }
+
     @Override
     public boolean isHealthy() {
         // TODO Auto-generated method stub

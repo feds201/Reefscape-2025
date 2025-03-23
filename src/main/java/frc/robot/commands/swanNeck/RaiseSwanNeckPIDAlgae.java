@@ -27,7 +27,7 @@ public class RaiseSwanNeckPIDAlgae extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_gooseNeck.setAlgaePIDTarget(m_setpoint.getAsDouble());
+    m_gooseNeck.setPIDTarget(m_setpoint.getAsDouble());
   }
 
   // Called every time the scheduler runs while the command is scheduled.
