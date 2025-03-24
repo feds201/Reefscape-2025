@@ -112,8 +112,8 @@ public class RobotContainer extends RobotFramework {
     private SendableChooser<Command> commandChooser;
     private final Camera frontRightCamera;
     public Camera frontLeftCamera;
-    private final Camera rearRightCamera;
-    private final Camera rearLeftCamera;
+    // private final Camera rearRightCamera;
+    // private final Camera rearLeftCamera;
     private final Climber climber;
     public Command zeroMechanisms;
 
@@ -162,11 +162,11 @@ public class RobotContainer extends RobotFramework {
             Subsystems.VISION, Subsystems.VISION.getNetworkTable(), ObjectType.APRIL_TAG_FRONT_LEFT, "limelight-five"
         );
 
-        rearRightCamera = new Camera(Subsystems.VISION, Subsystems.VISION.getNetworkTable(), ObjectType.APRIL_TAG_BACK,
-                "limelight-three");
+        // rearRightCamera = new Camera(Subsystems.VISION, Subsystems.VISION.getNetworkTable(), ObjectType.APRIL_TAG_BACK,
+        //         "limelight-three");
 
-        rearLeftCamera = new Camera(Subsystems.VISION, Subsystems.VISION.getNetworkTable(), ObjectType.APRIL_TAG_LEFT,
-                "limelight-one");
+        // rearLeftCamera = new Camera(Subsystems.VISION, Subsystems.VISION.getNetworkTable(), ObjectType.APRIL_TAG_LEFT,
+        //         "limelight-one");
 
         swanNeck = new SwanNeck(
                 Subsystems.INTAKE,
@@ -380,8 +380,8 @@ public class RobotContainer extends RobotFramework {
         return new SubsystemABS[] {
                 swerveSubsystem,
                 frontRightCamera,
-                rearLeftCamera,
-                rearRightCamera,
+                // rearLeftCamera,
+                // rearRightCamera,
                 frontLeftCamera
 
         };

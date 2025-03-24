@@ -23,6 +23,24 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "MetatagRelativeYawRight"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "MetatagRelativeYawRight"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.3
+          }
+        },
+        {
           "type": "deadline",
           "data": {
             "commands": [
@@ -96,12 +114,31 @@
                 }
               },
               {
-                "type": "named",
+                "type": "sequential",
                 "data": {
-                  "name": "L4"
+                  "commands": [
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 0.7
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "L3Infinite"
+                      }
+                    }
+                  ]
                 }
               }
             ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "L4"
           }
         }
       ]
