@@ -3,6 +3,14 @@ package frc.robot.constants;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfigurator;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+
+import static edu.wpi.first.units.Units.Rotation;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.dyn4j.geometry.Transform;
+
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.Slot2Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
@@ -12,6 +20,7 @@ import com.pathplanner.lib.path.PathConstraints;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
@@ -245,5 +254,27 @@ public class RobotMap {
         public static final Pose2d left56 = new Pose2d(3.256, 4.191, Rotation2d.fromDegrees(0));
         public static final Pose2d right66 = new Pose2d(3.715, 5.029, Rotation2d.fromDegrees(-60));
         public static final Pose2d left66 = new Pose2d(4.014, 5.187, Rotation2d.fromDegrees(-60));
+    }
+    public static class RedReefTagLocations {
+            public static final Pose2d id1116 = new Pose2d(Units.inchesToMeters(497.77), Units.inchesToMeters(130.17), Rotation2d.fromDegrees(240));
+            public static final Pose2d id1026 = new Pose2d(Units.inchesToMeters(481.39), Units.inchesToMeters(158.5), Rotation2d.fromDegrees(180));
+            public static final Pose2d id936 = new Pose2d(Units.inchesToMeters(497.77), Units.inchesToMeters(186.83), Rotation2d.fromDegrees(120));
+            public static final Pose2d id846 = new Pose2d(Units.inchesToMeters(530.49), Units.inchesToMeters(186.83), Rotation2d.fromDegrees(60));
+            public static final Pose2d id756 = new Pose2d(Units.inchesToMeters(546.87), Units.inchesToMeters(158.5), Rotation2d.fromDegrees(0));
+            public static final Pose2d id666 = new Pose2d(Units.inchesToMeters(530.49), Units.inchesToMeters(130.17), Rotation2d.fromDegrees(300));
+
+            public static final List<Pose2d> REDREEFTAGS = List.of(id1116, id1026, id936, id846, id756, id666);
+    }
+
+    public static class BlueReefTagLocations {
+            public static final Pose2d id2016 = new Pose2d(Units.inchesToMeters(193.10), Units.inchesToMeters(186.83), Rotation2d.fromDegrees(60));
+            public static final Pose2d id2126 = new Pose2d(Units.inchesToMeters(209.49), Units.inchesToMeters(158.5), Rotation2d.fromDegrees(0));
+            public static final Pose2d id2236 = new Pose2d(Units.inchesToMeters(193.1), Units.inchesToMeters(130.17), Rotation2d.fromDegrees(300));
+            public static final Pose2d id1746 = new Pose2d(Units.inchesToMeters(160.39), Units.inchesToMeters(130.17), Rotation2d.fromDegrees(240));
+            public static final Pose2d id1856 = new Pose2d(Units.inchesToMeters(144), Units.inchesToMeters(158.5), Rotation2d.fromDegrees(180));
+            public static final Pose2d id1966 = new Pose2d(Units.inchesToMeters(160.39), Units.inchesToMeters(186.83), Rotation2d.fromDegrees(60));
+
+            public static final List<Pose2d> BLUEREEFTAGS = List.of(id2016, id2126, id2236, id1746, id1856, id1966); 
+            
     }
 }
