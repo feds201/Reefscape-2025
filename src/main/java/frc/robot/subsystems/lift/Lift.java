@@ -7,6 +7,7 @@ import java.util.function.DoubleSupplier;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.CANcoder;
+import com.ctre.phoenix6.hardware.CANrange;
 import com.ctre.phoenix6.hardware.TalonFX;
 import frc.robot.constants.RobotMap;
 import frc.robot.constants.RobotMap.ElevatorMap;
@@ -25,6 +26,8 @@ public class Lift extends SubsystemABS {
     private DoubleSupplier m_encoderValue;
     public DoubleSupplier m_elevatorSpeed;
     private BooleanSupplier elevatorAboveThreshold;
+    private CANrange frontLeftCanRange;
+    private CANrange frontRightCanRange;
 
     // private final ShuffleboardTab tab = Shuffleboard.getTab("Elevator");
     private final PIDController pid;
@@ -35,6 +38,8 @@ public class Lift extends SubsystemABS {
         super(subsystem, name);
         elevatorMotorLeader = new TalonFX(RobotMap.ElevatorMap.ELEVATOR_MOTOR);
         elevatorMotorFollower = new TalonFX(RobotMap.ElevatorMap.ELEVATOR_MOTOR2);
+        frontLeftCanRange = new CANrange(ElevatorMap.CANRANGE_FL);
+        frontRightCanRange = new CANrange(ElevatorMap.CANRANGE_FR);
        
         // elevatorEncoder.setPosition(0);
 
@@ -52,7 +57,7 @@ public class Lift extends SubsystemABS {
         pid = new PIDController(RobotMap.ElevatorMap.ELEVATOR_P, RobotMap.ElevatorMap.ELEVATOR_I, RobotMap.ElevatorMap.ELEVATOR_D);
         pid.setTolerance(.2);
 
-        pidDown = new PIDController(0.008, 0, 0);
+        pidDown = new PIDController(0.015, 0, 0);
         pidDown.setTolerance(.2);
         pidDown.setSetpoint(1);
 
@@ -65,6 +70,8 @@ public class Lift extends SubsystemABS {
 
         tab.add("Elevator PID Down", pidDown).withWidget(BuiltInWidgets.kPIDController);
 
+        tab.addNumber("FL Canrange Val", ()-> frontLeftCanRange.getDistance().getValueAsDouble());
+        tab.addNumber("FR Canrange Val", ()-> frontRightCanRange.getDistance().getValueAsDouble());
         tab.addNumber("Elevator Position", m_encoderValue);
         // GenericEntry elevatorSpeedSetter = tab.add("Elevator Speed", 0.0)
         //         .withWidget(BuiltInWidgets.kNumberSlider)
@@ -157,6 +164,22 @@ public class Lift extends SubsystemABS {
 
     public boolean getElevatorAtBarge(){
         return getEncoderValue() > RobotMap.ElevatorMap.BARGEROTATION-2;
+    }
+
+    public double getFLDistance(){
+        return frontLeftCanRange.getDistance().getValueAsDouble();
+    }
+
+    public double getFRDistance(){
+        return frontRightCanRange.getDistance().getValueAsDouble();
+    }
+
+    public boolean getRobotInFrontOfCoral(){
+        return (getFLDistance() > .19) && (getFRDistance() >.19);
+    }
+
+    public boolean getRobotNotInFrontOfCoral(){
+        return (getFLDistance() < .19) && (getFRDistance() <.19);
     }
 
     @Override

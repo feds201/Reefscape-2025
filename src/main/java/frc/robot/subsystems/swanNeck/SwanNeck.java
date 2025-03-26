@@ -150,11 +150,11 @@ public class SwanNeck extends SubsystemABS {
     }
 
     public boolean getCoralLoaded(){
-        return coralCanRange.getDistance().getValueAsDouble() <= .2;
+        return coralCanRange.getDistance().getValueAsDouble() <= IntakeMap.CANRANGETHRESHOLDVALUE;
     }
 
     public boolean getCoralLoadedOpposite(){
-        return !(coralCanRange.getDistance().getValueAsDouble() <= .2);
+        return !(coralCanRange.getDistance().getValueAsDouble() <= IntakeMap.CANRANGETHRESHOLDVALUE);
     }
 
     public void zeroPivotPosition(){

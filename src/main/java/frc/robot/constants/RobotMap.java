@@ -83,6 +83,8 @@ public class RobotMap {
     public static class ElevatorMap {
         public static final int ELEVATOR_MOTOR = 61;
         public static final int ELEVATOR_MOTOR2 = 62;
+        public static final int CANRANGE_FL = 45;
+        public static final int CANRANGE_FR = 46;
         public static final int ELEVATOR_CANCODER = 18;
         public static final int ELEVATOR_SPEED = 0;
         public static final int EVEVATOR_ENCODER = 63;
@@ -187,12 +189,13 @@ public class RobotMap {
         public static final double WHEEL_SPEED_SCORE = -0.4;
         public static final double ALGAE_WHEEL_SPEED = -.8;
         public static final double L1_SPEED_SCORE = -0.3;
+        public static final double CANRANGETHRESHOLDVALUE = 0.15;
 
         public static class ReefStops {
             public static final double L4ANGLE = .113;
             public static final double STARTANGLE = .00;
             public static final double SAFEANGLE = .04; //0.04
-            public static final double INTAKEANGLE = .055;
+            public static final double INTAKEANGLE = .016;
             public static final double BARGEANGLE = .082;
             public static final double L1ANGLE = .0678;  // TODO tune it!
             public static final double L2ANGLE = .0678; // TODO tune it!

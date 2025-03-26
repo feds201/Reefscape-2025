@@ -67,6 +67,7 @@ import frc.robot.commands.swanNeck.retriveAlgae;
 import frc.robot.commands.swanNeck.IntakeCoralSequence;
 import frc.robot.commands.swanNeck.PlaceBarge;
 import frc.robot.commands.swanNeck.PlaceLFour;
+import frc.robot.commands.swanNeck.PlaceLFourOverCoral;
 import frc.robot.commands.swanNeck.PlaceLOne;
 import frc.robot.commands.swerve.ConfigureHologenicDrive;
 import frc.robot.commands.swerve.ConfigureSlowDrive;
@@ -213,12 +214,9 @@ public class RobotContainer extends RobotFramework {
         var driveState = DrivetrainConstants.drivetrain.getState();
         double headingDeg = driveState.Pose.getRotation().getDegrees();
         SmartDashboard.putNumber("heading Deg", headingDeg);
-        // Rotation2d gyroAngle = driveState.Pose.getRotation();
         double omega = Math.abs(Units.radiansToRotations(driveState.Speeds.omegaRadiansPerSecond));
         frontRightCamera.SetRobotOrientation(headingDeg, 0, 0, 0, 0, 0);
         frontLeftCamera.SetRobotOrientation(headingDeg, 0, 0, 0, 0, 0);
-
-        // poseEstimator.updatePose();
 
         PoseAllocate frontRightPose = frontRightCamera.getRobotPose();
         PoseAllocate frontLeftPose = frontLeftCamera.getRobotPose();
@@ -241,89 +239,127 @@ public class RobotContainer extends RobotFramework {
     }
 
     private void configureBindings() {
-        testController.a().whileTrue(new ServoOut(climber));
+        //Test Controller
+        testController.a()
+            .whileTrue(new ServoOut(climber));
+
+        testController
+            .rightBumper().whileTrue(new RaiseSwanNeck(swanNeck, swanNeck.m_swanNeckPivotSpeed));
         //Triggers 
-        new Trigger(elevator :: getElevatorAboveThreshold).and(elevator :: getElevatorAtBelowL4).and(RobotModeTriggers.teleop()).onTrue(new ConfigureHologenicDrive(driverController, DrivetrainConstants.drivetrain)).onFalse(ConfigureHologenicDrive(driverController, swerveSubsystem, elevator));
-        new Trigger(elevator :: getElevatorAtBarge).and(RobotModeTriggers.teleop()).onTrue(new ConfigureSlowDrive(driverController, DrivetrainConstants.drivetrain, 0.07)).onFalse(ConfigureHologenicDrive(driverController, swerveSubsystem, elevator));
-        // new Trigger (operatorController.leftTrigger()).whileTrue(zeroMechanisms).onTrue(new ConfigureSlowDrive(driverController, DrivetrainConstants.drivetrain, 0.1)).onFalse(ConfigureHologenicDrive(driverController, swerveSubsystem, elevator));
-        new Trigger (driverController.rightTrigger().and(frontLeftCamera :: twoTagsDetected)).whileTrue(DrivetrainConstants.drivetrain.runOnce(()-> DrivetrainConstants.drivetrain.resetRotation(new Rotation2d(frontLeftCamera.getMetatagYawRadians()))));
-        new Trigger (driverController.rightTrigger().and(frontRightCamera :: twoTagsDetected)).whileTrue(DrivetrainConstants.drivetrain.runOnce(()-> DrivetrainConstants.drivetrain.resetRotation(new Rotation2d(frontRightCamera.getMetatagYawRadians()))));
-        testController.rightBumper().whileTrue(new RaiseSwanNeck(swanNeck, swanNeck.m_swanNeckPivotSpeed));
+        new Trigger(elevator :: getElevatorAboveThreshold).and(elevator :: getElevatorAtBelowL4).and(RobotModeTriggers.teleop())
+            .onTrue(new ConfigureHologenicDrive(driverController, DrivetrainConstants.drivetrain))
+            .onFalse(ConfigureHologenicDrive(driverController, swerveSubsystem, elevator));
+
+        new Trigger(elevator :: getElevatorAtBarge).and(RobotModeTriggers.teleop())
+            .onTrue(new ConfigureSlowDrive(driverController, DrivetrainConstants.drivetrain, 0.07))
+            .onFalse(ConfigureHologenicDrive(driverController, swerveSubsystem, elevator));
+       
+        new Trigger (driverController.rightTrigger().and(frontLeftCamera :: twoTagsDetected))
+            .whileTrue(DrivetrainConstants.drivetrain.runOnce(()-> DrivetrainConstants.drivetrain.resetRotation(new Rotation2d(frontLeftCamera.getMetatagYawRadians()))));
+        
+        new Trigger (driverController.rightTrigger().and(frontRightCamera :: twoTagsDetected))
+            .whileTrue(DrivetrainConstants.drivetrain.runOnce(()-> DrivetrainConstants.drivetrain.resetRotation(new Rotation2d(frontRightCamera.getMetatagYawRadians()))));
+       
         //Operator
-        operatorController.y()
+
+        //Placing Reef With No Coral In Front
+        operatorController.y().and(elevator::getRobotNotInFrontOfCoral)
             .whileTrue(new PlaceLOne(elevator, swanNeck, swanNeckWheels));
-        operatorController.b()
+        
+        operatorController.b().and(elevator::getRobotNotInFrontOfCoral)
             .whileTrue(new PlaceLTwo(elevator, swanNeck, swanNeckWheels));
 
-        operatorController.a().whileTrue(new PlaceLThree(elevator, swanNeck, swanNeckWheels));
+        operatorController.a().and(elevator::getRobotNotInFrontOfCoral)
+            .whileTrue(new PlaceLThree(elevator, swanNeck, swanNeckWheels));
 
-        operatorController.x()
+        operatorController.x().and(elevator::getRobotNotInFrontOfCoral)
             .whileTrue(new PlaceLFour(elevator, swanNeck, swanNeckWheels).andThen(new RotateElevatorDownPID(elevator).until(elevator :: pidDownAtSetpoint))).onFalse(new RaiseSwanNeckPID(()-> IntakeMap.ReefStops.SAFEANGLE, swanNeck).until(swanNeck :: pidAtSetpoint));
 
-        operatorController.axisLessThan(Axis.kLeftY.value, -0.1).whileTrue(new RaiseSwanNeck(swanNeck, ()-> -.1));
-        operatorController.axisGreaterThan(Axis.kLeftY.value, 0.1).whileTrue(new RaiseSwanNeck(swanNeck, ()-> .1));
-
-        operatorController.axisLessThan(Axis.kRightY.value, -0.1).whileTrue(new RotateElevatorBasic(()-> .1, elevator));
-        operatorController.axisGreaterThan(Axis.kRightY.value, 0.1).whileTrue(new RotateElevatorBasic(()-> -.1, elevator));
-        operatorController.rightBumper().whileTrue(new retriveAlgae(elevator, swanNeck, swanNeckWheels, ElevatorMap.L1ROTATION+2).alongWith(new posePathfindToReef(frc.robot.commands.auton.posePathfindToReef.reefPole.CENTER, DrivetrainConstants.drivetrain, frontRightCamera, frontLeftCamera))).onFalse(new ParallelCommandGroup(new RotateElevatorDownPID(elevator), new SpinSwanWheels(swanNeckWheels, ()-> IntakeMap.ALGAE_WHEEL_SPEED)));
-        operatorController.rightTrigger().whileTrue(new retriveAlgae(elevator, swanNeck, swanNeckWheels, ElevatorMap.L2ROTATION+4).alongWith(new posePathfindToReef(frc.robot.commands.auton.posePathfindToReef.reefPole.CENTER, DrivetrainConstants.drivetrain, frontRightCamera, frontLeftCamera))).onFalse(new ParallelCommandGroup(new RotateElevatorDownPID(elevator), new SpinSwanWheels(swanNeckWheels, ()-> IntakeMap.ALGAE_WHEEL_SPEED)));
+        //Placing Reef With Coral In Front
+        operatorController.y().and(elevator::getRobotInFrontOfCoral)
+            .whileTrue(new PlaceLOne(elevator, swanNeck, swanNeckWheels));
         
-        // operatorController.rightTrigger().whileTrue(zeroMechanisms);
-       
+        operatorController.b().and(elevator::getRobotInFrontOfCoral)
+            .whileTrue(new PlaceLTwo(elevator, swanNeck, swanNeckWheels));
 
-        operatorController.leftBumper().whileTrue(new RotateElevatorDownPID(elevator));
-        operatorController.povDown()
+        operatorController.a().and(elevator::getRobotInFrontOfCoral)
+            .whileTrue(new PlaceLThree(elevator, swanNeck, swanNeckWheels));
+
+        operatorController.x().and(elevator::getRobotInFrontOfCoral)
+            .whileTrue(new PlaceLFourOverCoral(elevator, swanNeck, swanNeckWheels).andThen(new RotateElevatorDownPID(elevator).until(elevator :: pidDownAtSetpoint))).onFalse(new RaiseSwanNeckPID(()-> IntakeMap.ReefStops.SAFEANGLE, swanNeck).until(swanNeck :: pidAtSetpoint));
+
+        //Controls For L + R Joysticks
+        operatorController.axisLessThan(Axis.kLeftY.value, -0.1)
+            .whileTrue(new RaiseSwanNeck(swanNeck, ()-> -.1));
+
+        operatorController.axisGreaterThan(Axis.kLeftY.value, 0.1)
+            .whileTrue(new RaiseSwanNeck(swanNeck, ()-> .1));
+
+        operatorController.axisLessThan(Axis.kRightY.value, -0.1)
+            .whileTrue(new RotateElevatorBasic(()-> .1, elevator));
+
+        operatorController.axisGreaterThan(Axis.kRightY.value, 0.1)
+            .whileTrue(new RotateElevatorBasic(()-> -.1, elevator));
+
+        //Getting Algae From Reef
+        operatorController.rightBumper()
+            .onTrue(new retriveAlgae(elevator, swanNeck, swanNeckWheels, ElevatorMap.L1ROTATION+2))
+            .onFalse(new ParallelCommandGroup(new RotateElevatorDownPID(elevator), new SpinSwanWheels(swanNeckWheels, ()-> IntakeMap.ALGAE_WHEEL_SPEED)));
+        
+       operatorController.rightTrigger()
+            .onTrue( new retriveAlgae(elevator, swanNeck, swanNeckWheels, ElevatorMap.L2ROTATION+4))
+            .onFalse(new ParallelCommandGroup(new RotateElevatorDownPID(elevator), new SpinSwanWheels(swanNeckWheels, ()-> IntakeMap.ALGAE_WHEEL_SPEED)));
+
+        //Bring Down Elevator
+        operatorController.leftBumper()
+            .whileTrue(new RotateElevatorDownPID(elevator));
+
+        //Climber Binds
+        operatorController.povDown().or(operatorController.povDownLeft()).or( operatorController.povDownRight())
             .whileTrue(new RaiseClimberBasic(()-> .15, climber).until(climber:: climberPastZero));
-        operatorController.povDownLeft().whileTrue(new RaiseClimberBasic(()-> .15, climber).until(climber:: climberPastZero));
 
-        operatorController.povDownRight().whileTrue(new RaiseClimberBasic(()-> .15, climber).until(climber:: climberPastZero));
-        
-        operatorController.povUp()
+        operatorController.povUp().or(operatorController.povUpLeft()).or(operatorController.povUpRight())
             .whileTrue(new climbingSequenceUp(climber));
-        operatorController.povUpLeft() .whileTrue(new climbingSequenceUp(climber));
-        operatorController.povUpRight() .whileTrue(new climbingSequenceUp(climber));
-
-        operatorController.leftTrigger().whileTrue(new PlaceBarge(elevator, swanNeck, swanNeckWheels)).onFalse( new SequentialCommandGroup(new ParallelDeadlineGroup(new WaitCommand(2), new RotateElevatorPID(elevator, ()-> ElevatorMap.BARGEROTATION), new SpinSwanWheels(swanNeckWheels, ()-> -IntakeMap.ALGAE_WHEEL_SPEED-.2)), new RaiseSwanNeckPIDAlgae(()-> IntakeMap.ReefStops.BARGEANGLE, swanNeck).until(swanNeck :: pidAtSetpoint),
-         new RotateElevatorDownPID(elevator).until(elevator :: pidDownAtSetpoint)));
-
-
-    
-    // new RaiseSwanNeckPID(()-> IntakeMap.ReefStops.SAFEANGLE, m_SwanNeck).until(m_SwanNeck :: pidAtSetpoint),
-    // new RotateElevatorDownPID(m_elevator).until(m_elevator :: pidDownAtSetpoint));
-
+       
+        //Placing Barge
+        operatorController.leftTrigger()
+            .whileTrue(new PlaceBarge(elevator, swanNeck, swanNeckWheels))
+            .onFalse( new SequentialCommandGroup(new ParallelDeadlineGroup(new WaitCommand(2), new RotateElevatorPID(elevator, ()-> ElevatorMap.BARGEROTATION), new SpinSwanWheels(swanNeckWheels, ()-> -IntakeMap.ALGAE_WHEEL_SPEED-.2)), new RaiseSwanNeckPIDAlgae(()-> IntakeMap.ReefStops.BARGEANGLE, swanNeck).until(swanNeck :: pidAtSetpoint), new RotateElevatorDownPID(elevator).until(elevator :: pidDownAtSetpoint)));
         
         //Driver
-       driverController.povRight()
-                .onTrue(new InstantCommand(()-> CommandScheduler.getInstance().cancelAll()));
-
-        driverController.povDown().whileTrue(new MoveBack(DrivetrainConstants.drivetrain));
-
-        // driverController.b().onTrue(zeroMechanisms);
-        
         driverController.start()
-                .onTrue(DrivetrainConstants.drivetrain
-                        .runOnce(() -> DrivetrainConstants.drivetrain.seedFieldCentric()));
+            .onTrue(DrivetrainConstants.drivetrain.runOnce(() -> DrivetrainConstants.drivetrain.seedFieldCentric()));
 
+        //Auto Alignment Buttons
         driverController.leftBumper()
-                .onTrue(new posePathfindToReef(frc.robot.commands.auton.posePathfindToReef.reefPole.LEFT,
-                        DrivetrainConstants.drivetrain, frontRightCamera, frontLeftCamera));
+            .onTrue(new posePathfindToReef(frc.robot.commands.auton.posePathfindToReef.reefPole.LEFT, DrivetrainConstants.drivetrain, frontRightCamera, frontLeftCamera));
 
         driverController.rightBumper()
-                .onTrue(new posePathfindToReef(frc.robot.commands.auton.posePathfindToReef.reefPole.RIGHT,
-                        DrivetrainConstants.drivetrain, frontRightCamera, frontLeftCamera));
+            .onTrue(new posePathfindToReef(frc.robot.commands.auton.posePathfindToReef.reefPole.RIGHT, DrivetrainConstants.drivetrain, frontRightCamera, frontLeftCamera));
 
-       
+        driverController.b()
+            .onTrue(new posePathfindToReef(frc.robot.commands.auton.posePathfindToReef.reefPole.CENTER, DrivetrainConstants.drivetrain, frontRightCamera, frontLeftCamera));
+
         driverController.rightTrigger()
-                .whileTrue(new IntakeCoralSequence(swanNeck, swanNeckWheels, elevator));
+            .whileTrue(new IntakeCoralSequence(swanNeck, swanNeckWheels, elevator));
 
         driverController.leftTrigger()
-                .whileTrue(new SpinSwanWheels(swanNeckWheels, ()->-.4));
+            .whileTrue(new SpinSwanWheels(swanNeckWheels, ()->-.4));
 
-        driverController.povUp().whileTrue(new SpinSwanWheels(swanNeckWheels, ()-> .4));
+        driverController.povUp()
+            .whileTrue(new SpinSwanWheels(swanNeckWheels, ()-> .4));
 
-        driverController.povDown().whileTrue(new RaiseClimberBasic(()-> .10, climber));
+        //Climber Override
+        driverController.povLeft()
+            .whileTrue(new RaiseClimberBasic(()-> .10, climber));
                 
-        
+        //Panic Button
+        driverController.povRight()
+            .onTrue(new InstantCommand(()-> CommandScheduler.getInstance().cancelAll()));
+
+        //Back-Out For Algae
+        driverController.povDown()
+            .whileTrue(new MoveBack(DrivetrainConstants.drivetrain));
         
     }
 
@@ -338,9 +374,7 @@ public class RobotContainer extends RobotFramework {
         NamedCommands.registerCommand("L4Fast", new PlaceLFour(elevator, swanNeck, swanNeckWheels));
         NamedCommands.registerCommand("MetatagRelativeYaw", DrivetrainConstants.drivetrain.runOnce(()-> DrivetrainConstants.drivetrain.resetRotation(new Rotation2d(frontLeftCamera.getMetatagYawRadians()))));
         NamedCommands.registerCommand("MetatagRelativeYawRight", DrivetrainConstants.drivetrain.runOnce(()-> DrivetrainConstants.drivetrain.resetRotation(new Rotation2d(frontRightCamera.getMetatagYawRadians()))));
-        
         NamedCommands.registerCommand("ElevatorDown", new RotateElevatorDownPID(elevator).until(elevator :: pidDownAtSetpoint));
-        
         NamedCommands.registerCommand("Feed", new IntakeCoralSequence(swanNeck, swanNeckWheels, elevator));
         NamedCommands.registerCommand("ZeroMechanisms", zeroMechanisms);
         NamedCommands.registerCommand("L3Infinite", new RaiseSwanNeckPID(()-> IntakeMap.ReefStops.SAFEANGLE, swanNeck).until(swanNeck ::pidAtSetpoint).andThen(new RotateElevatorPID(elevator, ()-> ElevatorMap.L2ROTATION)));
