@@ -174,12 +174,20 @@ public class Lift extends SubsystemABS {
         return frontRightCanRange.getDistance().getValueAsDouble();
     }
 
+    public double getFRStdDev(){
+        return frontRightCanRange.getDistanceStdDev().getValueAsDouble();
+    }
+
+    public double getFLStdDev(){
+        return frontLeftCanRange.getDistanceStdDev().getValueAsDouble();
+    }
+
     public boolean getRobotInFrontOfCoral(){
-        return (getFLDistance() > .19) && (getFRDistance() >.19);
+        return ((getFLDistance() > .19) || (getFRDistance() >.19)) && (getFRStdDev() < 0.05) && (getFLStdDev() < 0.05);
     }
 
     public boolean getRobotNotInFrontOfCoral(){
-        return (getFLDistance() < .19) && (getFRDistance() <.19);
+        return !(((getFLDistance() > .19) || (getFRDistance() >.19)) && (getFRStdDev() < 0.05) && (getFLStdDev() < 0.05));
     }
 
     @Override

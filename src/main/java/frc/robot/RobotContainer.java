@@ -64,6 +64,7 @@ import frc.robot.commands.swanNeck.RaiseSwanNeckPIDAlgae;
 import frc.robot.commands.swanNeck.PlaceLThree;
 import frc.robot.commands.swanNeck.SpinSwanWheels;
 import frc.robot.commands.swanNeck.retriveAlgae;
+import frc.robot.commands.swanNeck.IntakeAlgaeFromGround;
 import frc.robot.commands.swanNeck.IntakeCoralSequence;
 import frc.robot.commands.swanNeck.PlaceBarge;
 import frc.robot.commands.swanNeck.PlaceLFour;
@@ -80,6 +81,7 @@ import frc.robot.constants.RobotMap.IntakeMap;
 import frc.robot.constants.RobotMap.SafetyMap;
 import frc.robot.constants.RobotMap.SensorMap;
 import frc.robot.constants.RobotMap.UsbMap;
+import frc.robot.constants.RobotMap.IntakeMap.ReefStops;
 import frc.robot.constants.RobotMap.SafetyMap.AutonConstraints;
 import frc.robot.subsystems.climber.Climber;
 import frc.robot.subsystems.lift.Lift;
@@ -280,7 +282,7 @@ public class RobotContainer extends RobotFramework {
             .whileTrue(new PlaceLOne(elevator, swanNeck, swanNeckWheels));
         
         operatorController.b().and(elevator::getRobotInFrontOfCoral)
-            .whileTrue(new PlaceLTwo(elevator, swanNeck, swanNeckWheels));
+            .whileTrue(new PlaceLTwo(elevator, swanNeck, swanNeckWheels).andThen(elevator :: rotateElevatorPIDDown).until(elevator :: pidDownAtSetpoint));
 
         operatorController.a().and(elevator::getRobotInFrontOfCoral)
             .whileTrue(new PlaceLThree(elevator, swanNeck, swanNeckWheels));
@@ -343,9 +345,12 @@ public class RobotContainer extends RobotFramework {
         driverController.rightTrigger()
             .whileTrue(new IntakeCoralSequence(swanNeck, swanNeckWheels, elevator));
 
-        driverController.leftTrigger()
-            .whileTrue(new SpinSwanWheels(swanNeckWheels, ()->-.4));
+        // driverController.leftTrigger()
+        //     .whileTrue(new SpinSwanWheels(swanNeckWheels, ()->-.4));
 
+        driverController.leftTrigger()
+        .whileTrue(new IntakeAlgaeFromGround(swanNeck, elevator, swanNeckWheels))
+        .onFalse(new SpinSwanWheels(swanNeckWheels, ()-> IntakeMap.ALGAE_WHEEL_SPEED).alongWith(new RaiseSwanNeckPIDAlgae(()-> IntakeMap.ReefStops.BARGEANGLE, swanNeck).until(swanNeck :: pidAtSetpoint)));
         driverController.povUp()
             .whileTrue(new SpinSwanWheels(swanNeckWheels, ()-> .4));
 
@@ -379,6 +384,7 @@ public class RobotContainer extends RobotFramework {
         NamedCommands.registerCommand("ZeroMechanisms", zeroMechanisms);
         NamedCommands.registerCommand("L3Infinite", new RaiseSwanNeckPID(()-> IntakeMap.ReefStops.SAFEANGLE, swanNeck).until(swanNeck ::pidAtSetpoint).andThen(new RotateElevatorPID(elevator, ()-> ElevatorMap.L2ROTATION)));
         NamedCommands.registerCommand("L2", new PlaceLTwo(elevator, swanNeck, swanNeckWheels));
+        NamedCommands.registerCommand("L4Height", new RaiseSwanNeckPID(()-> ReefStops.SAFEANGLE, swanNeck).until(swanNeck :: pidAtSetpoint).andThen(new RotateElevatorPID(elevator, ()-> ElevatorMap.L4ROTATION)));
     }
 
     public void setupPaths() {
