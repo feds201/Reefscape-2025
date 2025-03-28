@@ -385,6 +385,7 @@ public class RobotContainer extends RobotFramework {
         NamedCommands.registerCommand("L3Infinite", new RaiseSwanNeckPID(()-> IntakeMap.ReefStops.SAFEANGLE, swanNeck).until(swanNeck ::pidAtSetpoint).andThen(new RotateElevatorPID(elevator, ()-> ElevatorMap.L2ROTATION)));
         NamedCommands.registerCommand("L2", new PlaceLTwo(elevator, swanNeck, swanNeckWheels));
         NamedCommands.registerCommand("L4Height", new RaiseSwanNeckPID(()-> ReefStops.SAFEANGLE, swanNeck).until(swanNeck :: pidAtSetpoint).andThen(new RotateElevatorPID(elevator, ()-> ElevatorMap.L4ROTATION)));
+        NamedCommands.registerCommand("SpinRelease", new ParallelDeadlineGroup(new WaitCommand(.2), new SpinSwanWheels(swanNeckWheels, ()-> IntakeMap.WHEEL_SPEED_SCORE-.25)));
     }
 
     public void setupPaths() {
