@@ -245,6 +245,8 @@ public class RobotContainer extends RobotFramework {
         testController.a()
             .whileTrue(new ServoOut(climber));
 
+        testController.leftTrigger().whileTrue(new RotateElevatorBasic(elevator.m_elevatorSpeed, elevator));
+
         testController
             .rightBumper().whileTrue(new RaiseSwanNeck(swanNeck, swanNeck.m_swanNeckPivotSpeed));
         //Triggers 
@@ -282,7 +284,7 @@ public class RobotContainer extends RobotFramework {
             .whileTrue(new PlaceLOne(elevator, swanNeck, swanNeckWheels));
         
         operatorController.b().and(elevator::getRobotInFrontOfCoral)
-            .whileTrue(new PlaceLTwo(elevator, swanNeck, swanNeckWheels).andThen(elevator :: rotateElevatorPIDDown).until(elevator :: pidDownAtSetpoint));
+            .whileTrue(new PlaceLTwo(elevator, swanNeck, swanNeckWheels));
 
         operatorController.a().and(elevator::getRobotInFrontOfCoral)
             .whileTrue(new PlaceLThree(elevator, swanNeck, swanNeckWheels));
@@ -298,18 +300,18 @@ public class RobotContainer extends RobotFramework {
             .whileTrue(new RaiseSwanNeck(swanNeck, ()-> .1));
 
         operatorController.axisLessThan(Axis.kRightY.value, -0.1)
-            .whileTrue(new RotateElevatorBasic(()-> .1, elevator));
+            .whileTrue(new RotateElevatorBasic(()-> 1.2, elevator));
 
         operatorController.axisGreaterThan(Axis.kRightY.value, 0.1)
-            .whileTrue(new RotateElevatorBasic(()-> -.1, elevator));
+            .whileTrue(new RotateElevatorBasic(()-> -1.2, elevator));
 
         //Getting Algae From Reef
         operatorController.rightBumper()
-            .onTrue(new retriveAlgae(elevator, swanNeck, swanNeckWheels, ElevatorMap.L1ROTATION+2))
+            .onTrue(new retriveAlgae(elevator, swanNeck, swanNeckWheels, ElevatorMap.LOWALGAEROTATION))
             .onFalse(new ParallelCommandGroup(new RotateElevatorDownPID(elevator), new SpinSwanWheels(swanNeckWheels, ()-> IntakeMap.ALGAE_WHEEL_SPEED)));
         
        operatorController.rightTrigger()
-            .onTrue( new retriveAlgae(elevator, swanNeck, swanNeckWheels, ElevatorMap.L2ROTATION+4))
+            .onTrue( new retriveAlgae(elevator, swanNeck, swanNeckWheels, ElevatorMap.HIGHALGAEROTATION))
             .onFalse(new ParallelCommandGroup(new RotateElevatorDownPID(elevator), new SpinSwanWheels(swanNeckWheels, ()-> IntakeMap.ALGAE_WHEEL_SPEED)));
 
         //Bring Down Elevator

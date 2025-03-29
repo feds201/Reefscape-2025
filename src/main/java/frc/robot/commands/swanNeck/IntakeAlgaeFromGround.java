@@ -28,10 +28,10 @@ public class IntakeAlgaeFromGround extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(new SequentialCommandGroup(
-      new RotateElevatorPID(m_Lift, ()-> 1.7).until(m_Lift :: pidAtSetpoint),
+      new RotateElevatorPID(m_Lift, ()-> 1.8).until(m_Lift :: pidAtSetpoint),
       new SequentialCommandGroup(
         new ParallelCommandGroup(
-        new RotateElevatorPID(m_Lift, ()-> 1.7),
+        new RotateElevatorPID(m_Lift, ()-> 1.8),
         new RaiseSwanNeckPID(()-> 0.25, m_SwanNeck),
         new SpinSwanWheels(m_SwanNeckWheels, ()-> IntakeMap.ALGAE_WHEEL_SPEED)
       ))

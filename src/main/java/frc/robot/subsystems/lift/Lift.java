@@ -55,14 +55,14 @@ public class Lift extends SubsystemABS {
         m_encoderValue = () -> elevatorMotorLeader.getPosition().getValueAsDouble();
         elevatorAboveThreshold = ()-> getElevatorAboveThreshold();
         pid = new PIDController(RobotMap.ElevatorMap.ELEVATOR_P, RobotMap.ElevatorMap.ELEVATOR_I, RobotMap.ElevatorMap.ELEVATOR_D);
-        pid.setTolerance(.2);
+        pid.setTolerance(.05);
 
-        pidDown = new PIDController(0.015, 0, 0);
-        pidDown.setTolerance(.2);
+        pidDown = new PIDController(0.8, 0, 0);
+        pidDown.setTolerance(.05);
         pidDown.setSetpoint(1);
 
-        pidL3 = new PIDController(0.012, 0, 0);
-        pidL3.setTolerance(0.2);
+        pidL3 = new PIDController(0.4, 0, 0);
+        pidL3.setTolerance(0.05);
         pidL3.setSetpoint(RobotMap.ElevatorMap.L3ROTATION+3);
 
         tab.add("Elevator PID", pid)
@@ -73,11 +73,11 @@ public class Lift extends SubsystemABS {
         tab.addNumber("FL Canrange Val", ()-> frontLeftCanRange.getDistance().getValueAsDouble());
         tab.addNumber("FR Canrange Val", ()-> frontRightCanRange.getDistance().getValueAsDouble());
         tab.addNumber("Elevator Position", m_encoderValue);
-        // GenericEntry elevatorSpeedSetter = tab.add("Elevator Speed", 0.0)
-        //         .withWidget(BuiltInWidgets.kNumberSlider)
-        //         .withProperties(Map.of("min", 0, "max", .2))
-        //         .getEntry();
-        // m_elevatorSpeed = () -> elevatorSpeedSetter.getDouble(0);
+        GenericEntry elevatorSpeedSetter = tab.add("Elevator Speed", 0.0)
+                .withWidget(BuiltInWidgets.kNumberSlider)
+                .withProperties(Map.of("min", 0, "max", .2))
+                .getEntry();
+        m_elevatorSpeed = () -> elevatorSpeedSetter.getDouble(0);
 
         tab.addBoolean("elevator Threshold" , elevatorAboveThreshold);
     }
@@ -97,8 +97,8 @@ public class Lift extends SubsystemABS {
     }
 
     public void setMotorSpeed(double speed) {
-        elevatorMotorLeader.set(speed); // Set the speed of the primary motor
-        SmartDashboard.putNumber("Actual Elevator Speed", speed);
+        // elevatorMotorLeader.set(speed); // Set the speed of the primary motor
+       setMotorVolt(speed);
     }
 
     public void setMotorVolt(double volt){
@@ -115,11 +115,23 @@ public class Lift extends SubsystemABS {
 
     public void rotateElevatorPID() {
         double output = pid.calculate(getEncoderValue());
-        setMotorSpeed(output + ElevatorMap.ELEVATOR_F);
+        if(output > 0){
+            output += ElevatorMap.ELEVATOR_S;
+        } else {
+            output -= ElevatorMap.ELEVATOR_S;
+        }
+        output += ElevatorMap.ELEVATOR_G;
+        setMotorSpeed(output);
     }
 
     public void rotateElevatorPIDDown(){
         double output = pidDown.calculate(getEncoderValue());
+        if(output > 0){
+            output += ElevatorMap.ELEVATOR_S;
+        } else {
+            output -= ElevatorMap.ELEVATOR_S;
+        }
+        output += ElevatorMap.ELEVATOR_G;
         setMotorSpeed(output);
     }
 
@@ -129,6 +141,12 @@ public class Lift extends SubsystemABS {
 
     public void rotateElevatorPIDL3(){
         double output = pidL3.calculate(getEncoderValue());
+        if(output > 0){
+            output += ElevatorMap.ELEVATOR_S;
+        } else {
+            output -= ElevatorMap.ELEVATOR_S;
+        }
+        output += ElevatorMap.ELEVATOR_G;
         setMotorSpeed(output);
     }
 
