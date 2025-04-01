@@ -33,7 +33,7 @@ public class PlaceLThree extends SequentialCommandGroup {
     m_elevator = lift;
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands(new RaiseSwanNeckPID(()-> IntakeMap.ReefStops.SAFEANGLE , m_SwanNeck).until(m_SwanNeck :: pidAtSetpoint), 
+    addCommands(new RaiseSwanNeckPID(()-> IntakeMap.ReefStops.AGAINSTREEFANGLE , m_SwanNeck).until(m_SwanNeck :: pidAtSetpoint), 
 
     new RotateElevatorPID(m_elevator, ()-> ElevatorMap.L3ROTATION).until(m_elevator :: pidAtSetpoint), 
 

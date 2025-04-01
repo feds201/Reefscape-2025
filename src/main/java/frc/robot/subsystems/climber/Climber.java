@@ -134,7 +134,7 @@ public class Climber extends SubsystemABS {
   }
 
   public boolean climberPastZero(){
-    return getCANcoderValue() < -.405 && getCANcoderValue() > -.42;
+    return getCANcoderValue() < .13;
   }
 
   public boolean climberPastMax(){
@@ -142,7 +142,7 @@ public class Climber extends SubsystemABS {
   }
 
   public boolean climberAtStraight(){
-    return getCANcoderValue() > .32;
+    return getCANcoderValue() < .45;
   }
 
   @Override

@@ -57,9 +57,9 @@ public class Lift extends SubsystemABS {
         pid = new PIDController(RobotMap.ElevatorMap.ELEVATOR_P, RobotMap.ElevatorMap.ELEVATOR_I, RobotMap.ElevatorMap.ELEVATOR_D);
         pid.setTolerance(.05);
 
-        pidDown = new PIDController(0.8, 0, 0);
-        pidDown.setTolerance(.05);
-        pidDown.setSetpoint(1);
+        pidDown = new PIDController(0.4, 0, 0);
+        pidDown.setTolerance(.1);
+        pidDown.setSetpoint(.5);
 
         pidL3 = new PIDController(0.4, 0, 0);
         pidL3.setTolerance(0.05);
@@ -97,7 +97,7 @@ public class Lift extends SubsystemABS {
     }
 
     public void setMotorSpeed(double speed) {
-        // elevatorMotorLeader.set(speed); // Set the speed of the primary motor
+        elevatorMotorLeader.set(speed); // Set the speed of the primary motor
        setMotorVolt(speed);
     }
 

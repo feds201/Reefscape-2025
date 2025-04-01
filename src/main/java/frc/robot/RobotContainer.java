@@ -267,30 +267,34 @@ public class RobotContainer extends RobotFramework {
         //Operator
 
         //Placing Reef With No Coral In Front
-        operatorController.y().and(elevator::getRobotNotInFrontOfCoral)
+        operatorController.y()
+        // .and(elevator::getRobotNotInFrontOfCoral)
             .whileTrue(new PlaceLOne(elevator, swanNeck, swanNeckWheels));
         
-        operatorController.b().and(elevator::getRobotNotInFrontOfCoral)
+        operatorController.b()
+        // .and(elevator::getRobotNotInFrontOfCoral)
             .whileTrue(new PlaceLTwo(elevator, swanNeck, swanNeckWheels));
 
-        operatorController.a().and(elevator::getRobotNotInFrontOfCoral)
+        operatorController.a()
+        // .and(elevator::getRobotNotInFrontOfCoral)
             .whileTrue(new PlaceLThree(elevator, swanNeck, swanNeckWheels));
 
-        operatorController.x().and(elevator::getRobotNotInFrontOfCoral)
+        operatorController.x()
+        // .and(elevator::getRobotNotInFrontOfCoral)
             .whileTrue(new PlaceLFour(elevator, swanNeck, swanNeckWheels).andThen(new RotateElevatorDownPID(elevator).until(elevator :: pidDownAtSetpoint))).onFalse(new RaiseSwanNeckPID(()-> IntakeMap.ReefStops.SAFEANGLE, swanNeck).until(swanNeck :: pidAtSetpoint));
 
         //Placing Reef With Coral In Front
-        operatorController.y().and(elevator::getRobotInFrontOfCoral)
-            .whileTrue(new PlaceLOne(elevator, swanNeck, swanNeckWheels));
+        // operatorController.y().and(elevator::getRobotInFrontOfCoral)
+        //     .whileTrue(new PlaceLOne(elevator, swanNeck, swanNeckWheels));
         
-        operatorController.b().and(elevator::getRobotInFrontOfCoral)
-            .whileTrue(new PlaceLTwo(elevator, swanNeck, swanNeckWheels));
+        // operatorController.b().and(elevator::getRobotInFrontOfCoral)
+        //     .whileTrue(new PlaceLTwo(elevator, swanNeck, swanNeckWheels));
 
-        operatorController.a().and(elevator::getRobotInFrontOfCoral)
-            .whileTrue(new PlaceLThree(elevator, swanNeck, swanNeckWheels));
+        // operatorController.a().and(elevator::getRobotInFrontOfCoral)
+        //     .whileTrue(new PlaceLThree(elevator, swanNeck, swanNeckWheels));
 
-        operatorController.x().and(elevator::getRobotInFrontOfCoral)
-            .whileTrue(new PlaceLFourOverCoral(elevator, swanNeck, swanNeckWheels).andThen(new RotateElevatorDownPID(elevator).until(elevator :: pidDownAtSetpoint))).onFalse(new RaiseSwanNeckPID(()-> IntakeMap.ReefStops.SAFEANGLE, swanNeck).until(swanNeck :: pidAtSetpoint));
+        // operatorController.x().and(elevator::getRobotInFrontOfCoral)
+        //     .whileTrue(new PlaceLFourOverCoral(elevator, swanNeck, swanNeckWheels).andThen(new RotateElevatorDownPID(elevator).until(elevator :: pidDownAtSetpoint))).onFalse(new RaiseSwanNeckPID(()-> IntakeMap.ReefStops.SAFEANGLE, swanNeck).until(swanNeck :: pidAtSetpoint));
 
         //Controls For L + R Joysticks
         operatorController.axisLessThan(Axis.kLeftY.value, -0.1)
@@ -320,7 +324,9 @@ public class RobotContainer extends RobotFramework {
 
         //Climber Binds
         operatorController.povDown().or(operatorController.povDownLeft()).or( operatorController.povDownRight())
-            .whileTrue(new RaiseClimberBasic(()-> .15, climber).until(climber:: climberPastZero));
+            .whileTrue(new RaiseClimberBasic(()-> .15, climber)
+            .until(climber:: climberPastZero)
+            );
 
         operatorController.povUp().or(operatorController.povUpLeft()).or(operatorController.povUpRight())
             .whileTrue(new climbingSequenceUp(climber));

@@ -35,16 +35,16 @@ public class PlaceLOne extends SequentialCommandGroup {
     m_elevator = lift;
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands(new RaiseSwanNeckPID(()-> IntakeMap.ReefStops.STARTANGLE , m_SwanNeck).until(m_SwanNeck :: pidAtSetpoint), 
+    addCommands(new RaiseSwanNeckPID(()-> IntakeMap.ReefStops.L1ANGLE , m_SwanNeck).until(m_SwanNeck :: pidAtSetpoint), 
 
     new RotateElevatorPID(m_elevator, ()-> ElevatorMap.L1ROTATION).until(m_elevator :: pidAtSetpoint), 
 
     new ParallelCommandGroup(new RotateElevatorPID(m_elevator, ()-> ElevatorMap.L1ROTATION), 
-    new RaiseSwanNeckPID(()-> IntakeMap.ReefStops.STARTANGLE, m_SwanNeck)).until(m_SwanNeck :: pidAtSetpoint),
+    new RaiseSwanNeckPID(()-> IntakeMap.ReefStops.L1ANGLE, m_SwanNeck)).until(m_SwanNeck :: pidAtSetpoint),
 
-    new ParallelDeadlineGroup(new WaitCommand(1), new RotateElevatorPID(m_elevator, ()-> ElevatorMap.L1ROTATION), 
+    new ParallelDeadlineGroup(new WaitCommand(2), new RotateElevatorPID(m_elevator, ()-> ElevatorMap.L1ROTATION), 
     new SpinSwanWheels(m_SwanNeckWheels, ()-> (IntakeMap.L1_SPEED_SCORE))),
-    new RaiseSwanNeckPID(()-> IntakeMap.ReefStops.STARTANGLE, m_SwanNeck).until(m_SwanNeck :: pidAtSetpoint),
+    new RaiseSwanNeckPID(()-> IntakeMap.ReefStops.L1ANGLE, m_SwanNeck).until(m_SwanNeck :: pidAtSetpoint),
     // new ParallelRaceGroup(new WaitCommand(0.35), new MoveBack(DrivetrainConstants.drivetrain)),
     new RotateElevatorDownPID(m_elevator).until(m_elevator :: pidDownAtSetpoint)
      );
