@@ -3,33 +3,47 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 5.78,
+        "x": 7.1370000000000005,
         "y": 4.186834016393442
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.7940000000000005,
-        "y": 5.298334016393444
+        "x": 6.6370000000000005,
+        "y": 4.186834016393442
       },
       "isLocked": false,
-      "linkedName": "2/6right"
+      "linkedName": "compCenterStart"
     },
     {
       "anchor": {
-        "x": 6.074249999999999,
-        "y": 4.03475
+        "x": 5.78,
+        "y": 4.186834016393442
       },
       "prevControl": {
-        "x": 5.074249999999999,
-        "y": 4.03475
+        "x": 6.28,
+        "y": 4.186834016393442
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "2/6center"
+      "linkedName": "2/6right"
     }
   ],
   "rotationTargets": [],
-  "constraintZones": [],
+  "constraintZones": [
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 0.6976653696498071,
+      "maxWaypointRelativePos": 1.0,
+      "constraints": {
+        "maxVelocity": 1.0,
+        "maxAcceleration": 1.0,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    }
+  ],
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
@@ -45,7 +59,7 @@
     "rotation": 180.0
   },
   "reversed": false,
-  "folder": "Pole Places",
+  "folder": "compCenter",
   "idealStartingState": {
     "velocity": 0,
     "rotation": 180.0

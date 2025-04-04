@@ -115,7 +115,7 @@ public class RobotContainer extends RobotFramework {
     private SendableChooser<Command> commandChooser;
     private final Camera frontRightCamera;
     public Camera frontLeftCamera;
-    // private final Camera rearRightCamera;
+    private final Camera rearRightCamera;
     // private final Camera rearLeftCamera;
     private final Climber climber;
     public Command zeroMechanisms;
@@ -165,8 +165,8 @@ public class RobotContainer extends RobotFramework {
             Subsystems.VISION, Subsystems.VISION.getNetworkTable(), ObjectType.APRIL_TAG_FRONT_LEFT, "limelight-five"
         );
 
-        // rearRightCamera = new Camera(Subsystems.VISION, Subsystems.VISION.getNetworkTable(), ObjectType.APRIL_TAG_BACK,
-        //         "limelight-three");
+        rearRightCamera = new Camera(Subsystems.VISION, Subsystems.VISION.getNetworkTable(), ObjectType.APRIL_TAG_BACK,
+                "limelight-three");
 
         // rearLeftCamera = new Camera(Subsystems.VISION, Subsystems.VISION.getNetworkTable(), ObjectType.APRIL_TAG_LEFT,
         //         "limelight-one");
@@ -219,6 +219,44 @@ public class RobotContainer extends RobotFramework {
         double omega = Math.abs(Units.radiansToRotations(driveState.Speeds.omegaRadiansPerSecond));
         frontRightCamera.SetRobotOrientation(headingDeg, 0, 0, 0, 0, 0);
         frontLeftCamera.SetRobotOrientation(headingDeg, 0, 0, 0, 0, 0);
+        rearRightCamera.SetRobotOrientation(headingDeg, 0, 0, 0, 0, 0);
+
+        PoseAllocate backRightPose = rearRightCamera.getRobotPose();
+        PoseAllocate frontRightPose = frontRightCamera.getRobotPose();
+        PoseAllocate frontLeftPose = frontLeftCamera.getRobotPose();
+
+        if (frontRightPose != null
+                && frontRightPose.getPose() != null
+                && frontRightPose.getPoseEstimate().tagCount > 0
+                && omega < 2) {
+            DrivetrainConstants.drivetrain.addVisionMeasurement(frontRightPose.getPose(), frontRightPose.getTime());
+
+        }
+
+        if (frontLeftPose != null
+                && frontLeftPose.getPose() != null
+                && frontLeftPose.getPoseEstimate().tagCount > 0
+                && omega < 2) {
+            DrivetrainConstants.drivetrain.addVisionMeasurement(frontLeftPose.getPose(), frontLeftPose.getTime());
+
+        }
+
+        if (backRightPose != null
+                && backRightPose.getPose() != null
+                && backRightPose.getPoseEstimate().tagCount > 0
+                && omega < 2) {
+            DrivetrainConstants.drivetrain.addVisionMeasurement(backRightPose.getPose(), backRightPose.getTime());
+
+        }
+    }
+
+    public void setupVisionImplantsAuto() {
+        var driveState = DrivetrainConstants.drivetrain.getState();
+        double headingDeg = driveState.Pose.getRotation().getDegrees();
+        SmartDashboard.putNumber("heading Deg", headingDeg);
+        double omega = Math.abs(Units.radiansToRotations(driveState.Speeds.omegaRadiansPerSecond));
+        frontRightCamera.SetRobotOrientation(headingDeg, 0, 0, 0, 0, 0);
+        frontLeftCamera.SetRobotOrientation(headingDeg, 0, 0, 0, 0, 0);
 
         PoseAllocate frontRightPose = frontRightCamera.getRobotPose();
         PoseAllocate frontLeftPose = frontLeftCamera.getRobotPose();
@@ -264,6 +302,7 @@ public class RobotContainer extends RobotFramework {
         new Trigger (driverController.rightTrigger().and(frontRightCamera :: twoTagsDetected))
             .whileTrue(DrivetrainConstants.drivetrain.runOnce(()-> DrivetrainConstants.drivetrain.resetRotation(new Rotation2d(frontRightCamera.getMetatagYawRadians()))));
        
+        new Trigger(elevator :: elevatorSwitchTriggered).and(RobotModeTriggers.teleop()).onTrue(new InstantCommand(elevator :: setElevatorAtLimitHeight));
         //Operator
 
         //Placing Reef With No Coral In Front
@@ -312,11 +351,11 @@ public class RobotContainer extends RobotFramework {
         //Getting Algae From Reef
         operatorController.rightBumper()
             .onTrue(new retriveAlgae(elevator, swanNeck, swanNeckWheels, ElevatorMap.LOWALGAEROTATION))
-            .onFalse(new ParallelCommandGroup(new RotateElevatorDownPID(elevator), new SpinSwanWheels(swanNeckWheels, ()-> IntakeMap.ALGAE_WHEEL_SPEED)));
+            .onFalse(new ParallelCommandGroup(new RotateElevatorDownPID(elevator), new SpinSwanWheels(swanNeckWheels, ()-> IntakeMap.ALGAE_WHEEL_SPEED), new RaiseSwanNeckPID(()-> IntakeMap.ReefStops.SAFEANGLE, swanNeck)));
         
        operatorController.rightTrigger()
             .onTrue( new retriveAlgae(elevator, swanNeck, swanNeckWheels, ElevatorMap.HIGHALGAEROTATION))
-            .onFalse(new ParallelCommandGroup(new RotateElevatorDownPID(elevator), new SpinSwanWheels(swanNeckWheels, ()-> IntakeMap.ALGAE_WHEEL_SPEED)));
+            .onFalse(new ParallelCommandGroup(new RotateElevatorDownPID(elevator), new SpinSwanWheels(swanNeckWheels, ()-> IntakeMap.ALGAE_WHEEL_SPEED), new RaiseSwanNeckPID(()-> IntakeMap.ReefStops.SAFEANGLE, swanNeck)));
 
         //Bring Down Elevator
         operatorController.leftBumper()
@@ -359,7 +398,7 @@ public class RobotContainer extends RobotFramework {
 
         driverController.leftTrigger()
         .whileTrue(new IntakeAlgaeFromGround(swanNeck, elevator, swanNeckWheels))
-        .onFalse(new SpinSwanWheels(swanNeckWheels, ()-> IntakeMap.ALGAE_WHEEL_SPEED).alongWith(new RaiseSwanNeckPIDAlgae(()-> IntakeMap.ReefStops.BARGEANGLE, swanNeck).until(swanNeck :: pidAtSetpoint)));
+        .onFalse(new SpinSwanWheels(swanNeckWheels, ()-> IntakeMap.ALGAE_WHEEL_SPEED).alongWith( new SequentialCommandGroup(new RaiseSwanNeckPID(()-> 0.1, swanNeck).until(swanNeck :: pidAtSetpoint), new RaiseSwanNeckPID(()-> IntakeMap.ReefStops.SAFEANGLE, swanNeck))));
         driverController.povUp()
             .whileTrue(new SpinSwanWheels(swanNeckWheels, ()-> .4));
 
@@ -395,6 +434,11 @@ public class RobotContainer extends RobotFramework {
         NamedCommands.registerCommand("L2", new PlaceLTwo(elevator, swanNeck, swanNeckWheels));
         NamedCommands.registerCommand("L4Height", new RaiseSwanNeckPID(()-> ReefStops.SAFEANGLE, swanNeck).until(swanNeck :: pidAtSetpoint).andThen(new RotateElevatorPID(elevator, ()-> ElevatorMap.L4ROTATION)));
         NamedCommands.registerCommand("SpinRelease", new ParallelDeadlineGroup(new WaitCommand(.2), new SpinSwanWheels(swanNeckWheels, ()-> IntakeMap.WHEEL_SPEED_SCORE-.25)));
+        NamedCommands.registerCommand("LowAlgae", new retriveAlgae(elevator, swanNeck, swanNeckWheels, ElevatorMap.LOWALGAEROTATION));
+        NamedCommands.registerCommand("HighAlgae", new retriveAlgae(elevator, swanNeck, swanNeckWheels, ElevatorMap.HIGHALGAEROTATION));
+        NamedCommands.registerCommand("UpToBarge", new PlaceBarge(elevator, swanNeck, swanNeckWheels));
+        NamedCommands.registerCommand("ScoreBarge", new ParallelDeadlineGroup(new WaitCommand(1), new RotateElevatorPID(elevator, ()-> ElevatorMap.BARGEROTATION),  new SpinSwanWheels(swanNeckWheels, ()-> -IntakeMap.ALGAE_WHEEL_SPEED)));
+        NamedCommands.registerCommand("DownFromBarge", new SequentialCommandGroup( new RaiseSwanNeckPIDAlgae(()-> IntakeMap.ReefStops.BARGEANGLE, swanNeck).until(swanNeck :: pidAtSetpoint), new RotateElevatorDownPID(elevator).until(elevator :: pidDownAtSetpoint)));
     }
 
     public void setupPaths() {

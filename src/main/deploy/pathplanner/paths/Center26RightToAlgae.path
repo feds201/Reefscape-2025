@@ -8,24 +8,24 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.7940000000000005,
-        "y": 5.298334016393444
+        "x": 6.13,
+        "y": 4.186834016393442
       },
       "isLocked": false,
       "linkedName": "2/6right"
     },
     {
       "anchor": {
-        "x": 6.074249999999999,
-        "y": 4.03475
+        "x": 5.78,
+        "y": 4.02
       },
       "prevControl": {
-        "x": 5.074249999999999,
-        "y": 4.03475
+        "x": 6.08,
+        "y": 4.02
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "2/6center"
+      "linkedName": "2/6algae"
     }
   ],
   "rotationTargets": [],
@@ -45,7 +45,7 @@
     "rotation": 180.0
   },
   "reversed": false,
-  "folder": "Pole Places",
+  "folder": "compCenter",
   "idealStartingState": {
     "velocity": 0,
     "rotation": 180.0

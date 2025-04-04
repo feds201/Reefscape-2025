@@ -7,12 +7,14 @@ import java.util.function.DoubleSupplier;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.CANcoder;
+import com.ctre.phoenix6.hardware.CANdi;
 import com.ctre.phoenix6.hardware.CANrange;
 import com.ctre.phoenix6.hardware.TalonFX;
 import frc.robot.constants.RobotMap;
 import frc.robot.constants.RobotMap.ElevatorMap;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.button.NetworkButton;
@@ -28,6 +30,7 @@ public class Lift extends SubsystemABS {
     private BooleanSupplier elevatorAboveThreshold;
     private CANrange frontLeftCanRange;
     private CANrange frontRightCanRange;
+    private DigitalInput limitSwitch;
 
     // private final ShuffleboardTab tab = Shuffleboard.getTab("Elevator");
     private final PIDController pid;
@@ -40,6 +43,7 @@ public class Lift extends SubsystemABS {
         elevatorMotorFollower = new TalonFX(RobotMap.ElevatorMap.ELEVATOR_MOTOR2);
         frontLeftCanRange = new CANrange(ElevatorMap.CANRANGE_FL);
         frontRightCanRange = new CANrange(ElevatorMap.CANRANGE_FR);
+        limitSwitch = new DigitalInput(9);
        
         // elevatorEncoder.setPosition(0);
 
@@ -86,6 +90,8 @@ public class Lift extends SubsystemABS {
     public void periodic() {
         m_encoderValue = () -> elevatorMotorLeader.getPosition().getValueAsDouble();
         elevatorAboveThreshold = ()-> getElevatorAboveThreshold();
+
+        SmartDashboard.putBoolean("limit switch", elevatorSwitchTriggered());
     }
 
     @Override
@@ -111,6 +117,10 @@ public class Lift extends SubsystemABS {
 
     public boolean pidAtSetpoint() {
         return pid.atSetpoint();
+    }
+
+    public boolean elevatorSwitchTriggered(){
+        return !limitSwitch.get();
     }
 
     public void rotateElevatorPID() {
@@ -170,6 +180,10 @@ public class Lift extends SubsystemABS {
 
     public void zeroElevator(){
         elevatorMotorLeader.setPosition(0);
+    }
+
+    public void setElevatorAtLimitHeight(){
+        elevatorMotorLeader.setPosition(.45);
     }
 
     public boolean getElevatorAboveThreshold(){

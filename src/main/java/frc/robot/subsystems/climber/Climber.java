@@ -123,7 +123,7 @@ public class Climber extends SubsystemABS {
   }
 
   public boolean climberPastZero(){
-    return getCANcoderValue() < .105;
+    return getCANcoderValue() < .065;
   }
 
   public boolean climberPastMax(){

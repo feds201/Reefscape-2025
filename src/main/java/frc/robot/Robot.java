@@ -107,7 +107,7 @@ public class Robot extends TimedRobot
     @Override
     public void robotPeriodic()
     {
-        SmartDashboard.putData("command scheduler", CommandScheduler.getInstance());
+        // SmartDashboard.putData("command scheduler", CommandScheduler.getInstance());
         CommandScheduler.getInstance().run();
        
 
@@ -154,7 +154,7 @@ public class Robot extends TimedRobot
     /** This method is called periodically during autonomous. */
     @Override
     public void autonomousPeriodic() {
-        robotContainer.setupVisionImplantsTele();
+        robotContainer.setupVisionImplantsAuto();
     }
 
 
@@ -173,8 +173,8 @@ public class Robot extends TimedRobot
     @Override
     public void teleopPeriodic() {
         robotContainer.setupVisionImplantsTele();
-        SmartDashboard.putNumberArray("limelight5 blue", robotContainer.frontLeftCamera.getBotposeBlue());
-        SmartDashboard.putNumber("robot yaw", robotContainer.frontLeftCamera.getMetatagYaw());
+        // SmartDashboard.putNumberArray("limelight5 blue", robotContainer.frontLeftCamera.getBotposeBlue());
+        // SmartDashboard.putNumber("robot yaw", robotContainer.frontLeftCamera.getMetatagYaw());
     }
 
 

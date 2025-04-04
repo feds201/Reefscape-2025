@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 5.78,
-        "y": 4.186834016393442
+        "x": 7.692750000000001,
+        "y": 5.565499999999999
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.7940000000000005,
-        "y": 5.298334016393444
+        "x": 6.692750000000002,
+        "y": 5.565499999999999
       },
       "isLocked": false,
-      "linkedName": "2/6right"
+      "linkedName": "AutonBarge1"
     },
     {
       "anchor": {
-        "x": 6.074249999999999,
-        "y": 4.03475
+        "x": 6.825,
+        "y": 5.565499999999999
       },
       "prevControl": {
-        "x": 5.074249999999999,
-        "y": 4.03475
+        "x": 7.825,
+        "y": 5.565499999999999
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "2/6center"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],
@@ -33,7 +33,7 @@
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 3.0,
+    "maxVelocity": 0.7,
     "maxAcceleration": 3.5,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
@@ -42,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 180.0
+    "rotation": 0.0
   },
   "reversed": false,
-  "folder": "Pole Places",
+  "folder": "compCenter",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 180.0
+    "rotation": 0.0
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }
