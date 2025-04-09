@@ -21,7 +21,7 @@
                     {
                       "type": "wait",
                       "data": {
-                        "waitTime": 0.9
+                        "waitTime": 1.0
                       }
                     },
                     {
@@ -53,13 +53,13 @@
                     {
                       "type": "wait",
                       "data": {
-                        "waitTime": 3.0
+                        "waitTime": 1.5
                       }
                     },
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "Center26AlgaeToBarge"
+                        "pathName": "Center26AlgaeToBargeSetup"
                       }
                     }
                   ]
@@ -72,6 +72,12 @@
                 }
               }
             ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Center26AlgaeToBarge"
           }
         },
         {

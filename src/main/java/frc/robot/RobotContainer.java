@@ -68,6 +68,7 @@ import frc.robot.commands.swanNeck.IntakeAlgaeFromGround;
 import frc.robot.commands.swanNeck.IntakeCoralSequence;
 import frc.robot.commands.swanNeck.PlaceBarge;
 import frc.robot.commands.swanNeck.PlaceLFour;
+import frc.robot.commands.swanNeck.PlaceLFourAuton;
 import frc.robot.commands.swanNeck.PlaceLFourOverCoral;
 import frc.robot.commands.swanNeck.PlaceLOne;
 import frc.robot.commands.swerve.ConfigureHologenicDrive;
@@ -439,16 +440,17 @@ public class RobotContainer extends RobotFramework {
     private void setupNamedCommands() {
         NamedCommands.registerCommand("Field Relative", DrivetrainConstants.drivetrain.runOnce(() -> DrivetrainConstants.drivetrain.seedFieldCentric()));
         NamedCommands.registerCommand("L4", new PlaceLFour(elevator, swanNeck, swanNeckWheels).andThen(new RotateElevatorSafePID(elevator).until(elevator :: pidL3AtSetpoint)));
-        NamedCommands.registerCommand("L4Fast", new PlaceLFour(elevator, swanNeck, swanNeckWheels));
+        NamedCommands.registerCommand("L4Fast", new PlaceLFourAuton(elevator, swanNeck, swanNeckWheels));
         NamedCommands.registerCommand("MetatagRelativeYaw", DrivetrainConstants.drivetrain.runOnce(()-> DrivetrainConstants.drivetrain.resetRotation(new Rotation2d(frontLeftCamera.getMetatagYawRadians()))));
         NamedCommands.registerCommand("MetatagRelativeYawRight", DrivetrainConstants.drivetrain.runOnce(()-> DrivetrainConstants.drivetrain.resetRotation(new Rotation2d(frontRightCamera.getMetatagYawRadians()))));
-        NamedCommands.registerCommand("ElevatorDown", new RotateElevatorDownPID(elevator).until(elevator :: pidDownAtSetpoint));
+        NamedCommands.registerCommand("ElevatorDown", new SequentialCommandGroup(new RaiseSwanNeckPID(()-> ReefStops.SAFEANGLE, swanNeck).until(swanNeck :: pidAtSetpoint), new RotateElevatorDownPID(elevator).until(elevator :: pidDownAtSetpoint) ));
         NamedCommands.registerCommand("Feed", new IntakeCoralSequence(swanNeck, swanNeckWheels, elevator));
         NamedCommands.registerCommand("ZeroMechanisms", zeroMechanisms);
         NamedCommands.registerCommand("L3Infinite", new RaiseSwanNeckPID(()-> IntakeMap.ReefStops.SAFEANGLE, swanNeck).until(swanNeck ::pidAtSetpoint).andThen(new RotateElevatorPID(elevator, ()-> ElevatorMap.L2ROTATION)));
         NamedCommands.registerCommand("L2", new PlaceLTwo(elevator, swanNeck, swanNeckWheels));
-        NamedCommands.registerCommand("L4Height", new RaiseSwanNeckPID(()-> ReefStops.SAFEANGLE, swanNeck).until(swanNeck :: pidAtSetpoint).andThen(new RotateElevatorPID(elevator, ()-> ElevatorMap.L4ROTATION)));
+        NamedCommands.registerCommand("L4Height", new RaiseSwanNeckPID(()-> ReefStops.SAFEANGLE, swanNeck).until(swanNeck :: pidAtSetpoint).andThen(new RotateElevatorPID(elevator, ()-> ElevatorMap.L4ROTATION).until(elevator :: pidAtSetpoint)).andThen(new ParallelCommandGroup(new RotateElevatorPID(elevator, ()-> ElevatorMap.L4ROTATION), new RaiseSwanNeckPID(()-> ReefStops.L4ANGLE, swanNeck))));
         NamedCommands.registerCommand("SpinRelease", new ParallelDeadlineGroup(new WaitCommand(.2), new SpinSwanWheels(swanNeckWheels, ()-> IntakeMap.WHEEL_SPEED_SCORE-.25)));
+        NamedCommands.registerCommand("L4SpinRelease", new ParallelDeadlineGroup(new ParallelDeadlineGroup(new WaitCommand(.2), new SpinSwanWheels(swanNeckWheels, ()-> IntakeMap.WHEEL_SPEED_SCORE*2)), new RotateElevatorPID(elevator, ()-> ElevatorMap.L4ROTATION)));
         NamedCommands.registerCommand("LowAlgae", new retriveAlgae(elevator, swanNeck, swanNeckWheels, ElevatorMap.LOWALGAEROTATION));
         NamedCommands.registerCommand("HighAlgae", new retriveAlgae(elevator, swanNeck, swanNeckWheels, ElevatorMap.HIGHALGAEROTATION));
         NamedCommands.registerCommand("UpToBarge", new PlaceBarge(elevator, swanNeck, swanNeckWheels));
