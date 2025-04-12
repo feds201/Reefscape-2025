@@ -11,6 +11,8 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.Odometry;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
@@ -71,7 +73,7 @@ public class SwerveSubsystem extends SubsystemABS {
         tab.addNumber("Band/Robot X", ()-> drivetrain.getState().Pose.getX());
         tab.addNumber("Band/Robot Y", ()-> drivetrain.getState().Pose.getY());
 
-        tab.addBoolean("Robot Within Barge Range", ()-> Math.abs(DrivetrainConstants.drivetrain.getState().Pose.getX() - 8.775) <  1.065 && Math.abs(DrivetrainConstants.drivetrain.getState().Pose.getX() - 8.775) > 1.04);
+        tab.addBoolean("Robot Within Barge Range", ()-> robotAtBarge());
 
         if (Utils.isSimulation()) DrivetrainConstants.drivetrain.registerTelemetry(telemetry::telemeterize);
 
@@ -86,6 +88,9 @@ public class SwerveSubsystem extends SubsystemABS {
         }
     }
 
+    public boolean robotAtBarge(){
+       return  Math.abs(DrivetrainConstants.drivetrain.getState().Pose.getX() - 8.775) <  1.06;
+    }
 
     @Override
     public void periodic() {

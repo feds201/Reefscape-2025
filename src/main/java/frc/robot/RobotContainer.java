@@ -47,6 +47,7 @@ import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.auton.FeedThenL3;
 import frc.robot.commands.auton.MoveBack;
+import frc.robot.commands.auton.MoveForward;
 import frc.robot.commands.auton.pathfindToReef;
 import frc.robot.commands.auton.posePathfindToReef;
 import frc.robot.commands.auton.pathfindToReef.reefPole;
@@ -415,6 +416,7 @@ public class RobotContainer extends RobotFramework {
         driverController.b()
             .onTrue(new posePathfindToReef(frc.robot.commands.auton.posePathfindToReef.reefPole.CENTER, DrivetrainConstants.drivetrain, frontRightCamera, frontLeftCamera));
 
+        driverController.x().whileTrue(new MoveForward(DrivetrainConstants.drivetrain).until(()-> swerveSubsystem.robotAtBarge()).andThen(new ConfigureSlowDrive(driverController, DrivetrainConstants.drivetrain, 0.07)));
         driverController.rightTrigger()
             .whileTrue(new IntakeCoralSequence(swanNeck, swanNeckWheels, elevator));
 
@@ -467,6 +469,8 @@ public class RobotContainer extends RobotFramework {
         NamedCommands.registerCommand("ScoreBarge", new ParallelDeadlineGroup(new WaitCommand(1), new RotateElevatorPID(elevator, ()-> ElevatorMap.BARGEROTATION),  new SpinSwanWheels(swanNeckWheels, ()-> -IntakeMap.ALGAE_WHEEL_SPEED)));
         NamedCommands.registerCommand("DownFromBarge", new SequentialCommandGroup( new RaiseSwanNeckPIDAlgae(()-> IntakeMap.ReefStops.BARGEANGLE, swanNeck).until(swanNeck :: pidAtSetpoint), new RotateElevatorDownPID(elevator).until(elevator :: pidDownAtSetpoint)));
         NamedCommands.registerCommand("L1", new PlaceLOne(elevator, swanNeck, swanNeckWheels));
+        NamedCommands.registerCommand("L3Height", new RaiseSwanNeckPID(()-> IntakeMap.ReefStops.SAFEANGLE, swanNeck).until(swanNeck ::pidAtSetpoint).andThen(new RotateElevatorPID(elevator, ()-> ElevatorMap.L3ROTATION)));
+        NamedCommands.registerCommand("SuckInAlgae", new SpinSwanWheels(swanNeckWheels, ()-> IntakeMap.ALGAE_WHEEL_SPEED).alongWith(new RaiseSwanNeckPID(()-> IntakeMap.ReefStops.SAFEANGLE, swanNeck)));
     }
 
     public void setupPaths() {

@@ -35,6 +35,12 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "MetatagRelativeYawRight"
+          }
+        },
+        {
           "type": "wait",
           "data": {
             "waitTime": 0.3
