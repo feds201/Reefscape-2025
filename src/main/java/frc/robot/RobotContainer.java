@@ -258,14 +258,15 @@ public class RobotContainer extends RobotFramework {
         }
     }
 
-    public void setupVisionImplantsAuto() {
-        var driveState = DrivetrainConstants.drivetrain.getState();
+    public void setupVisionImplantsAuto() {var driveState = DrivetrainConstants.drivetrain.getState();
         double headingDeg = driveState.Pose.getRotation().getDegrees();
         SmartDashboard.putNumber("heading Deg", headingDeg);
         double omega = Math.abs(Units.radiansToRotations(driveState.Speeds.omegaRadiansPerSecond));
         frontRightCamera.SetRobotOrientation(headingDeg, 0, 0, 0, 0, 0);
         frontLeftCamera.SetRobotOrientation(headingDeg, 0, 0, 0, 0, 0);
+        rearRightCamera.SetRobotOrientation(headingDeg, 0, 0, 0, 0, 0);
 
+        PoseAllocate backRightPose = rearRightCamera.getRobotPose();
         PoseAllocate frontRightPose = frontRightCamera.getRobotPose();
         PoseAllocate frontLeftPose = frontLeftCamera.getRobotPose();
 
@@ -284,6 +285,8 @@ public class RobotContainer extends RobotFramework {
             DrivetrainConstants.drivetrain.addVisionMeasurement(frontLeftPose.getPose(), frontLeftPose.getTime());
 
         }
+
+       
     }
 
     private void configureBindings() {

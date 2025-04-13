@@ -174,7 +174,7 @@ public class Robot extends TimedRobot
     @Override
     public void teleopPeriodic() {
         if(Math.abs(DrivetrainConstants.drivetrain.getState().Pose.getX() - 8.775) <  1.775){
-            robotContainer.setupVisionImplantsTele();
+            robotContainer.setupVisionImplantsAuto();
         } else {
             robotContainer.setupVisionImplantsAuto();
         }

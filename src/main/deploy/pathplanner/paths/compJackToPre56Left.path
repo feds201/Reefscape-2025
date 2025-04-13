@@ -44,16 +44,7 @@
       "linkedName": "JackPre56Left"
     }
   ],
-  "rotationTargets": [
-    {
-      "waypointRelativePos": 0.1844701844701824,
-      "rotationDegrees": 180.0
-    },
-    {
-      "waypointRelativePos": 0.55,
-      "rotationDegrees": -59.99999999999999
-    }
-  ],
+  "rotationTargets": [],
   "constraintZones": [
     {
       "name": "Constraints Zone",
@@ -100,7 +91,7 @@
   "folder": "compJack",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 180.0
+    "rotation": 0.0
   },
   "useDefaultConstraints": false
 }
