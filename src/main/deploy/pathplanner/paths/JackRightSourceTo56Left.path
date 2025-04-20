@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.6,
-        "y": 5.565499999999999
+        "x": 0.671311475409836,
+        "y": 1.357735655737705
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.6000000000000005,
-        "y": 5.565499999999999
+        "x": 1.1744334129792744,
+        "y": 2.2106527433160776
       },
       "isLocked": false,
-      "linkedName": "AutonBarge1"
+      "linkedName": "RightSourceLeft"
     },
     {
       "anchor": {
-        "x": 6.825,
-        "y": 5.565499999999999
+        "x": 2.529405737704918,
+        "y": 4.078944672131147
       },
       "prevControl": {
-        "x": 7.825,
-        "y": 5.565499999999999
+        "x": 1.9848191235383408,
+        "y": 3.289044981746628
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "JackRightSourceTo56Left"
     }
   ],
   "rotationTargets": [],
@@ -33,7 +33,7 @@
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 1.5,
+    "maxVelocity": 3.0,
     "maxAcceleration": 3.5,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
@@ -41,14 +41,14 @@
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 0,
+    "velocity": 0.7,
     "rotation": 0.0
   },
   "reversed": false,
-  "folder": "compCenter",
+  "folder": "compJackRight",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 55.0
   },
-  "useDefaultConstraints": false
+  "useDefaultConstraints": true
 }

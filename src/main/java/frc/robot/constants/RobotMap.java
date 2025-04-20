@@ -92,7 +92,7 @@ public class RobotMap {
         public static final double ELEVATOR_P = .53; //.53
         public static final double ELEVATOR_I = 0;
         public static final double ELEVATOR_D = 0;
-        public static final double ELEVATOR_G = 0.55; ///.5
+        public static final double ELEVATOR_G = 0.6; ///.5
         public static final double ELEVATOR_S = 0.245; //.245
         public static final double PARENT_GEAR_RADIUS = Units.inchesToMeters(2.5);
         public static final double ELEVATOR_CIRCUMFERENCE = 2 * Math.PI * PARENT_GEAR_RADIUS;
@@ -220,7 +220,7 @@ public class RobotMap {
         }
 
         public static PIDController intakePid = new PIDController(5, 0, 0);
-        public static final double ks = 0.008;
+        public static final double ks = 0.0095;
         public static final double kg = 0.015;
         public static final double kgAlgae = .035;
         public static final double ksAlgae = .01;

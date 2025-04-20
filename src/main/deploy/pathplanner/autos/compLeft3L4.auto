@@ -277,9 +277,16 @@
           "data": {
             "commands": [
               {
-                "type": "named",
+                "type": "sequential",
                 "data": {
-                  "name": "L4Fast"
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "L4Fast"
+                      }
+                    }
+                  ]
                 }
               },
               {

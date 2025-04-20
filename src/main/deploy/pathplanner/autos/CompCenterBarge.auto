@@ -172,9 +172,9 @@
           "data": {
             "commands": [
               {
-                "type": "path",
+                "type": "named",
                 "data": {
-                  "pathName": "CenterBackToLeave"
+                  "name": "MoveBackwards"
                 }
               },
               {

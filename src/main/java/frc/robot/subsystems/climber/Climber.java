@@ -131,7 +131,7 @@ public class Climber extends SubsystemABS {
   }
 
   public boolean climberAtStraight(){
-    return getCANcoderValue() < .45;
+    return getCANcoderValue() < .415;
   }
 
   @Override

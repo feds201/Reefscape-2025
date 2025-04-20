@@ -46,8 +46,8 @@ public class SwanNeck extends SubsystemABS {
         coralCanRange = new CANrange(IntakeMap.SensorCanId.CORAL_CANRANGE);
         pid = IntakeMap.intakePid;
         algaePid = new PIDController(6.5, 0, 0);
-        algaePid.setTolerance(.003);
-        pid.setTolerance(.003);
+        algaePid.setTolerance(.007);
+        pid.setTolerance(.007);
     
         // gooseNeckAngler = new CANcoder(IntakeMap.SensorCanId.INTAKE_ENCODER);
         SmartDashboard.putNumber("L4 Positition", RobotMap.ElevatorMap.L4ROTATION);

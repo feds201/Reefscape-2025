@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.6,
-        "y": 5.565499999999999
+        "x": 3.2,
+        "y": 4.1907499999999995
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.6000000000000005,
-        "y": 5.565499999999999
+        "x": 2.8530737704918034,
+        "y": 3.491547131147541
       },
       "isLocked": false,
-      "linkedName": "AutonBarge1"
+      "linkedName": "5/6left"
     },
     {
       "anchor": {
-        "x": 6.825,
-        "y": 5.565499999999999
+        "x": 1.9659836065573768,
+        "y": 3.3117315573770485
       },
       "prevControl": {
-        "x": 7.825,
-        "y": 5.565499999999999
+        "x": 2.40952868852459,
+        "y": 3.347694672131147
       },
       "nextControl": null,
       "isLocked": false,
@@ -33,7 +33,7 @@
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 1.5,
+    "maxVelocity": 3.0,
     "maxAcceleration": 3.5,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
@@ -45,10 +45,10 @@
     "rotation": 0.0
   },
   "reversed": false,
-  "folder": "compCenter",
+  "folder": "compJackRight",
   "idealStartingState": {
     "velocity": 0,
     "rotation": 0.0
   },
-  "useDefaultConstraints": false
+  "useDefaultConstraints": true
 }
