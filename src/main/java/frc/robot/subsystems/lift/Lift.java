@@ -66,8 +66,8 @@ public class Lift extends SubsystemABS {
         pidDown.setSetpoint(1.3);
 
         pidL3 = new PIDController(0.4, 0, 0);
-        pidL3.setTolerance(0.05);
-        pidL3.setSetpoint(RobotMap.ElevatorMap.L3ROTATION+3);
+        pidL3.setTolerance(0.2);
+        pidL3.setSetpoint(1.3);
 
         tab.add("Elevator PID", pid)
             .withWidget(BuiltInWidgets.kPIDController);
@@ -149,7 +149,7 @@ public class Lift extends SubsystemABS {
         return pidDown.atSetpoint();
     }
 
-    public void rotateElevatorPIDL3(){
+    public void rotateElevatorPIDSafe(){
         double output = pidL3.calculate(getEncoderValue());
         if(output > 0){
             output += ElevatorMap.ELEVATOR_S;
@@ -160,7 +160,11 @@ public class Lift extends SubsystemABS {
         setMotorSpeed(output);
     }
 
-    public boolean pidL3AtSetpoint(){
+    public void setPIDSafeTarget(double target){
+        pidL3.setSetpoint(target);
+    }
+
+    public boolean pidSafeAtSetpoint(){
         return pidL3.atSetpoint();
     }
 
