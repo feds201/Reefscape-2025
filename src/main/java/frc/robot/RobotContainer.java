@@ -39,6 +39,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.RepeatCommand;
+import edu.wpi.first.wpilibj2.command.ScheduleCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller;
@@ -420,19 +421,20 @@ public class RobotContainer extends RobotFramework {
                                 .until(swanNeck::pidAtSetpoint),
                         new RotateElevatorDownPID(elevator).until(elevator::pidDownAtSetpoint)));
 
-        driverController.y().onTrue(
-                new SequentialCommandGroup(
-                        new RaiseSwanNeckPID(() -> IntakeMap.ReefStops.AGAINSTREEFANGLE, swanNeck)
-                                .until(swanNeck::pidAtSetpoint),
-                        new RotateElevatorNextLevelUp(elevator), new ParallelCommandGroup(new HoldElevator(elevator),
-                                new RaiseSwanNeckToScoringAngle(swanNeck, elevator))));
+        driverController.y().onTrue(new ScheduleCommand(elevator.runOnce(() -> {})).andThen(new ScheduleCommand(new SequentialCommandGroup(
+            new RaiseSwanNeckPID(() -> IntakeMap.ReefStops.AGAINSTREEFANGLE, swanNeck)
+                    .until(swanNeck::pidAtSetpoint),
+            new RotateElevatorNextLevelUp(elevator), new ParallelCommandGroup(new HoldElevator(elevator),
+                    new RaiseSwanNeckToScoringAngle(swanNeck, elevator))))));
+                
 
         driverController.a()
-                .onTrue(new SequentialCommandGroup(
-                        new RaiseSwanNeckPID(() -> IntakeMap.ReefStops.AGAINSTREEFANGLE, swanNeck)
-                                .until(swanNeck::pidAtSetpoint),
-                        new RotateElevatorNextLevelDown(elevator), new ParallelCommandGroup(new HoldElevator(elevator),
-                                new RaiseSwanNeckToScoringAngle(swanNeck, elevator))));
+                .onTrue(new ScheduleCommand(elevator.runOnce(() -> {})).andThen(new ScheduleCommand( new SequentialCommandGroup(
+                    new RaiseSwanNeckPID(() -> IntakeMap.ReefStops.AGAINSTREEFANGLE, swanNeck)
+                            .until(swanNeck::pidAtSetpoint),
+                    new RotateElevatorNextLevelDown(elevator), new ParallelCommandGroup(new HoldElevator(elevator),
+                            new RaiseSwanNeckToScoringAngle(swanNeck, elevator))))));
+                   
 
     }
 
