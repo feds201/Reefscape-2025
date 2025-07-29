@@ -28,9 +28,9 @@ public class RaiseSwanNeckToScoringAngle extends Command {
   @Override
   public void initialize() {
     if(m_Lift.getEncoderValueFromMotor() < ElevatorMap.L1ROTATION + 1){
-      setpoint = ReefStops.L1ANGLE;
+      setpoint = ReefStops.AGAINSTREEFANGLE;
     } else if(m_Lift.getEncoderValueFromMotor() < ElevatorMap.L3ROTATION + 4){
-      setpoint = ReefStops.L3ANGLE;
+      setpoint = ReefStops.AGAINSTREEFANGLE;
     } else {
       setpoint = ReefStops.L4ANGLE;
     }

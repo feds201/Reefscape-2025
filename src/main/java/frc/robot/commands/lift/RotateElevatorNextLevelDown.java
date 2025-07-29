@@ -4,6 +4,7 @@
 
 package frc.robot.commands.lift;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.constants.RobotMap.ElevatorMap;
 import frc.robot.subsystems.lift.Lift;
@@ -23,14 +24,19 @@ public class RotateElevatorNextLevelDown extends Command {
   public void initialize() {
     if(m_Lift.getEncoderValueFromMotor() > ElevatorMap.L4ROTATION + 2){
       setpoint = ElevatorMap.L4ROTATION;
+      SmartDashboard.putNumber("elevatorvaluetest", m_Lift.getEncoderValueFromMotor());
     }else if(m_Lift.getEncoderValueFromMotor() > ElevatorMap.L4ROTATION - 2){
       setpoint = ElevatorMap.L3ROTATION;
-    } else if(m_Lift.getEncoderValueFromMotor() > ElevatorMap.L3ROTATION - 2){
+      SmartDashboard.putNumber("elevatorvaluetest", m_Lift.getEncoderValueFromMotor());
+    } else if(m_Lift.getEncoderValueFromMotor() > ElevatorMap.L3ROTATION - 3){
       setpoint = ElevatorMap.L2ROTATION;
-    } else if(m_Lift.getEncoderValueFromMotor() > ElevatorMap.L2ROTATION - 1) {
+      SmartDashboard.putNumber("elevatorvaluetest", m_Lift.getEncoderValueFromMotor());
+    } else if(m_Lift.getEncoderValueFromMotor() > ElevatorMap.L2ROTATION - 3) {
       setpoint = ElevatorMap.L1ROTATION;
+      SmartDashboard.putNumber("elevatorvaluetest", m_Lift.getEncoderValueFromMotor());
     } else {
       setpoint = 1.3;
+      SmartDashboard.putNumber("elevatorvaluetest", m_Lift.getEncoderValueFromMotor());
     }
     m_Lift.setPIDSafeTarget(setpoint);
   }
