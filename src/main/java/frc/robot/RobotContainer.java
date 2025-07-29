@@ -399,7 +399,7 @@ public class RobotContainer extends RobotFramework {
             whileFalse(new RaiseClimberBasic(()-> 0, climber));
 
         operatorController.povUp().or(operatorController.povUpLeft()).or(operatorController.povUpRight())
-            .whileTrue(new climbingSequenceUp(climber));
+            .onTrue(new climbingSequenceUp(climber));
        
         //Placing Barge
         operatorController.leftTrigger()
