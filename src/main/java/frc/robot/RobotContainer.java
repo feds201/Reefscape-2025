@@ -453,14 +453,13 @@ public class RobotContainer extends RobotFramework {
         .onFalse(new SpinSwanWheels(swanNeckWheels, ()-> IntakeMap.ALGAE_WHEEL_SPEED).alongWith( new SequentialCommandGroup(new RaiseSwanNeckPID(()-> 0.1, swanNeck).until(swanNeck :: pidAtSetpoint), new RaiseSwanNeckPID(()-> IntakeMap.ReefStops.SAFEANGLE, swanNeck))));
        
         //Climber Override
-        driverController.povLeft()
-            .whileTrue(new RaiseClimberBasic(()-> .10, climber));
+        
                 
         //Panic Button
-        driverController.povRight()
-            .onTrue(new InstantCommand(()-> CommandScheduler.getInstance().cancelAll()));
+        // driverController.povRight()
+        //     .onTrue(new InstantCommand(()-> CommandScheduler.getInstance().cancelAll()));
 
-        driverController.povUpRight().whileTrue(new ParallelCommandGroup(new RaiseSwanNeckPID(()-> 0.0966, swanNeck), new SpinSwanWheels(swanNeckWheels, ()-> IntakeMap.ALGAE_WHEEL_SPEED)))
+        driverController.povRight().whileTrue(new ParallelCommandGroup(new RaiseSwanNeckPID(()-> 0.0966, swanNeck), new SpinSwanWheels(swanNeckWheels, ()-> IntakeMap.ALGAE_WHEEL_SPEED)))
         .onFalse(new ParallelDeadlineGroup(new WaitCommand(2), new SpinSwanWheels(swanNeckWheels, ()-> -IntakeMap.ALGAE_WHEEL_SPEED)));
        
         driverController.povDown()
@@ -472,7 +471,7 @@ public class RobotContainer extends RobotFramework {
         driverController.povUp()
             .onTrue(new climbingSequenceUp(climber));
        
-        driverController.povUpLeft()
+        driverController.povLeft()
             .whileTrue(new PlaceBarge(elevator, swanNeck, swanNeckWheels))
             .onFalse( new SequentialCommandGroup(new ParallelDeadlineGroup(new WaitCommand(2), new RotateElevatorPID(elevator, ()-> ElevatorMap.BARGEROTATION), new SpinSwanWheels(swanNeckWheels, ()-> -IntakeMap.ALGAE_WHEEL_SPEED-.2)), new RaiseSwanNeckPIDAlgae(()-> IntakeMap.ReefStops.BARGEANGLE, swanNeck).until(swanNeck :: pidAtSetpoint), new RotateElevatorDownPID(elevator).until(elevator :: pidDownAtSetpoint)));
         
