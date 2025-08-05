@@ -352,31 +352,27 @@ public class RobotContainer extends RobotFramework {
                         DrivetrainConstants.drivetrain, frontRightCamera, frontLeftCamera));
 
         driverController.b()
-                .onTrue(new ParallelCommandGroup(
-                        new retriveAlgae(elevator, swanNeck, swanNeckWheels, ElevatorMap.LOWALGAEROTATION)
-                // , new
-                // posePathfindToReef(frc.robot.commands.auton.posePathfindToReef.reefPole.CENTER,
-                // DrivetrainConstants.drivetrain, frontRightCamera, frontLeftCamera)
-                ))
-                .onFalse(new ParallelCommandGroup(new SpinSwanWheels(swanNeckWheels, () -> IntakeMap.ALGAE_WHEEL_SPEED),
+        .onTrue(new posePathfindToReef(frc.robot.commands.auton.posePathfindToReef.reefPole.CENTER,
+        DrivetrainConstants.drivetrain, frontRightCamera, frontLeftCamera).andThen(
+                new retriveAlgae(elevator, swanNeck, swanNeckWheels, ElevatorMap.LOWALGAEROTATION))
+        ).onFalse(new ParallelCommandGroup(new SpinSwanWheels(swanNeckWheels, () -> IntakeMap.ALGAE_WHEEL_SPEED),
                         new RaiseSwanNeckPID(() -> IntakeMap.ReefStops.BARGEANGLE, swanNeck),
                         new SequentialCommandGroup(
                                 new WaitCommand(.4).until(swanNeck::pidAtSetpoint),
-                                new ParallelDeadlineGroup(new WaitCommand(.3),
+                                new ParallelDeadlineGroup(new WaitCommand(.4),
                                         new MoveBack(DrivetrainConstants.drivetrain)),
                                 new ParallelCommandGroup(ConfigureHologenicDrive(driverController, swerveSubsystem),
                                         new RotateElevatorDownPID(elevator).until(elevator::pidDownAtSetpoint)))));
 
         driverController.x()
-                .onTrue(new ParallelCommandGroup(
-                        new retriveAlgae(elevator, swanNeck, swanNeckWheels, ElevatorMap.HIGHALGAEROTATION),
-                        new posePathfindToReef(frc.robot.commands.auton.posePathfindToReef.reefPole.CENTER,
-                                DrivetrainConstants.drivetrain, frontRightCamera, frontLeftCamera)))
-                .onFalse(new ParallelCommandGroup(new SpinSwanWheels(swanNeckWheels, () -> IntakeMap.ALGAE_WHEEL_SPEED),
+                .onTrue(new posePathfindToReef(frc.robot.commands.auton.posePathfindToReef.reefPole.CENTER,
+                DrivetrainConstants.drivetrain, frontRightCamera, frontLeftCamera).andThen(
+                        new retriveAlgae(elevator, swanNeck, swanNeckWheels, ElevatorMap.HIGHALGAEROTATION))
+        ).onFalse(new ParallelCommandGroup(new SpinSwanWheels(swanNeckWheels, () -> IntakeMap.ALGAE_WHEEL_SPEED),
                         new RaiseSwanNeckPID(() -> IntakeMap.ReefStops.BARGEANGLE, swanNeck),
                         new SequentialCommandGroup(
                                 new WaitCommand(.4).until(swanNeck::pidAtSetpoint),
-                                new ParallelDeadlineGroup(new WaitCommand(.3),
+                                new ParallelDeadlineGroup(new WaitCommand(.4),
                                         new MoveBack(DrivetrainConstants.drivetrain)),
                                 new ParallelCommandGroup(ConfigureHologenicDrive(driverController, swerveSubsystem),
                                         new RotateElevatorDownPID(elevator).until(elevator::pidDownAtSetpoint)))));
