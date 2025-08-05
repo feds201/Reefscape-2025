@@ -6,18 +6,12 @@ package frc.robot.commands.swanNeck;
 
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
-import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.commands.auton.MoveBack;
-import frc.robot.commands.lift.RotateElevatorDownPID;
 import frc.robot.commands.lift.RotateElevatorPID;
-import frc.robot.constants.RobotMap.ElevatorMap;
 import frc.robot.constants.RobotMap.IntakeMap;
 import frc.robot.subsystems.lift.Lift;
 import frc.robot.subsystems.swanNeck.SwanNeck;
 import frc.robot.subsystems.swanNeck.SwanNeckWheels;
-import frc.robot.utils.DrivetrainConstants;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
@@ -52,10 +46,6 @@ public class retriveAlgae extends SequentialCommandGroup {
           new RaiseSwanNeckPID(() -> 0.1170068359375, m_SwanNeck),
           new SpinSwanWheels(m_SwanNeckWheels, () -> IntakeMap.ALGAE_WHEEL_SPEED)
         )
-        // new ParallelRaceGroup(new WaitCommand(0.35), new
-        // MoveBack(DrivetrainConstants.drivetrain)),
-        // new RotateElevatorDownPID(m_elevator).until(m_elevator::pidDownAtSetpoint)
-
     );
   }
 }

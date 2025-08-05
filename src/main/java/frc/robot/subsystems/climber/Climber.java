@@ -28,6 +28,8 @@ public class Climber extends SubsystemABS {
   private DoubleSupplier m_CANcoderValue;
   private DoubleSupplier m_climberEncoderValue;
   private Servo m_Servo;
+  private boolean climberActive = false;
+  private BooleanSupplier climberActiveSupplier = ()-> false;
   //private CANcoder climberEncoder;
 
   public Climber(Subsystems subsystem, String name) {
@@ -48,7 +50,7 @@ public class Climber extends SubsystemABS {
 
     tab.addNumber("Climber CANCoder Position", m_CANcoderValue);
     tab.addNumber("Climber Internal Encoder Position", m_climberEncoderValue);
-
+    tab.addBoolean("Climber Active", climberActiveSupplier);
      tab.addBoolean("Climber Out", m_climberAtMax);
         // GenericEntry climberSpeedSetter = tab.add("Climber Speed", 0.0)
         //         .withWidget(BuiltInWidgets.kNumberSlider)
@@ -59,6 +61,7 @@ public class Climber extends SubsystemABS {
 
   @Override
   public void periodic() {
+    climberActiveSupplier = ()-> climberActive;
     m_climberAtMax = ()-> climberPastMax();
     m_CANcoderValue = ()-> climberCANCoder.getAbsolutePosition().getValueAsDouble();
     m_climberEncoderValue = ()-> climberMotorLeader.getPosition().getValueAsDouble();
@@ -98,6 +101,15 @@ public class Climber extends SubsystemABS {
     m_Servo.set(.1);
   }
 
+  public void setClimberActivated(){
+    climberActive = true;
+  }
+  public boolean getClimberActive(){
+    return climberActive;
+  }
+  public boolean getClimberNotActivated(){
+    return !climberActive;
+  }
   // public boolean getLeftValue() {
   //   return leftSwitch.get();
   // }

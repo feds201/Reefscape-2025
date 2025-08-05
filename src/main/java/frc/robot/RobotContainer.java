@@ -338,7 +338,8 @@ public class RobotContainer extends RobotFramework {
         driverController.start()
                 .onTrue(new SequentialCommandGroup(
                         new ParallelDeadlineGroup(new WaitCommand(.25),
-                                new SpinSwanWheels(swanNeckWheels, () -> IntakeMap.WHEEL_SPEED_SCORE * 2)),
+                                new SpinSwanWheels(swanNeckWheels, () -> IntakeMap.WHEEL_SPEED_SCORE * 2),
+                                new HoldElevator(elevator)),
                         new RaiseSwanNeckPID(() -> ReefStops.SAFEANGLE, swanNeck).until(swanNeck::pidAtSetpoint),
                         new RotateElevatorDownPID(elevator).until(elevator::pidDownAtSetpoint)));
 
@@ -350,11 +351,10 @@ public class RobotContainer extends RobotFramework {
         driverController.rightBumper()
                 .onTrue(new posePathfindToReef(frc.robot.commands.auton.posePathfindToReef.reefPole.RIGHT,
                         DrivetrainConstants.drivetrain, frontRightCamera, frontLeftCamera));
-
+        
         driverController.b()
-        .onTrue(new posePathfindToReef(frc.robot.commands.auton.posePathfindToReef.reefPole.CENTER,
-        DrivetrainConstants.drivetrain, frontRightCamera, frontLeftCamera).andThen(
-                new retriveAlgae(elevator, swanNeck, swanNeckWheels, ElevatorMap.LOWALGAEROTATION))
+        .onTrue(new ParallelCommandGroup(   
+                    new retriveAlgae(elevator, swanNeck, swanNeckWheels, ElevatorMap.LOWALGAEROTATION))
         ).onFalse(new ParallelCommandGroup(new SpinSwanWheels(swanNeckWheels, () -> IntakeMap.ALGAE_WHEEL_SPEED),
                         new RaiseSwanNeckPID(() -> IntakeMap.ReefStops.BARGEANGLE, swanNeck),
                         new SequentialCommandGroup(
@@ -363,12 +363,13 @@ public class RobotContainer extends RobotFramework {
                                         new MoveBack(DrivetrainConstants.drivetrain)),
                                 new ParallelCommandGroup(ConfigureHologenicDrive(driverController, swerveSubsystem),
                                         new RotateElevatorDownPID(elevator).until(elevator::pidDownAtSetpoint)))));
-
+        driverController.povDown()
+        .onTrue( new posePathfindToReef(frc.robot.commands.auton.posePathfindToReef.reefPole.CENTER,
+        DrivetrainConstants.drivetrain, frontRightCamera, frontLeftCamera));
         driverController.x()
-                .onTrue(new posePathfindToReef(frc.robot.commands.auton.posePathfindToReef.reefPole.CENTER,
-                DrivetrainConstants.drivetrain, frontRightCamera, frontLeftCamera).andThen(
-                        new retriveAlgae(elevator, swanNeck, swanNeckWheels, ElevatorMap.HIGHALGAEROTATION))
-        ).onFalse(new ParallelCommandGroup(new SpinSwanWheels(swanNeckWheels, () -> IntakeMap.ALGAE_WHEEL_SPEED),
+                .onTrue(new ParallelCommandGroup(   
+                    new retriveAlgae(elevator, swanNeck, swanNeckWheels, ElevatorMap.HIGHALGAEROTATION)
+        )).onFalse(new ParallelCommandGroup(new SpinSwanWheels(swanNeckWheels, () -> IntakeMap.ALGAE_WHEEL_SPEED),
                         new RaiseSwanNeckPID(() -> IntakeMap.ReefStops.BARGEANGLE, swanNeck),
                         new SequentialCommandGroup(
                                 new WaitCommand(.4).until(swanNeck::pidAtSetpoint),
@@ -399,12 +400,12 @@ public class RobotContainer extends RobotFramework {
                 .onFalse(new ParallelDeadlineGroup(new WaitCommand(2),
                         new SpinSwanWheels(swanNeckWheels, () -> -IntakeMap.ALGAE_WHEEL_SPEED)));
 
-        driverController.povDown()
+        driverController.povUp().and(()-> climber.getClimberActive())
                 .whileTrue(new RaiseClimberBasic(() -> .15, climber)
                         .until(climber::climberPastZero))
                 .whileFalse(new RaiseClimberBasic(() -> 0, climber));
 
-        driverController.povUp()
+        driverController.povUp().and(()-> climber.getClimberNotActivated())
                 .onTrue(new climbingSequenceUp(climber));
 
         driverController.povLeft()

@@ -33,7 +33,7 @@ public class climbingSequenceUp extends SequentialCommandGroup {
         m_climber = climber;
         // addCommands(new FooCommand(), new BarCommand());
         addCommands(new ParallelDeadlineGroup(new WaitCommand(5), new InstantCommand(()-> m_climber.setServoIn())), new RaiseClimberBasic(()-> .08, climber).until(m_climber :: internalEncoderPastThreshold), new WaitCommand(.1), new RaiseClimberBasic(()-> .085, climber)
-        .until(m_climber :: climberAtStraight)
+        .until(m_climber :: climberAtStraight), new InstantCommand(()-> m_climber.setClimberActivated())
         );
     }
 }

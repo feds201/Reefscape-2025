@@ -100,7 +100,7 @@ public class RobotMap {
         public static final double L1ROTATION = 4.472;
         public static final double LOWALGAEROTATION = 8.0;
         public static final double HIGHALGAEROTATION = 15.5;
-        public static final double L2ROTATION = 9.3;
+        public static final double L2ROTATION = 8.3;
         public static final double L3ROTATION = 15.7;
         public static final double L4ROTATION = 28.48;
         public static final double BARGEROTATION = 31;
