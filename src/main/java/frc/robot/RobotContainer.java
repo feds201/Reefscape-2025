@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Map;
 import java.util.function.DoubleSupplier;
+import java.util.function.Supplier;
 
 import org.json.simple.parser.ParseException;
 
@@ -35,6 +36,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
@@ -50,6 +52,7 @@ import frc.robot.commands.auton.FeedThenL3;
 import frc.robot.commands.auton.MoveBack;
 import frc.robot.commands.auton.MoveBackFast;
 import frc.robot.commands.auton.MoveForward;
+import frc.robot.commands.auton.RepeatUntilAfterIteration;
 import frc.robot.commands.auton.pathfindToReef;
 import frc.robot.commands.auton.posePathfindToReef;
 import frc.robot.commands.auton.pathfindToReef.reefPole;
@@ -140,6 +143,11 @@ public class RobotContainer extends RobotFramework {
     private PathPlannerPath centerAutoPath;
     private PathPlannerPath jackAutoPath;
 
+    
+    private Command Left3L4Part2;
+    private Command Left3L4Part3;
+    private Command Left3L4Part1;
+
     private final NetworkTableInstance inst = NetworkTableInstance.getDefault();
 
     public RobotContainer() {
@@ -210,7 +218,22 @@ public class RobotContainer extends RobotFramework {
 
         setupEventTriggers();
         setupNamedCommands();
-        autonChooser = AutoBuilder.buildAutoChooser();
+
+       
+        Left3L4Part2 = AutoBuilder.buildAuto("Left3L4Part2");
+        Left3L4Part3 = AutoBuilder.buildAuto("Left3L4Part3");
+        Left3L4Part1 = AutoBuilder.buildAuto("Left3L4Part1");
+        
+        boolean isCompetition = true;
+
+        // Build an auto chooser. This will use Commands.none() as the default option.
+        // As an example, this will only show autos that start with "comp" while at
+        // competition as defined by the programmer
+        autonChooser = AutoBuilder.buildAutoChooserWithOptionsModifier(
+          (stream) -> isCompetition
+            ? stream.filter(auto -> auto.getName().startsWith("comp"))
+            : stream
+        );
         setupPaths();
         SmartDashboard.putData(autonChooser);
         leftAutoPath = AutoPathFinder.loadPath("LeftAutoSetup");
@@ -508,10 +531,27 @@ public class RobotContainer extends RobotFramework {
     }
 
     public void setupPaths() {
-        autonChooser.setDefaultOption("Drive Forward", new DriveForwardCommand(swerveSubsystem, 0.5, 5));
-        Shuffleboard.getTab(Subsystems.SWERVE_DRIVE.getNetworkTable()).add("Auton Chooser", autonChooser).withSize(2, 1)
-                .withProperties(Map.of("position", "0, 0"));
+        autonChooser.addOption("CompLeft3L4Robust",
+        new SequentialCommandGroup(
+            Left3L4Part1,
+            new RepeatUntilAfterIteration(
+                () -> AutoBuilder.buildAuto("Left3L4Part1Detour"), 
+                () -> swanNeck.getCoralLoaded()
+            ),
+            Left3L4Part2,
+            new RepeatUntilAfterIteration(
+                () -> AutoBuilder.buildAuto("Left3L4Part2Detour"),
+                () -> swanNeck.getCoralLoaded()
+            ),
+            Left3L4Part3
+        )
+    );
+
+       
     }
+
+   
+    
 
     public void setupDrivetrain() {
         teleOpChooser.setDefaultOption("Holo-Genic Drive", ConfigureHologenicDrive(driverController, swerveSubsystem));
