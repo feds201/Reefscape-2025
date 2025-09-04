@@ -3,12 +3,14 @@ package frc.robot;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Map;
+import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
 import org.json.simple.parser.ParseException;
 
 import com.ctre.phoenix6.Utils;
+import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.ctre.phoenix6.swerve.SwerveDrivetrain.SwerveDriveState;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
@@ -52,7 +54,6 @@ import frc.robot.commands.auton.FeedThenL3;
 import frc.robot.commands.auton.MoveBack;
 import frc.robot.commands.auton.MoveBackFast;
 import frc.robot.commands.auton.MoveForward;
-import frc.robot.commands.auton.RepeatUntilAfterIteration;
 import frc.robot.commands.auton.pathfindToReef;
 import frc.robot.commands.auton.posePathfindToReef;
 import frc.robot.commands.auton.pathfindToReef.reefPole;
@@ -301,7 +302,6 @@ public class RobotContainer extends RobotFramework {
         PoseAllocate backRightPose = rearRightCamera.getRobotPose();
         PoseAllocate frontRightPose = frontRightCamera.getRobotPose();
         PoseAllocate frontLeftPose = frontLeftCamera.getRobotPose();
-
         if (frontRightPose != null
                 && frontRightPose.getPose() != null
                 && frontRightPose.getPoseEstimate().tagCount > 0
@@ -530,19 +530,27 @@ public class RobotContainer extends RobotFramework {
         NamedCommands.registerCommand("MoveBackwards", new MoveBackFast(DrivetrainConstants.drivetrain));
     }
 
+    
+    public static Command repeatWhile(Supplier<Command> cmd, BooleanSupplier cond) {
+       boolean[] atEnd = { false };
+      return Commands.runOnce(() -> { atEnd[0] = true; })
+        .andThen(Commands.deferredProxy(cmd::get))
+        .alongWith(Commands.runOnce(() -> { atEnd[0] = false; }))
+        .finallyDo(() -> { atEnd[0] = true; })
+        .repeatedly()
+        .until(() -> atEnd[0] && cond.getAsBoolean());
+    }
+
     public void setupPaths() {
+        Supplier<Command> detourOneSupplier = ()->AutoBuilder.buildAuto("Left3L4Part1Detour");
+        Supplier<Command> detourTwoSupplier = ()->AutoBuilder.buildAuto("Left3L4Part2Detour");
+
         autonChooser.addOption("CompLeft3L4Robust",
         new SequentialCommandGroup(
             Left3L4Part1,
-            new RepeatUntilAfterIteration(
-                () -> AutoBuilder.buildAuto("Left3L4Part1Detour"), 
-                () -> swanNeck.getCoralLoaded()
-            ),
+            repeatWhile(detourOneSupplier, ()-> swanNeck.getCoralLoaded()),
             Left3L4Part2,
-            new RepeatUntilAfterIteration(
-                () -> AutoBuilder.buildAuto("Left3L4Part2Detour"),
-                () -> swanNeck.getCoralLoaded()
-            ),
+            repeatWhile(detourTwoSupplier, ()-> swanNeck.getCoralLoaded()),
             Left3L4Part3
         )
     );
