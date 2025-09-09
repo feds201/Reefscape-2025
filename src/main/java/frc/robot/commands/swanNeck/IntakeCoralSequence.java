@@ -44,6 +44,6 @@ public class IntakeCoralSequence extends SequentialCommandGroup {
     new RotateElevatorPID(elevator, ()-> 1.33)
 
       
-    ).onlyIf(()-> !swanNeck.getCoralLoaded()));
+    ));
   }
 }
