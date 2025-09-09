@@ -548,9 +548,15 @@ public class RobotContainer extends RobotFramework {
         autonChooser.addOption("CompLeft3L4Robust",
         new SequentialCommandGroup(
             Left3L4Part1,
-            repeatWhile(detourOneSupplier, ()-> swanNeck.getCoralLoaded()),
+           // repeatWhile(detourOneSupplier, ()-> swanNeck.getCoralLoaded()),
+           AutoBuilder.buildAuto("Left3L4Part1Detour").onlyIf(()-> !swanNeck.getCoralLoaded()),
+           AutoBuilder.buildAuto("Left3L4Part1Detour").onlyIf(()-> !swanNeck.getCoralLoaded()),
+           AutoBuilder.buildAuto("Left3L4Part1Detour").onlyIf(()-> !swanNeck.getCoralLoaded()),
             Left3L4Part2,
-            repeatWhile(detourTwoSupplier, ()-> swanNeck.getCoralLoaded()),
+           // repeatWhile(detourTwoSupplier, ()-> swanNeck.getCoralLoaded()),
+           AutoBuilder.buildAuto("Left3L4Part2Detour").onlyIf(()-> !swanNeck.getCoralLoaded()),
+           AutoBuilder.buildAuto("Left3L4Part2Detour").onlyIf(()-> !swanNeck.getCoralLoaded()),
+           AutoBuilder.buildAuto("Left3L4Part2Detour").onlyIf(()-> !swanNeck.getCoralLoaded()),
             Left3L4Part3
         )
     );
