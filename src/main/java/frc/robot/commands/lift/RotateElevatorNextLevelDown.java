@@ -4,16 +4,17 @@
 
 package frc.robot.commands.lift;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+// import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.constants.RobotMap.ElevatorMap;
 import frc.robot.subsystems.lift.Lift;
 
-/* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class RotateElevatorNextLevelDown extends Command {
   Lift m_Lift;
+  boolean useNormalPid = false;
   double setpoint;
-  /** Creates a new PlaceNextLevelUp. */
+  final double ELEVATOR_POSITION_TOLERANCE = 2;
+  /** Rotate the elevator to the next level downwards from current elevator level (l4, l3, etc.) */
   public RotateElevatorNextLevelDown(Lift lift) {
     m_Lift = lift;
     addRequirements(lift);
@@ -22,29 +23,43 @@ public class RotateElevatorNextLevelDown extends Command {
 
   @Override
   public void initialize() {
-    if(m_Lift.getEncoderValueFromMotor() > ElevatorMap.L4ROTATION + 2){
+    useNormalPid = false;
+    double encoderValue = m_Lift.getEncoderValueFromMotor();
+    if(encoderValue > ElevatorMap.L4ROTATION + ELEVATOR_POSITION_TOLERANCE){
+
       setpoint = ElevatorMap.L4ROTATION;
-      SmartDashboard.putNumber("elevatorvaluetest", m_Lift.getEncoderValueFromMotor());
-    }else if(m_Lift.getEncoderValueFromMotor() > ElevatorMap.L4ROTATION - 2){
+    }else if(encoderValue > ElevatorMap.L4ROTATION - ELEVATOR_POSITION_TOLERANCE){
+
       setpoint = ElevatorMap.L3ROTATION;
-      SmartDashboard.putNumber("elevatorvaluetest", m_Lift.getEncoderValueFromMotor());
-    } else if(m_Lift.getEncoderValueFromMotor() > ElevatorMap.L3ROTATION - 3){
+    } else if(encoderValue > ElevatorMap.L3ROTATION - ELEVATOR_POSITION_TOLERANCE){
+
       setpoint = ElevatorMap.L2ROTATION;
-      SmartDashboard.putNumber("elevatorvaluetest", m_Lift.getEncoderValueFromMotor());
-    } else if(m_Lift.getEncoderValueFromMotor() > ElevatorMap.L2ROTATION - 3) {
+    } else if(encoderValue > ElevatorMap.L2ROTATION - ELEVATOR_POSITION_TOLERANCE) {
+
       setpoint = ElevatorMap.L1ROTATION;
-      SmartDashboard.putNumber("elevatorvaluetest", m_Lift.getEncoderValueFromMotor());
+    } else if(encoderValue > ElevatorMap.L1ROTATION - ELEVATOR_POSITION_TOLERANCE){
+      // Small deviation from the pattern, used to allow easy access to level 2 from intaking or 0 position.
+      setpoint = ElevatorMap.L2ROTATION;
+      useNormalPid = true;
     } else {
-      setpoint = 1.3;
-      SmartDashboard.putNumber("elevatorvaluetest", m_Lift.getEncoderValueFromMotor());
+
+      setpoint = ElevatorMap.CORAL_INTAKE_ROTATION;
     }
-    m_Lift.setPIDSafeTarget(setpoint);
+    if(useNormalPid){
+      m_Lift.setPIDTarget(setpoint);
+    } else {
+      m_Lift.setPIDSafeTarget(setpoint);
+    }
   }
 
 
   @Override
   public void execute() {
-    m_Lift.rotateElevatorPIDSafe();
+    if(useNormalPid){
+      m_Lift.rotateElevatorPID();
+    } else {
+      m_Lift.rotateElevatorPIDSafe();
+    }
   }
 
  
@@ -56,6 +71,12 @@ public class RotateElevatorNextLevelDown extends Command {
 
   @Override
   public boolean isFinished() {
-    return m_Lift.pidSafeAtSetpoint();
+    boolean finished = false;
+    if(useNormalPid){
+      finished = m_Lift.pidAtSetpoint();
+    } else {
+      finished =  m_Lift.pidSafeAtSetpoint();
+    }
+    return finished;
   }
 }

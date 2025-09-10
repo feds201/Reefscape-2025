@@ -97,6 +97,7 @@ public class RobotMap {
         public static final double PARENT_GEAR_RADIUS = Units.inchesToMeters(2.5);
         public static final double ELEVATOR_CIRCUMFERENCE = 2 * Math.PI * PARENT_GEAR_RADIUS;
         public static final double ELEVATOR_CURRENT_LIMIT = 50.0;
+        public static final double CORAL_INTAKE_ROTATION = 1.33;
         public static final double L1ROTATION = 4.472;
         public static final double LOWALGAEROTATION = 8.0;
         public static final double HIGHALGAEROTATION = 15.5;
