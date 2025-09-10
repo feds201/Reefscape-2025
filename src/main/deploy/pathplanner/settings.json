@@ -13,7 +13,8 @@
     "faceCenters"
   ],
   "autoFolders": [
-    "CompLeft3L4Folder"
+    "CompLeft3L4Folder",
+    "CompRight3L4Folder"
   ],
   "defaultMaxVel": 3.0,
   "defaultMaxAccel": 3.5,

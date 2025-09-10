@@ -144,10 +144,14 @@ public class RobotContainer extends RobotFramework {
     private PathPlannerPath centerAutoPath;
     private PathPlannerPath jackAutoPath;
 
-    
+    //code project - instantiate pathplanner auto section commands here (like how you see below)
+
     private Command Left3L4Part2;
     private Command Left3L4Part3;
     private Command Left3L4Part1;
+
+
+
 
     private final NetworkTableInstance inst = NetworkTableInstance.getDefault();
 
@@ -220,11 +224,15 @@ public class RobotContainer extends RobotFramework {
         setupEventTriggers();
         setupNamedCommands();
 
-       
+       //code project - setup right auton auto sections here (like how you see below)
+
         Left3L4Part2 = AutoBuilder.buildAuto("Left3L4Part2");
         Left3L4Part3 = AutoBuilder.buildAuto("Left3L4Part3");
         Left3L4Part1 = AutoBuilder.buildAuto("Left3L4Part1");
         
+
+
+
         boolean isCompetition = true;
 
         // Build an auto chooser. This will use Commands.none() as the default option.
@@ -542,18 +550,15 @@ public class RobotContainer extends RobotFramework {
     }
 
     public void setupPaths() {
-        Supplier<Command> detourOneSupplier = ()->AutoBuilder.buildAuto("Left3L4Part1Detour");
-        Supplier<Command> detourTwoSupplier = ()->AutoBuilder.buildAuto("Left3L4Part2Detour");
+       //code project - add option of "CompRight3L4Robust", putting together the auto sections and detours in the same way as seen below
 
         autonChooser.addOption("CompLeft3L4Robust",
         new SequentialCommandGroup(
             Left3L4Part1,
-           // repeatWhile(detourOneSupplier, ()-> swanNeck.getCoralLoaded()),
            AutoBuilder.buildAuto("Left3L4Part1Detour").onlyIf(()-> !swanNeck.getCoralLoaded()),
            AutoBuilder.buildAuto("Left3L4Part1Detour").onlyIf(()-> !swanNeck.getCoralLoaded()),
            AutoBuilder.buildAuto("Left3L4Part1Detour").onlyIf(()-> !swanNeck.getCoralLoaded()),
             Left3L4Part2,
-           // repeatWhile(detourTwoSupplier, ()-> swanNeck.getCoralLoaded()),
            AutoBuilder.buildAuto("Left3L4Part2Detour").onlyIf(()-> !swanNeck.getCoralLoaded()),
            AutoBuilder.buildAuto("Left3L4Part2Detour").onlyIf(()-> !swanNeck.getCoralLoaded()),
            AutoBuilder.buildAuto("Left3L4Part2Detour").onlyIf(()-> !swanNeck.getCoralLoaded()),
