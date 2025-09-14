@@ -11,10 +11,8 @@ import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.FlippingUtil;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.constants.RobotMap.AutonPosesMap;
 import frc.robot.constants.RobotMap.BlueReefTagLocations;
@@ -24,50 +22,19 @@ import frc.robot.constants.RobotMap.SafetyMap.AutonConstraints;
 import frc.robot.subsystems.swerve.CommandSwerveDrivetrain;
 import frc.robot.subsystems.vision.camera.Camera;
 import frc.robot.utils.AprilTagPosePair;
-import frc.robot.utils.AutoPathFinder;
 import frc.robot.utils.DrivetrainConstants;
-import frc.robot.utils.PathPair;
-import frc.robot.utils.PosePair;
 
-/* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class posePathfindToReef extends Command {
+
   public enum reefPole {
     LEFT, RIGHT, CENTER
   }
   private List<Pose2d> reefSideTagPoses;
   private reefPole pole;
-  private Camera rightLimelight;
-  private Camera leftLimelight;
-  private int tagIdRight;
-  private int tagIdLeft;
-  private int tagIdFinal;
   private Pose2d tagPosefinal;
   private boolean commandFinished;
-  private Pose2d poseName; //put in intitialize instead?
-  private PathPlannerPath pathToReefPole;
+  private Pose2d poseName; 
   private Command reefPathCommand;
-  private final PosePair[] poses = {
-      // //Coral Stations
-      // new PathPair(1, 13, "thispathwasntmadeyetdontrunthis",
-      // "thispathwasntmadeyetdontrunthis"),
-      // new PathPair(2, 12, "thispathwasntmadeyetdontrunthis",
-      // "thispathwasntmadeyetdontrunthis"),
-      // //Processor
-      // new PathPair(3, 16, "thispathwasntmadeyetdontrunthis",
-      // "thispathwasntmadeyetdontrunthis"),
-      // //Net tags
-      // new PathPair(4, 15, "thispathwasntmadeyetdontrunthis",
-      // "thispathwasntmadeyetdontrunthis"),
-      // new PathPair(5, 14, "thispathwasntmadeyetdontrunthis",
-      // "thispathwasntmadeyetdontrunthis"),
-      // Reef Paths
-      new PosePair(6, 19, AutonPosesMap.left66, AutonPosesMap.right66),
-      new PosePair(7, 18, AutonPosesMap.left56, AutonPosesMap.right56),
-      new PosePair(8, 17, AutonPosesMap.left46, AutonPosesMap.right46),
-      new PosePair(9, 22, AutonPosesMap.left36, AutonPosesMap.right36),
-      new PosePair(10, 21, AutonPosesMap.left26, AutonPosesMap.right26),
-      new PosePair(11, 20, AutonPosesMap.left16, AutonPosesMap.right16)
-  };
 
   private final AprilTagPosePair[] aprilTagPoses = {
     new AprilTagPosePair(RedReefTagLocations.id1026, BlueReefTagLocations.id2126, AutonPosesMap.left26, AutonPosesMap.right26, ReefCentersPoses.center26),
@@ -81,12 +48,7 @@ public class posePathfindToReef extends Command {
 
   public posePathfindToReef(reefPole pole, CommandSwerveDrivetrain swerve, Camera rightCamera, Camera leftCamera) {
     this.pole = pole;
-    rightLimelight = rightCamera;
-    leftLimelight = leftCamera;
     addRequirements(swerve);
-
-    
-
   }
 
   // Called when the command is initially scheduled.
@@ -97,24 +59,6 @@ public class posePathfindToReef extends Command {
     } else {
       reefSideTagPoses = BlueReefTagLocations.BLUEREEFTAGS;
     }
-    // tagIdRight = rightLimelight.GetAprilTag();
-    // tagIdLeft = leftLimelight.GetAprilTag();
-
-    // if (tagIdLeft == tagIdRight) {
-    //   tagIdFinal = tagIdLeft;
-
-    // } else if (tagIdRight != -1) {
-    //   tagIdFinal = tagIdRight;
-
-    // } else if (tagIdLeft != -1){
-    //   tagIdFinal = tagIdLeft;
-
-    // } else {
-    //   tagIdFinal = -1;
-    // }
-    // tagIdFinal = 18;
-   
-    
 
     tagPosefinal = DrivetrainConstants.drivetrain.getState().Pose.nearest(reefSideTagPoses);
 
@@ -122,29 +66,30 @@ public class posePathfindToReef extends Command {
       commandFinished = true;
     } else {
 
+    // Retrieve the Correct Pose Destination for Alignment.
     switch (pole) {
       case LEFT:
         for (AprilTagPosePair pose : aprilTagPoses) {
           if (pose.poseToPath(tagPosefinal)) {
-            poseName = pose.getLeftPath();
+            poseName = pose.getLeftPose();
           }
         }
         break;
       case RIGHT:
         for (AprilTagPosePair pose : aprilTagPoses) {
           if (pose.poseToPath(tagPosefinal)) {
-            poseName = pose.getRightPath();
+            poseName = pose.getRightPose();
           }
         }
         break;
       case CENTER:
         for (AprilTagPosePair pose : aprilTagPoses) {
           if (pose.poseToPath(tagPosefinal)) {
-            poseName = pose.getCenterPath();
+            poseName = pose.getCenterPose();
           }
         }
     }
-      
+    
     if(poseName != null){
      if(DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red){
       poseName = FlippingUtil.flipFieldPose(poseName);

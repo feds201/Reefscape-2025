@@ -9,13 +9,13 @@ import java.util.function.DoubleSupplier;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.lift.Lift;
 
-/* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class RotateElevatorBasic extends Command {
-  /** Creates a new RotateElevatorBasic. */
+  
   DoubleSupplier m_Speed;
   Lift m_Elevator;
   DoubleSupplier m_volt;
 
+  /* Rotates Elevator At a Constant Speed. */
   public RotateElevatorBasic(DoubleSupplier speed, Lift elevator) {
     m_Speed = speed;
     m_Elevator = elevator;

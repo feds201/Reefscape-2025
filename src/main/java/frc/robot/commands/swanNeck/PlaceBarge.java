@@ -6,28 +6,19 @@ package frc.robot.commands.swanNeck;
 
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
-import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.commands.auton.MoveBack;
-import frc.robot.commands.lift.RotateElevatorDownPID;
 import frc.robot.commands.lift.RotateElevatorPID;
-import frc.robot.commands.lift.RotateElevatorSafePID;
 import frc.robot.constants.RobotMap.ElevatorMap;
 import frc.robot.constants.RobotMap.IntakeMap;
 import frc.robot.subsystems.lift.Lift;
 import frc.robot.subsystems.swanNeck.SwanNeck;
 import frc.robot.subsystems.swanNeck.SwanNeckWheels;
-import frc.robot.utils.DrivetrainConstants;
 
-// NOTE:  Consider using this command inline, rather than writing a subclass.  For more
-// information, see:
-// https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class PlaceBarge extends SequentialCommandGroup {
   SwanNeck m_SwanNeck;
   SwanNeckWheels m_SwanNeckWheels;
   Lift m_elevator;
-  /** Creates a new scoreLTwo. */
+  /** Barge scoring command sequence */
   public PlaceBarge(Lift lift, SwanNeck swanNeck, SwanNeckWheels swanNeckWheels) {
     m_SwanNeck = swanNeck;
     m_SwanNeckWheels = swanNeckWheels;

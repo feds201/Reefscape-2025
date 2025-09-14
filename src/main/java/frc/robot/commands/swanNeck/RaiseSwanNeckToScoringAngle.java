@@ -6,14 +6,12 @@ package frc.robot.commands.swanNeck;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.constants.RobotMap.ElevatorMap;
-import frc.robot.constants.RobotMap.IntakeMap;
 import frc.robot.constants.RobotMap.IntakeMap.ReefStops;
 import frc.robot.subsystems.lift.Lift;
 import frc.robot.subsystems.swanNeck.SwanNeck;
 
-/* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class RaiseSwanNeckToScoringAngle extends Command {
-  /** Creates a new RaiseSwanNeckToScoringAngle. */
+  /** Command Used With RotateElevatorNextLevelUp and RotateElevatorNextLevelDown to Change the SwanNeck Angle Based on Elevator Level (infinite). */
   SwanNeck m_SwanNeck;
   Lift m_Lift;
   double setpoint;

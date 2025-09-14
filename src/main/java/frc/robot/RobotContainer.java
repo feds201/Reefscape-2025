@@ -51,16 +51,12 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.auton.FeedThenL3;
-import frc.robot.commands.auton.MoveBack;
-import frc.robot.commands.auton.MoveBackFast;
 import frc.robot.commands.auton.MoveForward;
-import frc.robot.commands.auton.pathfindToReef;
+import frc.robot.commands.auton.MoveRobotCentricX;
 import frc.robot.commands.auton.posePathfindToReef;
-import frc.robot.commands.auton.pathfindToReef.reefPole;
 import frc.robot.commands.climber.RaiseClimberBasic;
 import frc.robot.commands.climber.ServoOut;
 import frc.robot.commands.climber.climbingSequenceUp;
-import frc.robot.commands.lift.ElevatorDummy;
 import frc.robot.commands.lift.HoldElevator;
 import frc.robot.commands.lift.RotateElevatorBasic;
 import frc.robot.commands.lift.RotateElevatorDownPID;
@@ -81,18 +77,17 @@ import frc.robot.commands.swanNeck.IntakeCoralSequence;
 import frc.robot.commands.swanNeck.PlaceBarge;
 import frc.robot.commands.swanNeck.PlaceLFour;
 import frc.robot.commands.swanNeck.PlaceLFourAuton;
-import frc.robot.commands.swanNeck.PlaceLFourOverCoral;
 import frc.robot.commands.swanNeck.PlaceLOne;
 import frc.robot.commands.swerve.ConfigureHologenicDrive;
 import frc.robot.commands.swerve.ConfigureSlowDrive;
 import frc.robot.commands.swerve.DriveForwardCommand;
-import frc.robot.commands.swerve.GameNavigator;
 import frc.robot.commands.vision.RetrieveClosestGamePiece;
 import frc.robot.constants.*;
 import frc.robot.constants.RobotMap.ElevatorMap;
 import frc.robot.constants.RobotMap.IntakeMap;
 import frc.robot.constants.RobotMap.SafetyMap;
 import frc.robot.constants.RobotMap.SensorMap;
+import frc.robot.constants.RobotMap.SwerveMap;
 import frc.robot.constants.RobotMap.UsbMap;
 import frc.robot.constants.RobotMap.IntakeMap.ReefStops;
 import frc.robot.constants.RobotMap.SafetyMap.AutonConstraints;
@@ -391,7 +386,7 @@ public class RobotContainer extends RobotFramework {
                         new SequentialCommandGroup(
                                 new WaitCommand(.4).until(swanNeck::pidAtSetpoint),
                                 new ParallelDeadlineGroup(new WaitCommand(.4),
-                                        new MoveBack(DrivetrainConstants.drivetrain)),
+                                        new MoveRobotCentricX(DrivetrainConstants.drivetrain, ()-> SwerveMap.BACKWARDS_SPEED)),
                                 new ParallelCommandGroup(ConfigureHologenicDrive(driverController, swerveSubsystem),
                                         new RotateElevatorDownPID(elevator).until(elevator::pidDownAtSetpoint)))));
         driverController.povDown()
@@ -405,7 +400,7 @@ public class RobotContainer extends RobotFramework {
                         new SequentialCommandGroup(
                                 new WaitCommand(.4).until(swanNeck::pidAtSetpoint),
                                 new ParallelDeadlineGroup(new WaitCommand(.4),
-                                        new MoveBack(DrivetrainConstants.drivetrain)),
+                                        new MoveRobotCentricX(DrivetrainConstants.drivetrain, ()-> SwerveMap.BACKWARDS_SPEED)),
                                 new ParallelCommandGroup(ConfigureHologenicDrive(driverController, swerveSubsystem),
                                         new RotateElevatorDownPID(elevator).until(elevator::pidDownAtSetpoint)))));
 
@@ -535,7 +530,7 @@ public class RobotContainer extends RobotFramework {
         NamedCommands.registerCommand("SuckInAlgae",
                 new SpinSwanWheels(swanNeckWheels, () -> IntakeMap.ALGAE_WHEEL_SPEED)
                         .alongWith(new RaiseSwanNeckPID(() -> IntakeMap.ReefStops.SAFEANGLE, swanNeck)));
-        NamedCommands.registerCommand("MoveBackwards", new MoveBackFast(DrivetrainConstants.drivetrain));
+        NamedCommands.registerCommand("MoveBackwards", new MoveRobotCentricX(DrivetrainConstants.drivetrain, ()-> SwerveMap.FAST_BACKWARDS_SPEED));
     }
 
     

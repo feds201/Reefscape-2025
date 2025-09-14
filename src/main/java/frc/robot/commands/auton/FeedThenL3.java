@@ -20,7 +20,7 @@ public class FeedThenL3 extends SequentialCommandGroup {
   Lift m_elevator;
   SwanNeckWheels m_swanNeckWheels;
   SwanNeck m_gooseNeck;
-  /** Creates a new FeedThenL3. */
+  /** Runs feed sequence then moves elevator to L3 level */
   public FeedThenL3(Lift lift, SwanNeck swanNeck, SwanNeckWheels swanNeckWheels) {
     m_elevator = lift;
     m_swanNeckWheels = swanNeckWheels;

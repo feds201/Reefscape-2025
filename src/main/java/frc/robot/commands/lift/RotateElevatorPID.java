@@ -9,14 +9,11 @@ import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.Command;
 
-
-/* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class RotateElevatorPID extends Command {
-  /** Creates a new rotateElevator. */
   private final Lift c_Elevator;
   private final DoubleSupplier c_ElevatorAngle;
+  /* Rotates the Elevator Using the Default PID (infinite). */
   public RotateElevatorPID(Lift elevator, DoubleSupplier elevatorAngle) {
-    // Use addRequirements() here to declare subsystem dependencies.
     c_Elevator = elevator;
     c_ElevatorAngle = elevatorAngle;
     addRequirements(c_Elevator);
@@ -43,7 +40,6 @@ public class RotateElevatorPID extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    // return c_Elevator.pidAtSetpoint();
     return false;
   }
 }

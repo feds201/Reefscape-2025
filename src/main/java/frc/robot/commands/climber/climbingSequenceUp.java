@@ -4,34 +4,19 @@
 
 package frc.robot.commands.climber;
 
-import java.util.function.BooleanSupplier;
-
-import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.path.PathPlannerPath;
-
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.constants.RobotMap;
-import frc.robot.constants.RobotMap.ClimberMap;
-import frc.robot.constants.RobotMap.SafetyMap;
-import frc.robot.constants.RobotMap.SafetyMap.AutonConstraints;
 import frc.robot.subsystems.climber.Climber;
-import frc.robot.utils.AutoPathFinder;
-import frc.robot.utils.DrivetrainConstants;
 
-// NOTE:  Consider using this command inline, rather than writing a subclass.  For more
-// information, see:
-// https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class climbingSequenceUp extends SequentialCommandGroup {
     private Climber m_climber;
 
     /** Creates a new climbingSequence. */
     public climbingSequenceUp(Climber climber) {
         m_climber = climber;
-        // addCommands(new FooCommand(), new BarCommand());
+        
         addCommands(new ParallelDeadlineGroup(new WaitCommand(5), new InstantCommand(()-> m_climber.setServoIn())), new RaiseClimberBasic(()-> .08, climber).until(m_climber :: internalEncoderPastThreshold), new WaitCommand(.1), new RaiseClimberBasic(()-> .085, climber)
         .until(m_climber :: climberAtStraight), new InstantCommand(()-> m_climber.setClimberActivated())
         );

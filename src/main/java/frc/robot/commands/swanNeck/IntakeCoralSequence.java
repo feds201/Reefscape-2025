@@ -4,12 +4,10 @@
 
 package frc.robot.commands.swanNeck;
 
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.lift.RotateElevatorBasic;
-import frc.robot.commands.lift.RotateElevatorDownPID;
 import frc.robot.commands.lift.RotateElevatorPID;
 import frc.robot.constants.RobotMap.ElevatorMap;
 import frc.robot.constants.RobotMap.IntakeMap;
@@ -17,20 +15,16 @@ import frc.robot.subsystems.lift.Lift;
 import frc.robot.subsystems.swanNeck.SwanNeck;
 import frc.robot.subsystems.swanNeck.SwanNeckWheels;
 
-// NOTE:  Consider using this command inline, rather than writing a subclass.  For more
-// information, see:
-// https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class IntakeCoralSequence extends SequentialCommandGroup {
   SwanNeck m_SwanNeck;
   Lift m_eleLift;
   SwanNeckWheels m_SwanNeckWheels;
-  /** Creates a new loadCoral. */
+  /** Command Sequence to Intake Coral From the Coral Station. */
   public IntakeCoralSequence(SwanNeck swanNeck, SwanNeckWheels swanNeckWheels, Lift elevator) {
     m_SwanNeck = swanNeck;
     m_SwanNeckWheels = swanNeckWheels;
     m_eleLift = elevator;
-    // Add your commands in the addCommands() call, e.g.
-    // addCommands(new FooCommand(), new BarCommand());
+
     addCommands(new RaiseSwanNeckPID(()-> IntakeMap.ReefStops.INTAKEANGLE, m_SwanNeck).until(m_SwanNeck :: pidAtSetpoint),
 
     new ParallelDeadlineGroup( new SequentialCommandGroup( 

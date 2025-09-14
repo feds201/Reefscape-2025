@@ -7,14 +7,12 @@ package frc.robot.commands.lift;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.lift.Lift;
 
-/* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class RotateElevatorSafePID extends Command {
-  /** Creates a new RotateElevatorDownPID. */
   Lift m_elevator;
+  /* Rotates Elevator Using PIDSafe. */
   public RotateElevatorSafePID(Lift elevator) {
     m_elevator = elevator;
     addRequirements(m_elevator);
-    // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.

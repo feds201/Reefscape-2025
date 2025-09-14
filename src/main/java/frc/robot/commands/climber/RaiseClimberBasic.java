@@ -11,7 +11,7 @@ import frc.robot.subsystems.climber.Climber;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class RaiseClimberBasic extends Command {
-  /** Creates a new RaiseClimberBasic. */
+  /** Raises Climber at a Constant Speed. */
   Climber m_Climber;
   DoubleSupplier m_speed;
   public RaiseClimberBasic(DoubleSupplier speed, Climber climber) {

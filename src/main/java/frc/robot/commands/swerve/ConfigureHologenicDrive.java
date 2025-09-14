@@ -22,12 +22,11 @@ public class ConfigureHologenicDrive extends Command {
   
   private SlewRateLimiter slewX = new SlewRateLimiter(1.5);
   private SlewRateLimiter slewY = new SlewRateLimiter(1.5);
-  /** Creates a new ConfigureHologenicDrive. */
+  /** Command Used to Configure Swerve in its Default Configuration. */
   public ConfigureHologenicDrive(CommandXboxController driverController, CommandSwerveDrivetrain drivetrain) {
     m_driverController = driverController;
     m_drivetrain = drivetrain;
     addRequirements(m_drivetrain);
-    // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.

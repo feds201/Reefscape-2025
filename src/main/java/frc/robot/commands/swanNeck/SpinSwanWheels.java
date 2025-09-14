@@ -9,16 +9,14 @@ import java.util.function.DoubleSupplier;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.swanNeck.SwanNeckWheels;
 
-/* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class SpinSwanWheels extends Command {
   private DoubleSupplier m_speed;
   private SwanNeckWheels m_SwanNeckWheels;
-  /** Creates a new SpinSwanWheels. */
+  /** Spins SwanNeck Wheels at a Set Speed (Infinite). */
   public SpinSwanWheels(SwanNeckWheels swanNeckWheels, DoubleSupplier speed) {
     m_speed = speed;
     m_SwanNeckWheels = swanNeckWheels;
     addRequirements(m_SwanNeckWheels);
-    // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.

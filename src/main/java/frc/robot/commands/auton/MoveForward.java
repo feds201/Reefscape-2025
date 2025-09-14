@@ -11,7 +11,7 @@ import frc.robot.subsystems.swerve.CommandSwerveDrivetrain;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class MoveForward extends Command {
-  /** Creates a new MoveBack. */
+  /** Moves Robot Forward Robot-Centrically */
   CommandSwerveDrivetrain m_swerve;
   public MoveForward(CommandSwerveDrivetrain swerve) {
     m_swerve = swerve;

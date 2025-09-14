@@ -13,23 +13,22 @@ import frc.robot.subsystems.lift.Lift;
 import frc.robot.subsystems.swanNeck.SwanNeck;
 import frc.robot.subsystems.swanNeck.SwanNeckWheels;
 
-// NOTE:  Consider using this command inline, rather than writing a subclass.  For more
-// information, see:
-// https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class retriveAlgae extends SequentialCommandGroup {
   SwanNeck m_SwanNeck;
   SwanNeckWheels m_SwanNeckWheels;
   Lift m_elevator;
   double m_algaePosition;
 
-  /** Creates a new scoreLTwo. */
+  /** Command Sequence to Retrieve Algae from the Reef.
+   * 
+   * @param algaePosition Elevator Position to Retrieve the Algae.
+   */
   public retriveAlgae(Lift lift, SwanNeck swanNeck, SwanNeckWheels swanNeckWheels, double algaePosition) {
     m_SwanNeck = swanNeck;
     m_SwanNeckWheels = swanNeckWheels;
     m_elevator = lift;
     m_algaePosition = algaePosition;
-    // Add your commands in the addCommands() call, e.g.
-    // addCommands(new FooCommand(), new BarCommand());
+
     addCommands(
         new RaiseSwanNeckPID(() -> IntakeMap.ReefStops.SAFEANGLE, m_SwanNeck).until(m_SwanNeck::pidAtSetpoint),
 

@@ -13,7 +13,7 @@ import frc.robot.subsystems.swanNeck.SwanNeck;
 public class RaiseSwanNeckPIDAlgae extends Command {
   DoubleSupplier m_setpoint;
   SwanNeck m_gooseNeck;
-  /** Rotates SwanNeck Subsystem Using PID
+  /** Rotates SwanNeck Subsystem Using AlgaePID (infinite).
    * 
    * @param setpoint The setpoint of the Gooseneck In rotations, with horizontal being 0.
    */

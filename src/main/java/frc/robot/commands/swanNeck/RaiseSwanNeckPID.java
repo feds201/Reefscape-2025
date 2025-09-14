@@ -9,11 +9,10 @@ import java.util.function.DoubleSupplier;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.swanNeck.SwanNeck;
 
-/* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class RaiseSwanNeckPID extends Command {
   DoubleSupplier m_setpoint;
   SwanNeck m_gooseNeck;
-  /** Rotates SwanNeck Subsystem Using PID
+  /** Rotates SwanNeck Subsystem Using PID (infinite).
    * 
    * @param setpoint The setpoint of the Gooseneck In rotations, with horizontal being 0.
    */

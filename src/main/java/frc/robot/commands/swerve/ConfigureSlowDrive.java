@@ -21,12 +21,14 @@ public class ConfigureSlowDrive extends Command {
   private Command driveCommand;
   private double m_multiplier;
   
+  /** Command Used to Configure Swerve to Drive at a Slower Speed
+   * @param multiplier When < 1, The Multiplier to Determine the Speed Decrease Percentage.
+   */
   public ConfigureSlowDrive(CommandXboxController driverController, CommandSwerveDrivetrain drivetrain, double multiplier) {
     m_driverController = driverController;
     m_drivetrain = drivetrain;
     m_multiplier = multiplier;
     addRequirements(m_drivetrain);
-    // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.

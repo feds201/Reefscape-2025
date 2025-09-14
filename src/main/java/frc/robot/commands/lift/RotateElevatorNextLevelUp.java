@@ -9,11 +9,10 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.constants.RobotMap.ElevatorMap;
 import frc.robot.subsystems.lift.Lift;
 
-/* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class RotateElevatorNextLevelUp extends Command {
   Lift m_Lift;
   double setpoint;
-  /** Creates a new PlaceNextLevelUp. */
+  /** Rotates Elevator Next Level Up from its' Current Level (L3, L4, etc.) */
   public RotateElevatorNextLevelUp(Lift lift) {
     m_Lift = lift;
     addRequirements(lift);
@@ -38,8 +37,6 @@ public class RotateElevatorNextLevelUp extends Command {
 
   @Override
   public void execute() {
-    // SmartDashboard.putNumber("elevatorvaluetest", m_Lift.getEncoderValueFromMotor());
-
     m_Lift.rotateElevatorPID();
   }
 

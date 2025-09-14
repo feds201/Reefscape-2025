@@ -78,6 +78,8 @@ public class RobotMap {
         public static final int FRONT_RIGHT_DRIVE = 5;
         public static final int BACK_LEFT_DRIVE = 6;
         public static final int BACK_RIGHT_DRIVE = 7;
+        public static final double FAST_BACKWARDS_SPEED = -1.2;
+        public static final double BACKWARDS_SPEED = -0.6;
     }
 
     public static class ElevatorMap {

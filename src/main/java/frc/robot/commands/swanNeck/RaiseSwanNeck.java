@@ -9,11 +9,10 @@ import java.util.function.DoubleSupplier;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.swanNeck.SwanNeck;
 
-/* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class RaiseSwanNeck extends Command {
   SwanNeck m_swanNeck;
   DoubleSupplier m_speed;
-  /** Creates a new raiseSwanNeck. */
+  /** Raise the SwanNeck at a Set Speed. */
   public RaiseSwanNeck(SwanNeck swanNeck, DoubleSupplier speed) {
     m_swanNeck = swanNeck;
     m_speed = speed;

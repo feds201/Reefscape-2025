@@ -7,14 +7,12 @@ package frc.robot.commands.lift;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.lift.Lift;
 
-/* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class HoldElevator extends Command {
   Lift m_Lift;
-  /** Creates a new HoldElevator. */
+  /** Holds the Elevator at its' Current Height (infinite). */
   public HoldElevator(Lift lift) {
     m_Lift = lift;
     addRequirements(lift);
-    // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.

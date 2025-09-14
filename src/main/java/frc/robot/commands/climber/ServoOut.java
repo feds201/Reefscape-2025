@@ -13,11 +13,9 @@ import frc.robot.subsystems.climber.Climber;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class ServoOut extends SequentialCommandGroup {
   Climber m_Climber;
-  /** Creates a new ServoOut. */
+  /** Sets Servo into the Out Position. */
   public ServoOut(Climber climber) {
     m_Climber=climber;
-    // Add your commands in the addCommands() call, e.g.
-    // addCommands(new FooCommand(), new BarCommand());
     addCommands(new InstantCommand(()->m_Climber.setServoOut()));
   }
 }

@@ -4,19 +4,21 @@
 
 package frc.robot.commands.auton;
 
+import java.util.function.DoubleSupplier;
+
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.swerve.CommandSwerveDrivetrain;
 
-/* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class MoveBackFast extends Command {
-  /** Creates a new MoveBack. */
+public class MoveRobotCentricX extends Command {
   CommandSwerveDrivetrain m_swerve;
-  public MoveBackFast(CommandSwerveDrivetrain swerve) {
+  DoubleSupplier m_speed;
+   /** Moves robot-centrically backwards (infinite) */
+  public MoveRobotCentricX(CommandSwerveDrivetrain swerve, DoubleSupplier speed) {
     m_swerve = swerve;
+    m_speed = speed;
     addRequirements(m_swerve);
-    // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
@@ -26,7 +28,7 @@ public class MoveBackFast extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_swerve.setControl(new SwerveRequest.RobotCentric().withVelocityX(-1.2).withVelocityY(0));
+    m_swerve.setControl(new SwerveRequest.RobotCentric().withVelocityX(m_speed.getAsDouble()).withVelocityY(0));
   }
 
   // Called once the command ends or is interrupted.
