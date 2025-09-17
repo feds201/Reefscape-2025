@@ -41,7 +41,7 @@ public class IntakeCoralSequence extends SequentialCommandGroup {
     new SpinSwanWheels(m_SwanNeckWheels, ()-> -IntakeMap.WHEEL_SPEED_INTAKE/2).until(m_SwanNeck :: getCoralLoaded),
     new ParallelDeadlineGroup(new WaitCommand(.08),new SpinSwanWheels(m_SwanNeckWheels, ()-> -IntakeMap.WHEEL_SPEED_INTAKE/2)),
     new RaiseSwanNeckPID(()-> IntakeMap.ReefStops.SAFEANGLE, m_SwanNeck).until(m_SwanNeck :: pidAtSetpoint)),
-    new RotateElevatorPID(elevator, ()-> 1.3)
+    new RotateElevatorPID(elevator, ()-> 1.67)
 
       
     ));
