@@ -25,6 +25,7 @@ import edu.wpi.first.util.datalog.DataLogWriter;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj.RobotController;
 import frc.robot.commands.swerve.ConfigureHologenicDrive;
 import frc.robot.constants.ComandCenter;
 import frc.robot.constants.RobotMap;
@@ -45,6 +46,7 @@ public class Robot extends TimedRobot
 {
     private Command autonomousCommand;
     private RobotContainer robotContainer;
+    private boolean voltageBelow10 = false;
 
     public Robot(){
         CameraServer.startAutomaticCapture();
@@ -108,6 +110,8 @@ public class Robot extends TimedRobot
     @Override
     public void robotPeriodic()
     {
+        if(RobotController.getBatteryVoltage() < 10.5) voltageBelow10 = true;
+        SmartDashboard.putBoolean("Robot voltage below 10", voltageBelow10);
         // SmartDashboard.putData("command scheduler", CommandScheduler.getInstance());
         CommandScheduler.getInstance().run();
        
