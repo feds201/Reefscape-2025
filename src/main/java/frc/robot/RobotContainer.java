@@ -312,10 +312,10 @@ public class RobotContainer extends RobotFramework {
             .onTrue(new ConfigureSlowDrive(driverController, DrivetrainConstants.drivetrain, 0.07))
             .onFalse(ConfigureHologenicDrive(driverController, swerveSubsystem));
        
-        new Trigger (driverController.rightTrigger().and(frontLeftCamera :: twoTagsDetected))
+        new Trigger (driverController.leftTrigger().and(frontLeftCamera :: twoTagsDetected))
             .whileTrue(DrivetrainConstants.drivetrain.runOnce(()-> DrivetrainConstants.drivetrain.resetRotation(new Rotation2d(frontLeftCamera.getMetatagYawRadians()))));
         
-        new Trigger (driverController.rightTrigger().and(frontRightCamera :: twoTagsDetected))
+        new Trigger (driverController.leftTrigger().and(frontRightCamera :: twoTagsDetected))
             .whileTrue(DrivetrainConstants.drivetrain.runOnce(()-> DrivetrainConstants.drivetrain.resetRotation(new Rotation2d(frontRightCamera.getMetatagYawRadians()))));
        
         new Trigger(elevator :: elevatorSwitchTriggered).and(RobotModeTriggers.teleop()).onTrue(new InstantCommand(elevator :: setElevatorAtLimitHeight));
@@ -335,21 +335,7 @@ public class RobotContainer extends RobotFramework {
             .whileTrue(new PlaceLThree(elevator, swanNeck, swanNeckWheels));
 
         operatorController.x()
-        // .and(elevator::getRobotNotInFrontOfCoral)
-            .whileTrue(new PlaceLFour(elevator, swanNeck, swanNeckWheels).andThen(new RotateElevatorDownPID(elevator).until(elevator :: pidDownAtSetpoint))).onFalse(new RaiseSwanNeckPID(()-> IntakeMap.ReefStops.SAFEANGLE, swanNeck).until(swanNeck :: pidAtSetpoint));
-
-        //Placing Reef With Coral In Front
-        // operatorController.y().and(elevator::getRobotInFrontOfCoral)
-        //     .whileTrue(new PlaceLOne(elevator, swanNeck, swanNeckWheels));
-        
-        // operatorController.b().and(elevator::getRobotInFrontOfCoral)
-        //     .whileTrue(new PlaceLTwo(elevator, swanNeck, swanNeckWheels));
-
-        // operatorController.a().and(elevator::getRobotInFrontOfCoral)
-        //     .whileTrue(new PlaceLThree(elevator, swanNeck, swanNeckWheels));
-
-        // operatorController.x().and(elevator::getRobotInFrontOfCoral)
-        //     .whileTrue(new PlaceLFourOverCoral(elevator, swanNeck, swanNeckWheels).andThen(new RotateElevatorDownPID(elevator).until(elevator :: pidDownAtSetpoint))).onFalse(new RaiseSwanNeckPID(()-> IntakeMap.ReefStops.SAFEANGLE, swanNeck).until(swanNeck :: pidAtSetpoint));
+                .whileTrue(new PlaceLFour(elevator, swanNeck, swanNeckWheels).andThen(new RotateElevatorDownPID(elevator).until(elevator :: pidDownAtSetpoint))).onFalse(new RaiseSwanNeckPID(()-> IntakeMap.ReefStops.SAFEANGLE, swanNeck).until(swanNeck :: pidAtSetpoint));
 
         //Controls For L + R Joysticks
         operatorController.axisLessThan(Axis.kLeftY.value, -0.1)
@@ -421,13 +407,13 @@ public class RobotContainer extends RobotFramework {
             .onTrue(new posePathfindToReef(frc.robot.commands.auton.posePathfindToReef.reefPole.CENTER, DrivetrainConstants.drivetrain, frontRightCamera, frontLeftCamera));
 
         driverController.x().whileTrue(new MoveForward(DrivetrainConstants.drivetrain).until(()-> swerveSubsystem.robotAtBarge()).andThen(new ConfigureSlowDrive(driverController, DrivetrainConstants.drivetrain, 0.07)));
-        driverController.rightTrigger()
+        driverController.leftTrigger()
             .whileTrue(new IntakeCoralSequence(swanNeck, swanNeckWheels, elevator));
 
         // driverController.leftTrigger()
         //     .whileTrue(new SpinSwanWheels(swanNeckWheels, ()->-.4));
 
-        driverController.leftTrigger()
+        driverController.rightTrigger()
         .whileTrue(new IntakeAlgaeFromGround(swanNeck, elevator, swanNeckWheels))
         .onFalse(new SpinSwanWheels(swanNeckWheels, ()-> IntakeMap.ALGAE_WHEEL_SPEED).alongWith( new SequentialCommandGroup(new RaiseSwanNeckPID(()-> 0.1, swanNeck).until(swanNeck :: pidAtSetpoint), new RaiseSwanNeckPID(()-> IntakeMap.ReefStops.SAFEANGLE, swanNeck))));
         driverController.povUp()
