@@ -37,7 +37,7 @@ public class RotateElevatorNextLevelDown extends Command {
     } else if(encoderValue > ElevatorMap.L2ROTATION - ELEVATOR_POSITION_TOLERANCE) {
 
       setpoint = ElevatorMap.L1ROTATION;
-    } else if(encoderValue > ElevatorMap.L1ROTATION - ELEVATOR_POSITION_TOLERANCE){
+    } else if(encoderValue < ElevatorMap.L1ROTATION - ELEVATOR_POSITION_TOLERANCE){
       // Small deviation from the pattern, used to allow easy access to level 2 from intaking or 0 position.
       setpoint = ElevatorMap.L2ROTATION;
       useNormalPid = true;
