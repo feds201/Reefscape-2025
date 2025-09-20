@@ -98,7 +98,7 @@ public class RobotMap {
         public static final double ELEVATOR_CIRCUMFERENCE = 2 * Math.PI * PARENT_GEAR_RADIUS;
         public static final double ELEVATOR_CURRENT_LIMIT = 50.0;
         public static final double L1ROTATION = 4.472;
-        public static final double LOWALGAEROTATION = 8.0;
+        public static final double LOWALGAEROTATION = 9.0;
         public static final double HIGHALGAEROTATION = 15.5;
         public static final double L2ROTATION = 9.3;
         public static final double L3ROTATION = 15.7;

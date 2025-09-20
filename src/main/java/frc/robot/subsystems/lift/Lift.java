@@ -183,7 +183,7 @@ public class Lift extends SubsystemABS {
     }
 
     public void setElevatorAtLimitHeight(){
-        elevatorMotorLeader.setPosition(.45);
+        elevatorMotorLeader.setPosition(.07);
     }
 
     public boolean getElevatorAboveThreshold(){
