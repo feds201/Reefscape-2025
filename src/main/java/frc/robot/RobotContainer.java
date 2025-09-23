@@ -144,6 +144,12 @@ public class RobotContainer extends RobotFramework {
     private Command Left3L4Part2;
     private Command Left3L4Part3;
     private Command Left3L4Part1;
+    
+    private Command Right3L4Part2;
+    private Command Right3L4Part3;
+    private Command Right3L4Part1;
+
+
 
 
 
@@ -224,6 +230,11 @@ public class RobotContainer extends RobotFramework {
         Left3L4Part2 = AutoBuilder.buildAuto("Left3L4Part2");
         Left3L4Part3 = AutoBuilder.buildAuto("Left3L4Part3");
         Left3L4Part1 = AutoBuilder.buildAuto("Left3L4Part1");
+
+        Right3L4Part2 = AutoBuilder.buildAuto("Right3L4Part2");
+        Right3L4Part3 = AutoBuilder.buildAuto("Right3L4Part3");
+        Right3L4Part1 = AutoBuilder.buildAuto("Right3L4Part1");
+        
         
 
 
@@ -560,6 +571,21 @@ public class RobotContainer extends RobotFramework {
             Left3L4Part3
         )
     );
+
+    autonChooser.addOption("CompRight3L4Robust",
+    new SequentialCommandGroup(
+        Right3L4Part1,
+       AutoBuilder.buildAuto("Right3L4Part1Detour").onlyIf(()-> !swanNeck.getCoralLoaded()),
+       AutoBuilder.buildAuto("Right3L4Part1Detour").onlyIf(()-> !swanNeck.getCoralLoaded()),
+       AutoBuilder.buildAuto("Right3L4Part1Detour").onlyIf(()-> !swanNeck.getCoralLoaded()),
+        Right3L4Part2,
+       AutoBuilder.buildAuto("Right3L4Part2Detour").onlyIf(()-> !swanNeck.getCoralLoaded()),
+       AutoBuilder.buildAuto("Right3L4Part2Detour").onlyIf(()-> !swanNeck.getCoralLoaded()),
+       AutoBuilder.buildAuto("Right3L4Part2Detour").onlyIf(()-> !swanNeck.getCoralLoaded()),
+        Right3L4Part3
+    )
+);
+
 
        
     }
