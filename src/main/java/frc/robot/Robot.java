@@ -5,6 +5,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
@@ -113,6 +114,7 @@ public class Robot extends TimedRobot
         if(RobotController.getBatteryVoltage() < 10.5) voltageBelow10 = true;
         SmartDashboard.putBoolean("Robot voltage below 10", voltageBelow10);
          SmartDashboard.putData("command scheduler", CommandScheduler.getInstance());
+         SmartDashboard.putNumber("Match Time", Timer.getMatchTime());
         CommandScheduler.getInstance().run();
        
 

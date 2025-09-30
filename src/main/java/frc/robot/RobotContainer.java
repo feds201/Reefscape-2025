@@ -416,7 +416,8 @@ public class RobotContainer extends RobotFramework {
                                         new RotateElevatorDownPID(elevator).until(elevator::pidDownAtSetpoint)))));
 
         driverController.leftTrigger()
-                .whileTrue(new IntakeCoralSequence(swanNeck, swanNeckWheels, elevator));
+                .whileTrue(new IntakeCoralSequence(swanNeck, swanNeckWheels, elevator))
+                .onFalse(new SpinSwanWheels(swanNeckWheels, ()-> -IntakeMap.WHEEL_SPEED_INTAKE/2).until(swanNeck :: getCoralLoaded).onlyIf(swanNeck :: getCoralLoadedOpposite));
 
         driverController.rightTrigger()
                 .whileTrue(new IntakeAlgaeFromGround(swanNeck, elevator, swanNeckWheels))
