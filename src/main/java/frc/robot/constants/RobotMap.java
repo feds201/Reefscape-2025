@@ -101,7 +101,7 @@ public class RobotMap {
         public static final double ELEVATOR_CURRENT_LIMIT = 50.0;
         public static final double CORAL_INTAKE_ROTATION = 1.67;
         public static final double L1ROTATION = 4.472;
-        public static final double LOWALGAEROTATION = 8.0;
+        public static final double LOWALGAEROTATION = 9.0;
         public static final double HIGHALGAEROTATION = 15.5;
         public static final double L2ROTATION = 8.3;
         public static final double L3ROTATION = 15.7;
