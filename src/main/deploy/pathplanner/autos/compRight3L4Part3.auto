@@ -1,0 +1,57 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "deadline",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "rightSourceTo46Right2"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "L4Height"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "L4Fast"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "46RightTo46Center"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "ElevatorDown"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": "CompRight3L4Folder",
+  "choreoAuto": false
+}

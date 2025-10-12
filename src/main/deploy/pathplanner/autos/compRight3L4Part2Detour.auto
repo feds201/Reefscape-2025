@@ -7,7 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "46LeftToRightSource"
+            "pathName": "46RightToRightSource"
           }
         },
         {
@@ -21,7 +21,7 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "rightSourceTo46Left"
+                        "pathName": "RightSourceTo46LeftSlow"
                       }
                     },
                     {
