@@ -206,9 +206,10 @@ public class RobotMap {
             public static final double AGAINSTREEFANGLE = .0234;
             public static final double INTAKEANGLE = .016;
             public static final double BARGEANGLE = .022;
-            public static final double L1ANGLE = .01;  // TODO tune it!
-            public static final double L2ANGLE = .0678; // TODO tune it!
-            public static final double L3ANGLE = .0678; // TODO tune it!
+            public static final double BARGESETUPANGLE = .07; //TODO tune it!
+            public static final double L1ANGLE = .01;  
+            public static final double L2ANGLE = .0678; 
+            public static final double L3ANGLE = .0678; 
           
         }
 

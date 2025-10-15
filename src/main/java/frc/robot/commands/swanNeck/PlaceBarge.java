@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.lift.RotateElevatorPID;
 import frc.robot.constants.RobotMap.ElevatorMap;
 import frc.robot.constants.RobotMap.IntakeMap;
+import frc.robot.constants.RobotMap.IntakeMap.ReefStops;
 import frc.robot.subsystems.lift.Lift;
 import frc.robot.subsystems.swanNeck.SwanNeck;
 import frc.robot.subsystems.swanNeck.SwanNeckWheels;
@@ -26,10 +27,10 @@ public class PlaceBarge extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-     new ParallelCommandGroup(new SpinSwanWheels(swanNeckWheels, ()-> IntakeMap.ALGAE_WHEEL_SPEED), new SequentialCommandGroup(
-    new RaiseSwanNeckPIDAlgae(()-> IntakeMap.ReefStops.BARGEANGLE, m_SwanNeck).until(m_SwanNeck :: pidAtSetpoint), 
-    new ParallelDeadlineGroup(new RotateElevatorPID(m_elevator, ()-> ElevatorMap.BARGEROTATION).until(m_elevator :: pidAtSetpoint), new RaiseSwanNeckPIDAlgae(()-> IntakeMap.ReefStops.BARGEANGLE, m_SwanNeck)), 
-    new ParallelCommandGroup(new RotateElevatorPID(m_elevator, ()-> ElevatorMap.BARGEROTATION), new RaiseSwanNeckPIDAlgae(()-> IntakeMap.ReefStops.BARGEANGLE, m_SwanNeck)))) 
+     new ParallelDeadlineGroup(new SpinSwanWheels(swanNeckWheels, ()-> IntakeMap.ALGAE_WHEEL_SPEED), new SequentialCommandGroup(
+    new RaiseSwanNeckPIDAlgae(()-> IntakeMap.ReefStops.BARGESETUPANGLE, m_SwanNeck).until(m_SwanNeck :: pidAtSetpoint), 
+    new ParallelDeadlineGroup(new RotateElevatorPID(m_elevator, ()-> ElevatorMap.L4ROTATION).until(m_elevator :: pidAtSetpoint), new RaiseSwanNeckPIDAlgae(()-> IntakeMap.ReefStops.BARGESETUPANGLE, m_SwanNeck)), 
+    new RotateElevatorPID(m_elevator, ()-> ElevatorMap.L4ROTATION).until(()-> swanNeck.positionGreaterThan(ReefStops.BARGESETUPANGLE + .01)))) 
    
     // ,
 

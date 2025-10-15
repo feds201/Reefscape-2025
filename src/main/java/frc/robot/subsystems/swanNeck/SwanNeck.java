@@ -161,6 +161,10 @@ public class SwanNeck extends SubsystemABS {
         pivotMotor.setPosition(0);
     }
 
+    public boolean positionGreaterThan(double pos){
+        return getPivotPosition() > pos;
+    }
+
     public double getPivotPosition() {
         return pivotMotor.getPosition().getValueAsDouble();
     }

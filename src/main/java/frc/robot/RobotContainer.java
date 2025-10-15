@@ -447,14 +447,15 @@ public class RobotContainer extends RobotFramework {
                 .onTrue(new climbingSequenceUp(climber));
 
         driverController.povLeft()
-                .whileTrue(new PlaceBarge(elevator, swanNeck, swanNeckWheels))
-                .onFalse(new SequentialCommandGroup(
+                .whileTrue(new PlaceBarge(elevator, swanNeck, swanNeckWheels)
+                .andThen(new RaiseSwanNeckPIDAlgae(() -> IntakeMap.ReefStops.BARGEANGLE, swanNeck).until(swanNeck::pidAtSetpoint)
+                .andThen(new SequentialCommandGroup(
                         new ParallelDeadlineGroup(new WaitCommand(2),
                                 new RotateElevatorPID(elevator, () -> ElevatorMap.BARGEROTATION),
                                 new SpinSwanWheels(swanNeckWheels, () -> -IntakeMap.ALGAE_WHEEL_SPEED - .2)),
                         new RaiseSwanNeckPIDAlgae(() -> IntakeMap.ReefStops.BARGEANGLE, swanNeck)
                                 .until(swanNeck::pidAtSetpoint),
-                        new RotateElevatorDownPID(elevator).until(elevator::pidDownAtSetpoint)));
+                        new RotateElevatorDownPID(elevator).until(elevator::pidDownAtSetpoint)))));
 
         driverController.y().onTrue(new ScheduleCommand(elevator.runOnce(() -> {})).andThen(new ScheduleCommand(new SequentialCommandGroup(
             new RaiseSwanNeckPID(() -> IntakeMap.ReefStops.AGAINSTREEFANGLE, swanNeck)
