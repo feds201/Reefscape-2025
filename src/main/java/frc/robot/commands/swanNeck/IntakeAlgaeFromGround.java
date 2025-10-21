@@ -32,10 +32,11 @@ public class IntakeAlgaeFromGround extends SequentialCommandGroup {
       new SequentialCommandGroup(
         new ParallelCommandGroup(
         new RotateElevatorPID(m_Lift, ()-> 1.67),
-        new RaiseSwanNeckPID(()-> 0.22, m_SwanNeck) //0.25
-        ,
-        new SpinSwanWheels(m_SwanNeckWheels, ()-> IntakeMap.ALGAE_WHEEL_SPEED)
-      ))
+        new SpinSwanWheels(m_SwanNeckWheels, ()-> IntakeMap.ALGAE_WHEEL_SPEED),
+        new SequentialCommandGroup(
+          new RaiseSwanNeckPID(()-> .12, m_SwanNeck).until(m_SwanNeck::pidAtSetpoint),
+          new RaiseSwanNeckPID(()-> 0.24, m_SwanNeck)
+      )))
     ));
   }
 }

@@ -205,6 +205,11 @@ public class RobotContainer extends RobotFramework {
         zeroMechanisms = new InstantCommand(()-> elevator.zeroElevator())
         .alongWith(new InstantCommand(()-> swanNeck.zeroPivotPosition())).alongWith(new InstantCommand(()-> climber.zeroClimber()));
 
+        
+
+        setupEventTriggers();
+        setupNamedCommands();
+        autonChooser = AutoBuilder.buildAutoChooser();
         Left3L4Part2 = AutoBuilder.buildAuto("Left3L4Part2");
         Left3L4Part3 = AutoBuilder.buildAuto("Left3L4Part3");
         Left3L4Part1 = AutoBuilder.buildAuto("Left3L4Part1");
@@ -212,10 +217,6 @@ public class RobotContainer extends RobotFramework {
         Right3L4Part2 = AutoBuilder.buildAuto("Right3L4Part2");
         Right3L4Part3 = AutoBuilder.buildAuto("Right3L4Part3");
         Right3L4Part1 = AutoBuilder.buildAuto("Right3L4Part1");
-
-        setupEventTriggers();
-        setupNamedCommands();
-        autonChooser = AutoBuilder.buildAutoChooser();
         setupPaths();
         SmartDashboard.putData(autonChooser);
         leftAutoPath = AutoPathFinder.loadPath("LeftAutoSetup");
@@ -430,7 +431,7 @@ public class RobotContainer extends RobotFramework {
 
         driverController.rightTrigger()
         .whileTrue(new IntakeAlgaeFromGround(swanNeck, elevator, swanNeckWheels))
-        .onFalse(new SpinSwanWheels(swanNeckWheels, ()-> IntakeMap.ALGAE_WHEEL_SPEED).alongWith( new SequentialCommandGroup(new RaiseSwanNeckPID(()-> 0.1, swanNeck).until(swanNeck :: pidAtSetpoint), new RaiseSwanNeckPID(()-> IntakeMap.ReefStops.SAFEANGLE, swanNeck))));
+        .onFalse(new SpinSwanWheels(swanNeckWheels, ()-> IntakeMap.ALGAE_WHEEL_SPEED).alongWith( new SequentialCommandGroup(new RaiseSwanNeckPID(()-> 0.18, swanNeck).until(swanNeck :: pidAtSetpoint), new RaiseSwanNeckPID(()-> 0.12, swanNeck).until(swanNeck :: pidAtSetpoint), new RaiseSwanNeckPID(()-> 0.07, swanNeck).until(swanNeck :: pidAtSetpoint), new RaiseSwanNeckPID(()-> IntakeMap.ReefStops.SAFEANGLE, swanNeck))));
         driverController.povUp()
             .whileTrue(new SpinSwanWheels(swanNeckWheels, ()-> .4));
 
